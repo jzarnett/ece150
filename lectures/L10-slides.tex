@@ -1,0 +1,384 @@
+\input{configuration}
+
+\title{Lecture 10 --- Enumerated Types and Structures}
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: W.D. Bishop}
+  \end{center}
+ \end{frame}
+ 
+\part{Enumerated Types}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}
+\frametitle{Data Representation: Motivation}
+
+How might we represent the days of the week in our program?
+
+We might use an integer and define Monday = 1, Tuesday = 2...
+
+Problem 1: Most programmers start counting at zero:\\
+\quad Monday = 0, Tuesday = 1...
+
+Problem 2: some countries consider Sunday the first day of the week.\\
+\quad Sunday = 0, Monday = 1... or is it Sunday = 1, Monday = 2... ?
+
+Problem 3: if later on you see that a day variable contains the value ``4'', what day of the week does it represent?
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Enumerated Types}
+
+
+The concept of \alert{Enumerated Types} builds upon the simple variable types we have already seen.
+
+In an enumerated type, we define our own ``type'' in which we specify all the possible values.
+
+The options are a list of constants, and are human-readable.
+
+Instead of ``4'', in code we might see ``THURSDAY''.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Enumerated Types: Set}
+
+An enumerated type is very much like a mathematical \alert{set}.
+
+A set is a well defined collection of items; duplicates are not allowed.
+
+A mathematical set example: \{ 1, 3, 5, 7, 9 \}
+
+A set does not have to be of numbers; it could be a set of books:\\ \{ ``Les Mis\'{e}rables'', ``War and Peace'', ``A Tale of Two Cities''\}
+
+So the set of days of the week is:\\
+\{ Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday \}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Enumerated Types: Set}
+
+Let's turn the set of days of the week into some code.\\
+\quad The format is \texttt{enum} \textit{name} \{ \textit{values} \};
+
+\texttt{enum Days \{ Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday \};}
+
+The keyword \texttt{enum} indicates this will be an enumerated type.
+
+\texttt{Days} is the name of the \texttt{enum}.
+
+The seven values inside the \{ \} braces are the members of the set;\\
+\quad the values of the enumeration.
+
+We'll see why somewhat later, but the definition must be placed before the line with \texttt{static void Main()}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Using an Enumeration}
+
+Declaring and initializing an enumeration looks like this:
+
+\texttt{Days today = Days.Monday;}
+
+The type of the variable in this assignment expression is \texttt{Days}, the \texttt{enum} type that we defined.
+
+The right side of the assignment operator has to be a value of type \texttt{Days}, i.e., one of the items we defined.
+
+So that the compiler knows we mean the ``Monday'' defined in \texttt{Days}, we precede \texttt{Monday} with \texttt{Days} and a dot (\texttt{.}) separates them.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Enumeration and the Switch-Case Statement}
+The \texttt{switch} statement is often used on an \texttt{enum}.
+
+\begin{verbatim}
+switch ( today )
+{
+    case Days.Monday:
+    case Days.Tuesday:
+    case Days.Wednesday:
+    case Days.Thursday:
+    case Days.Friday:
+        Console.WriteLine( "Time to go to work." );
+        break;
+    case Days.Saturday:
+    case Days.Sunday:
+        Console.WriteLine( "Day off!" );
+        break;
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Enumeration Behind-the-Scenes}
+Computers really like numbers and they aren't fans of strings.
+
+The computer associates each entry in the set with an integer (and behind the scenes, that's how it thinks about it).
+
+So to the computer, \texttt{Monday} is still \texttt{0}.
+
+By default, the next item in the list is the previous integer plus 1.
+
+Thus, an \texttt{enum} is different from a proper mathematical set in that the order of the elements in the \texttt{enum} matters.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Setting \texttt{enum} Values}
+
+If you want an \texttt{enum} to start at 1, you can do that:
+
+\texttt{enum Days \{ Monday = 1, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday \};}
+
+If appropriate, you can set some or all of the integer values for the items of an enumeration manually.
+
+\texttt{enum CompassDirection \{ NORTH = 0, EAST = 90, SOUTH = 180, WEST = 270 \};}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Further Examples of Enumerations}
+There are lots of situations where enumerated types make sense.
+
+\texttt{enum SalesTax = \{ NO\_TAX, GST, HST \}; }
+
+\texttt{enum WeightUnit = \{ KILOGRAM, POUND, STONE \};}
+
+In some coding conventions, the names of the options are in all-caps, to indicate that they are constants (read-only).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Using Enumerated Types}
+
+Use enumerated types when there is a specific list of valid values.
+
+You can always add more options later if it makes sense.
+
+They can make code much easier to understand for human readers.
+
+\end{frame}
+
+\part{Structures}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}
+\frametitle{Defining Our Own Types}
+Looking at enumerated types gave an introduction to the idea of defining our own types.
+
+Consider complex numbers. Recall that a complex number has a real part $a$ and an imaginary part $b$ in the form $a + bj$. 
+
+(Notation: in Engineering, the symbol $i$ is used for electric current, so the symbol $j$ is used to denote the imaginary part).
+
+Some complex numbers: 4 + 2$j$, -3.5 -8$j$, 9 - 2$j$.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Without Our Own Types}
+Solution 1: Have a variable for each.
+
+\begin{verbatim}
+double point1_real = 4;
+double point1_imaginary = 2;
+double point2_real = -3.5;
+double point2_imaginary = -8;
+double point3_real = 9;
+double point3_imaginary = -2;
+
+\end{verbatim}
+
+It has a lot of potential for error and there's no real association between the real and imaginary parts of each number.
+
+Wouldn't it be nice if we could write our own type that associates the real and imaginary parts?
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Enter the Structure}
+
+The concept for this is the \alert{structure}, which allows us to have a collection of multiple different types and treat this as a single item.
+
+Like the \texttt{enum}, the \texttt{struct} definition should be placed outside the \texttt{Main()} block of statements.
+
+\begin{verbatim}
+struct Complex
+{
+    public double real;
+    public double imaginary;
+};
+\end{verbatim}
+
+(The complex number example has two \texttt{double} variables, but they could be of different types, and we can have as many as needed.)
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Structure Terminology}
+The keyword \texttt{struct} indicates we are defining a structure.\\
+\quad Typically, a \texttt{struct} name begins with an uppercase letter.
+
+The variables declared inside the \{ \} braces are called the \alert{members}.
+
+The variables inside the \texttt{struct} have an additional keyword in front of their type: \texttt{public}.
+
+The \texttt{public} keyword means the member variable can be accessed from outside the \texttt{struct} body.\\
+(Later in the course, we will examine all access control keywords.)
+
+Once a structure is defined, you can use it just like any other type.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Dot Operator}
+The \alert{dot operator} is used to access a member.
+
+(We actually saw, but did not define, this dot operator earlier in enumerated types where we referenced \texttt{Days.Monday})
+
+In fact, the dot operator is used in several contexts in C\#.\\
+\quad As we proceed through the course we'll see them all.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Using the Complex Number Structure}
+
+Now let's fill in the declaration and initialization of the points.
+
+\begin{verbatim}
+Complex point1; // Declare Point 1
+Complex point2; // Declare Point 2
+Complex point3; // Declare Point 3
+
+point1.real = 4;
+point1.imaginary = 2;
+point2.real = -3.5;
+point2.imaginary = -8;
+point3.real = 9;
+point3.imaginary = -2;
+
+\end{verbatim}
+
+This is actually more lines than it was before, but there are some advantages to using a structure.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Structure Assignment}
+Here's an example of how a structure can save us some work:
+
+\begin{verbatim}
+point2_real = point1_real;
+point2_imaginary = point1_imaginary;
+\end{verbatim}
+
+... compared to...
+
+\begin{verbatim}
+point2 = point1;
+\end{verbatim}
+
+And this has the effect of setting \texttt{point2}'s real and imaginary parts to the values that were in \texttt{point1}.
+
+For two variables, this is not a big savings, but imagine a much more complicated \texttt{struct} and you can see how this is useful.
+
+\texttt{}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Structures within Structures}
+
+Are structures within structures allowed? Yes!
+
+\begin{verbatim}
+struct Date
+{
+    public int day;
+    public int month;
+    public int year;
+};
+
+struct Invoice
+{
+    public int number;
+    public Date date;
+    public bool paid;
+};
+\end{verbatim}
+
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Structures within Structures}
+
+If we declare \texttt{Invoice invoice1;}\\
+\quad then we can access the invoice year like so: \texttt{invoice1.date.year}
+
+
+The dot operator is used twice in that expression. It can be used as many times as needed in the hierarchy of structures.
+
+There's no practical limit to the depth of the hierarchy (although eventually things will get silly).
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Re-Use of the Structure}
+
+One of the great things about a \texttt{struct} is that it can be re-used over and over again in the program.
+
+Using the same \texttt{Date struct} we saw on an earlier slide, we can also define the following:
+
+\begin{verbatim}
+struct Cheque
+{
+    public string payee;
+    public double amount;
+    public int number;
+    public Date date;
+};
+\end{verbatim}
+
+This allows us to re-use common elements, like dates.
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Re-Use of the Structure}
+
+This, however, is an error:
+
+\begin{verbatim}
+struct Invoice
+{
+    public int number;
+    public Date date;
+    public bool paid;
+    public Invoice previousInvoice;
+};
+\end{verbatim}
+
+The compiler can't figure out what to do with this; it would get stuck in an infinite loop trying to compile this.
+
+\end{frame}
+
+
+\end{document}
+

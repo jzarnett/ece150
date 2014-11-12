@@ -1,0 +1,401 @@
+\input{configuration}
+
+\title{Lecture 34 --- Interfaces }
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: W.D. Bishop}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Sorting Programmer-Defined Types}
+Last time, we examined using the \texttt{Sort} methods of the language to do sorting automatically.
+
+To sort a programmer-defined type, we can either do it manually, or we can tell the system how to sort that type automatically.
+
+Let's use a class \texttt{Student} that has the following member variables:
+\begin{itemize}
+	\item Student ID Number
+	\item Last Name
+	\item First Name
+	\item Date of Birth
+	\item User ID
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Sorting Programmer-Defined Types}
+
+If told to sort some students, you might ask, ``sort them by what?''\\
+\quad Could be: Student ID Number, Last Name, Date of Birth...
+
+You might also ask if you want it to be ascending, descending...
+
+Let's say we want to sort by student ID number, ascending.
+
+When you actually perform the sort, you will examine a particular student record, and \alert{compare} it with others to see where it belongs.
+
+So to tell the system how to sort a programmer-defined type:\\
+\quad Tell it \alert{how to compare two instances}.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Interface}
+The secret to indicating how to sort two objects is the \alert{interface}.
+
+An interface is an object oriented design concept to allow a common means for unrelated objects to interact with one another.
+
+In this case, we want the sorting routine to interact with the \texttt{Student} class, even though the sort routine knows nothing about \texttt{Students}.
+
+Think of an interface as a contract.\\
+\quad An interface specifies some number of methods.\\
+\quad To fulfill our side of the contract, we implement those methods.\\
+\quad If we do our part, we gain some benefit.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{\texttt{IComparable}}
+
+The relevant interface in C\# is \alert{\texttt{IComparable}}.
+
+\texttt{IComparable} contains one method signature:\\
+\quad \texttt{public int CompareTo( object obj )}
+
+The first thing to do is to say that our class promises to implement the methods of the \texttt{IComparable} interface.
+
+When we live up to our promise and implement \texttt{CompareTo} on our class, we get the benefit: automatic sorting of instances of that class.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Comparing Two Instances}
+
+
+The contract says when \texttt{o1} is compared to \texttt{o2} (\texttt{o1.CompareTo( o2 )}):
+\begin{itemize}
+	\item A negative result (e.g., -1) is returned if \texttt{o1} is ``smaller than'' \texttt{o2}
+	\item Zero is returned if \texttt{o1} is equal to \texttt{o2}
+	\item A positive result (e.g., 1) is returned if \texttt{o1} is ``larger than'' \texttt{o2}
+\end{itemize}
+
+The meaning of the comparison is defined by the method implementation, not the interface.
+
+We are responsible for deciding what it means for an instance to be larger than or smaller than another.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Comparing Two Instances}
+
+We have decided to sort by student ID.\\
+\quad Thus when \texttt{Student s1.CompareTo( s2 ) } is run:
+
+\begin{itemize}
+	\item -1 is returned if \texttt{s1}'s student ID is less than \texttt{s2}'s student ID
+	\item Zero is returned if \texttt{s1}'s student ID is equal to \texttt{s2}'s student ID
+	\item 1 is returned if \texttt{s1}'s student ID is greater than \texttt{s2}'s student ID
+\end{itemize}
+
+We reduce the problem of comparing two \texttt{Student}s down to the problem of comparing two student IDs.
+
+Comparing student IDs is easy: they're integers.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Implementing \texttt{IComparable}}
+
+To indicate the promise to implement \texttt{IComparable}, we add after the name of the class: a colon and the name of the interface.
+
+\begin{verbatim}
+public class Student : IComparable
+{
+    public int CompareTo( object obj )
+    {
+       // TODO : Implement method
+    }
+}
+\end{verbatim}
+
+By promising to implement that interface, it will be a compile time error if we do not add the \texttt{CompareTo} method.
+
+We've decided that the \texttt{CompareTo} method should do a normal integer comparison of their student IDs.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Implementing \texttt{IComparable}}
+
+Remember the \texttt{is} keyword from the discussion of \texttt{Equals}, and the use of explicit type casting.
+
+{\scriptsize
+\begin{verbatim}
+public int CompareTo( object obj )
+{
+    if ( obj is Student )
+    {
+        Student other = (Student) obj;
+        if ( studentID < other.studentID )
+        {
+            return -1;
+        } else if ( studentID == other.studentID )
+        {
+            return 0;
+        } else
+        {
+            return 1;
+        }
+    }
+    else
+    {
+        throw new ArgumentException( "No comparison possible." ); 
+    }
+}
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Implementing \texttt{IComparable}}
+
+Given that studentID is an \texttt{int}, a system defined type for which \texttt{CompareTo} is implemented, we can simplify this:
+
+{\scriptsize
+\begin{verbatim}
+public int CompareTo( object obj )
+{
+    if ( obj is Student )
+    {
+        Student other = (Student) obj;
+        return studentID.CompareTo( other.studentID );
+    }
+    else
+    {
+        throw new ArgumentException( "No comparison possible." ); 
+    }
+}
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Changing the Implementation}
+If we decide in the future we would prefer to sort by userID, the change is easy to make.
+
+Strings and all built-in numeric types are comparable as we expect.
+
+If we wanted to sort by date of birth, it might be necessary to make the \texttt{Date} class implement comparable too.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Implementing \texttt{IComparable} on User ID}
+
+Let's rewrite the comparison to check on User ID:
+
+{\scriptsize
+\begin{verbatim}
+public int CompareTo( object obj )
+{
+    if ( obj is Student )
+    {
+        Student other = (Student) obj;
+        return userID.CompareTo( other.userID );
+    }
+    else
+    {
+        throw new ArgumentException( "No comparison possible." ); 
+    }
+}
+\end{verbatim}
+}
+
+\begin{verbatim}
+
+\end{verbatim}
+
+We delegate the comparison to the built in string comparison routine.
+
+This still lives up to the contract of \texttt{IComparable}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Using Multiple Criteria}
+Sorting on student ID or user ID is ``nice'' because we expect that these are all unique: no two students will have the same student/user ID.
+
+Last names, however, are not unique. Many are quite common, siblings, et cetera...
+
+When we compare two identical last names we will have a tie.\\
+\quad To get a consistent sort order we will need a tiebreaker.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Multiple Criteria \texttt{IComparable}}
+
+{\scriptsize
+\begin{verbatim}
+public int CompareTo( object obj )
+{
+    if ( obj is Student )
+    {
+        Student other = (Student) obj;
+        int comparison = lastName.CompareTo( other.lastName );
+        if (comparison == 0)
+        {
+            return firstName.CompareTo( other.firstName );
+        }
+        else
+        {
+            return comparison;
+        }
+    }
+    else
+    {
+        throw new ArgumentException( "No comparison possible." ); 
+    }
+}
+\end{verbatim}
+}
+
+If two last names are equal, the check compares the first names.
+
+We could check another criterion if the first names are also identical...
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Summing Up \texttt{IComparable}}
+As we saw for \texttt{IComparable}, an interface is a contract.\\
+\quad If we accept the contract and implement the methods, we benefit.\\
+\quad Here, the benefit is automatic sorting of the \texttt{Student} objects.
+
+The system can sort without knowing how \texttt{Student} is implemented.\\
+\quad It's enough to know that \texttt{Student} implements \texttt{IComparable}.
+
+In short, the interface allows a piece of code (the sort routine) to interact with some object (the student), regardless of implementation.
+
+Comparison is useful, but it's only an example of what interfaces are...
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Defining Interfaces}
+
+Formally, an interface defines a set of methods, properties, et cetera.
+
+A class may implement as many interfaces as required.
+
+An interface is defined as follows:
+\textit{access-modifier} interface \textit{identifier}
+
+This is followed by a statement block that contains the definitions of methods, properties, etc...
+
+Interfaces may not contain method implementation; only signatures.\\
+\quad They also may not contain fields.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Interface Definition Example}
+
+\begin{verbatim}
+public interface ITaxable
+{
+    public double GetTaxRate( );
+    public double GetBasisAmount( );
+    public void SetTotalAmount( double totalAmount );
+}
+\end{verbatim}
+
+It is a C\# convention to add I (a capital letter i) to the beginning of an interface name. This is common practice, but not an enforced rule.
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Using Interfaces}
+It's important to note that it is not possible to instantiate an interface.\\
+\quad An interface is only a specification of members (behaviour).
+
+Instead, we must instantiate a class that implements that interface.
+
+We may have several classes that implement \texttt{ITaxable}:
+\begin{itemize}
+	\item \texttt{Invoice}
+	\item \texttt{BillPayment}
+	\item \texttt{Paycheque}
+	\item ... and more.
+\end{itemize}
+
+We could instantiate any one of those.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Using Code that Implements Interfaces}
+
+We can, for example, use the interface name as the type as a parameter of a function or method.
+
+Let's use the \texttt{ITaxable} interface we saw before.
+
+There may be another method elsewhere: \\
+\quad \texttt{public void computeTotal( ITaxable t ) }
+
+The interface is \texttt{ITaxable} and within this method we can call any method on \texttt{t} that is specified in the interface.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Using Code that Implements Interfaces}
+
+\begin{verbatim}
+public void computeTotal( ITaxable t )
+{
+    double tax = t.GetBasisAmount( ) * t.GetTaxRate( );
+    double total = t.GetBasisAmount( ) + tax;
+    t.SetTotalAmount( total );
+}
+\end{verbatim}
+
+This works even though the object referenced by \texttt{t} is not an instance of \texttt{ITaxable}, but of some class that implements \texttt{ITaxable}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Multiple Interfaces}
+It is permitted for one class to implement more than one interface.
+
+To do so, the interfaces are separated by commas.\\
+\quad Example: \texttt{public class Invoice : ITaxable, IComparable}
+
+Interfaces are a way to write code that is extensible and general.\\
+\quad Next time, we'll look at more advanced techniques.
+
+\end{frame}
+
+
+\end{document}
+

@@ -1,0 +1,378 @@
+\input{configuration}
+
+\title{Lecture 15 --- Parameter Passing}
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: W.D. Bishop}
+  \end{center}
+ \end{frame}
+
+\part{Optional Parameters}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Optional Parameters}
+Last time, we examined function overloading as a way of having a default value for a function.
+
+\begin{verbatim}
+double calculate( double x, double y )
+{
+    return calculate( x, y, true );
+}
+\end{verbatim}
+
+It is also possible to specify in a function's signature that one or more parameters are optional.
+
+\begin{verbatim}
+double compute( double a, double b,  double c = 1.0d )
+{
+    return a * b / c;
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Optional Parameters}
+In the previous example, the parameter \texttt{c} is optional:\\
+\quad If the caller provides a value, that value is used.\\
+\quad Otherwise, the default value of 1 is used.
+
+Thus, both of these function calls are valid:\\
+\quad \texttt{compute(5, 9, 2.5);}\\
+\quad \texttt{compute(45, 12);}
+
+This is like having an overloaded function, except in this case the compiler generates it for you. If we wrote it explicitly, it would be:
+
+\begin{verbatim}
+double compute( double a, double b )
+{
+    return compute( a, b, 1.0d );
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Optional Parameter Rules}
+We may have multiple optional parameters in the same function.
+\vspace{-5em}
+
+\begin{verbatim}
+double compute( double a, double b = 2d,  double c = 1.0d )
+\end{verbatim}
+
+\vspace{-2em}
+
+When default values are added, they always start at the last parameter and move right to left.\\
+\quad This avoids developer and compiler confusion.
+
+The following are errors:\\
+\quad \texttt{compute( double a = 2d, double b,  double c )}\\
+\quad \texttt{compute( double a = 2d, double b,  double c = 1.0d )}\\
+
+\end{frame}
+
+
+
+\part{Pass-By-Value, Pass-By-Reference}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Pass-By-Value}
+Consider the function shown below:
+
+\begin{verbatim}
+static void changeValueTo99 ( int number )
+{
+    number = 99;
+}
+\end{verbatim}
+
+And suppose this code appears in \texttt{Main}:
+\begin{verbatim}
+int score = 0;
+changeValueTo99( score );
+Console.WriteLine( score );
+\end{verbatim}
+
+What do you expect the output will be?
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Pass-By-Value}
+Why did \texttt{score} stay at 0 and not get changed to 99?
+
+Answer: because the default behaviour is \alert{pass-by-value}.
+
+When \texttt{changeValueTo99()} is called, the parameter \texttt{number} is created and initialized with 0; the same \underline{value} as \texttt{score} holds.
+
+However, \texttt{number} is its own copy, so a change made to \texttt{number} is not reflected in \texttt{score}. Two separate boxes in memory.
+
+By default, all simple types and \texttt{struct} are passed by value.\\
+\quad A copy is made when the function is called.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Pass-By-Value Alternative}
+Is there an alternative to pass-by-value? Yes: \alert{pass-by-reference}.
+
+First, we need to define a \alert{reference}.
+
+Recall our model for a variable \texttt{x}: it is a box labelled x.\\
+\quad This box is located somewhere in memory.
+
+The computer will keep track of the memory address of \texttt{x}.\\
+\quad When the code uses \texttt{x}, the computer knows where it is.
+
+A reference is, quite simply, a memory address.\\
+\quad A reference to \texttt{x} is the location of where to find \texttt{x} in memory.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Using a Reference}
+Suppose a function has a formal parameter \texttt{y} and we provide an actual parameter \texttt{x}, both of type \texttt{int}.
+
+When we pass \texttt{x} by value to a function, \texttt{y} is created as a copy of \texttt{x}; variables \texttt{x} and \texttt{y} have different memory addresses.
+
+If we pass \texttt{x} by reference, instead of making a copy, we instead tell the function, ``here's where \texttt{x} is'' and \texttt{y} gets the same location.
+
+Because \texttt{x} and \texttt{y} refer to the same thing, a change made to \texttt{y} is automatically a change to \texttt{x}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Rules for Passing By Reference}
+
+The keyword in C\# for passing by reference is \alert{\texttt{ref}}.
+
+The \texttt{ref} keyword on a function's formal parameter causes the parameter to be passed by reference.
+
+%Any changes made to the variable in the function will be reflected in the variable when control passes back to the calling function.
+
+The \texttt{ref} keyword must appear in both the declaration of the function and the invocation of the function.
+
+%The \texttt{ref} keyword can only be applied to a variable or array that has been initialized.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Pass-By-Reference}
+Consider the modified function shown below:
+
+\begin{verbatim}
+static void changeValueTo99 ( ref int number )
+{
+    number = 99;
+}
+\end{verbatim}
+
+And suppose this code appears in \texttt{Main}:
+\begin{verbatim}
+int score = 0;
+changeValueTo99( ref score );
+Console.WriteLine( score );
+\end{verbatim}
+
+What do you expect the output will be now?
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Pass-By-Reference}
+
+Why is \texttt{score} now 99 rather than 0?
+
+When we passed \texttt{score} by reference, no copy of it was made. 
+
+Instead, \texttt{number} was initialized in such a way that it is the same box in memory as \texttt{score}.\\
+\quad Thus a change to \texttt{number} is automatically a change to \texttt{score}.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Value, Reference, and Arrays}
+
+Consider the function shown below:
+
+\begin{verbatim}
+static void setFirstEntryToOne ( int[] numbers )
+{
+    numbers[0] = 1;
+}
+\end{verbatim}
+
+And suppose this code appears in \texttt{Main}:
+\begin{verbatim}
+int[] scores = new int[10];
+scores[0] = 0;
+setFirstEntryToOne( scores );
+Console.WriteLine( scores[0] );
+\end{verbatim}
+
+What do you expect the output will be?
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Value, Reference, and Arrays}
+We did not make use of the \texttt{ref} keyword, so why did the value of \texttt{scores[0]} change to 1?
+
+Unlike an \texttt{int}, \texttt{double}, or \texttt{struct}, in C\# an array is a \alert{reference type}.
+
+\texttt{int[] scores} is a reference to a memory location for the array.\\
+\quad It's directions telling us how to get to a memory location.\\
+\quad Think of it like written directions on how to get to a restaurant.
+
+When we access \texttt{scores[0]}, the computer looks up the location of the array, goes to the location, and then takes the first entry there.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Value, Reference, and Arrays}
+\texttt{scores} is passed by value, but this just makes a copy of the reference.\\
+\quad In other words, \texttt{numbers} contains a copy of the address information.\\
+\quad Extending the analogy: write out another copy of the directions.
+
+Thus, \texttt{numbers[0]} is the same location in memory as \texttt{scores[0]}.\\
+\quad Both sets of directions lead us to the same place.\\
+\quad Once there, examine the first entry: it's the same memory address.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Value, Reference, and Arrays}
+
+Consider the revised function shown below:
+
+\begin{verbatim}
+static void setFirstEntryToOne ( int[] numbers )
+{
+    numbers = new int[10];
+    numbers[0] = 1;
+}
+\end{verbatim}
+
+And suppose this code appears in \texttt{Main}:
+\begin{verbatim}
+int[] scores = new int[10];
+scores[0] = 0;
+setFirstEntryToOne( scores );
+Console.WriteLine( scores[0] );
+\end{verbatim}
+
+What do you expect the output will be?
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Value, Reference, and Arrays}
+This time \texttt{scores[0]} is not changed. Why?
+
+In \texttt{setFirstEntryToOne()} the \texttt{numbers} reference changed.\\
+\quad We erased the directions and wrote new directions. 
+
+Thus when we follow the directions to \texttt{numbers} we don't end up at the same place as we would if we followed the directions to \texttt{scores}.
+
+Because we made another copy of the directions, the original directions are not affected.
+
+Thus \texttt{scores} still contains directions to the original memory location.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Value, Reference, and Arrays}
+
+Now let's add \texttt{ref} to the array example:
+
+\begin{verbatim}
+static void setFirstEntryToOne ( ref int[] numbers )
+{
+    numbers = new int[10];
+    numbers[0] = 1;
+}
+\end{verbatim}
+
+And suppose this code appears in \texttt{Main}:
+\begin{verbatim}
+int[] scores = new int[10];
+scores[0] = 0;
+setFirstEntryToOne( ref scores );
+Console.WriteLine( scores[0] );
+\end{verbatim}
+
+What do you expect the output will be?
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Value, Reference, and Arrays}
+Why did \texttt{scores[0]} change this time?
+
+This time the reference \texttt{scores} was passed by reference.
+
+Instead of two copies of the directions, there is only one copy.
+
+Thus when the statement \texttt{numbers = new int[10];} changes the directions to \texttt{numbers}, the directions to \texttt{score} are changed too.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Comments on Parameter Passing}
+Passing parameters by reference can be useful when swapping things.\\
+\quad Example: exchange two integer values (see the next slide).
+
+Passing parameters by reference allows a software designer to build a function that returns several results or changes several variables.
+
+In reality, this is rarely necessary since you can always create more functions to produce more results.
+
+Passing by reference should be avoided unless absolutely necessary.
+
+We still need to examine pass by reference vs. pass by value because of the behaviour of arrays when used as function parameters.\\
+\quad Strings are immutable; to ``change'' one, we update the reference.
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Example: Swapping Two Integers}
+{\scriptsize
+\begin{verbatim}
+static void swap ( ref int r1, ref int r2 )
+{
+    int tmp = r1;
+    r1 = r2;
+    r2 = tmp;
+}
+
+static void Main( )
+{
+    int a = 5;
+    int b = 12;
+    
+    Console.WriteLine( a );
+    Console.WriteLine( b );
+    
+    swap( ref a, ref b );
+    
+    Console.WriteLine( a );
+    Console.WriteLine( b );
+}       
+\end{verbatim}
+}
+\end{frame}
+
+\end{document}
+

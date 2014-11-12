@@ -1,0 +1,515 @@
+\input{configuration}
+
+\title{Lecture 20 --- Object-Oriented Programming }
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: W.D. Bishop}
+  \end{center}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Structuring a Program}
+
+Up to this point we have organized our program using procedural programming: the use of functions to give us program structure.
+
+We can break down a larger problem into smaller problems, each of which we can accomplish in a re-usable sequence of steps (function).
+
+The painful reality is that most software projects fail.\\
+\quad They are often late, unreliable, and/or expensive.
+
+This is because software is extremely complex.\\
+\quad We need to manage this complexity if a project is to succeed.\\
+\quad Procedural programming is not adequate to the task.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Re-usable Components}
+
+Idea: if an electrical engineer needs a transistor, she does not need to build one from scratch; just go to the bin and use an existing one.
+
+Now take the idea of re-usable components and apply it to software.\\
+\quad We've already had re-usable functions, so why not components?
+
+What we'd like is to package up data and functions that manipulate that data into single, self-contained, re-usable unit.
+
+\alert{Objects} are the way of packaging \& managing our data and functions.\\
+\quad They are the building blocks of an object-oriented program.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Objects}
+
+
+
+An object models a tangible item or some abstract concept:\\
+\quad What properties does an object have? What can the object do?
+
+The world is full of ``things'' (objects). Imagine a dog.\\
+\quad A dog has characteristics like colour, weight, age...\\
+\quad A dog also has behaviours like bark, move, sleep...
+
+To represent a dog in software, create an object that possesses both characteristics (\textbf{data variables}) and behaviours (\textbf{functions}) of a dog.
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Object Oriented Programming}
+
+Objects interact with other objects through their functions, and not by manipulating another object's data directly.
+
+Modelling the system as objects and their interactions is known as \alert{Object Oriented Programming}.
+
+C\# supports and encourages this programming paradigm as an approach to designing useful, modular, reusable software systems.
+
+Appropriate use of object oriented programming as a design technique will allow us to create and maintain complex software.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Example: Variable Voltage}
+Suppose we want to model a variable voltage source: an electric component that provides several different voltage output levels. 
+
+Let's say it has a selector to choose one of the following levels:\\
+\quad Off, 6V, 12V, 18V, and 24V.
+
+What variables will we need to model this?\\
+\quad Some constants to hold the possible settings.\\
+\quad A variable to represent the current setting.
+
+We also have some functions to represent voltage source behaviour:\\
+\quad Increase the voltage by one level.\\
+\quad Decrease the voltage by one level.\\
+\quad Shut it off.\\
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{The Blueprints}
+We have an idea now about how to model the variable voltage source.\\
+\quad Now, to represent that in the program.
+
+Analogy: building ``blueprints'' (architectural plan).
+
+Before a building is built, architects and civil engineers draft a document that describes in detail the structure of the building.
+
+The construction team uses the document when building a structure.\\
+\quad It tells them what to do (though not generally how to do it).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Building Blueprints Example}
+
+\begin{center}
+	\includegraphics[width=0.85\textwidth]{images/putnamhouse.jpg}
+\end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Class Definition}
+To tell the system how to build an object, we need to provide it the blueprints for that object.
+
+The blueprints for an object is a \alert{\texttt{class}} definition.\\
+\quad This code tells the system how to create an object of that type.
+
+The \texttt{class} definition specifies the variables and methods.
+
+Classes are therefore programmer-defined types.
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{The Structure}
+
+We've already seen programmer-defined types: the \texttt{struct}.
+
+The \texttt{struct} can contain different variables of different types.
+
+The \texttt{class} is an expanded version of the \texttt{struct}: it contains functions in addition to variables.
+
+In C\#, a \texttt{struct} may also contain functions, but this is not true in all programming languages.
+
+The data and functions of an object are referred to as \alert{members}.
+
+Member functions are called \alert{methods}.\\
+Member variables are called \alert{fields}.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Voltage Source Blueprints}
+
+Let's draw up the blueprints for the voltage source:
+{\scriptsize
+\begin{verbatim}
+public class VoltageSource
+{
+  public int currentVoltage;
+  public int[] voltageLevels = {0, 6, 12, 18, 24};
+
+  public void IncreaseVoltage()
+  {
+    // ...
+  }
+  
+  public void DecreaseVoltage()
+  {
+    // ...
+  }
+  
+  public void TurnOff()
+  {
+    // ...
+  }
+}
+\end{verbatim}
+}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Voltage Source Blueprints Comments}
+
+The previous slide gave the structure for the voltage source we wanted to model: it showed the member fields and methods.
+
+Given this definition, the system now knows how to make a \texttt{VoltageSource} object.
+
+The implementations of the functions are not shown for space reasons, but in defining the class, we would normally fill them in.
+
+Of course, defining the structure of the object is the first step, but if we want to use a \texttt{VoltageSource}, we will need to create one.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Instances}
+
+A specific realization of a class is called an \alert{instance}.\\
+\quad A program may create many distinct instances of the same class.
+
+Classes are programmer-defined \textbf{types}, so this is no surprise.\\
+\quad We can have many distinct \texttt{double}s in the program.
+
+The process of creating an instance of a class is called \alert{instantiation}.
+
+Now we can see an overview of terminology of structures and classes:
+
+\begin{center}
+\begin{tabular}{l|l|l}
+      & \textbf{Structure Term} & \textbf{Object Term} \\ \hline
+	Variable & Field & Field \\ \hline
+	Function & Method (if allowed) & Method \\ \hline
+	Instance & Record & Object \\
+\end{tabular}
+\end{center}
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Classes are Reference Types}
+Like arrays, classes are reference types. \\
+\quad This means the \texttt{new} keyword is needed to create an instance.
+
+The declaration\\
+\quad \texttt{VoltageSource source;}\\
+ is the same as\\
+\quad  \texttt{VoltageSource source = null;}
+
+  
+It creates a reference to  an instance of \texttt{VoltageSource}.\\
+\quad ... but does not allocate memory or create the instance.
+
+Instantiation: \texttt{VoltageSource source = new VoltageSource( );}
+
+When creating an instance, the name of the class is followed by brackets, like a function call. We'll see why soon.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Car Example}
+
+Let's look at another object example: a car.\\
+\quad Data: make, model, year,...\\
+\quad Functions: \texttt{HonkHorn(), FlashLights()}...
+
+
+Given a \texttt{class Car}, you can make several instances:\\
+\quad Toyota Corolla, Chevrolet Corvette, BMW 335i, Volkswagen Jetta...
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Car Class}
+
+Here's a basic version of the \texttt{Car} class, that looks much like a \texttt{struct}:
+
+{\scriptsize
+\begin{verbatim}
+public class Car
+{
+    public string make;
+    public string model;
+    public int year;
+    
+    public void HonkHorn() {
+        // ...
+    }
+    public void FlashLights() {
+        // ...
+    }
+    // Other methods not shown for space reasons
+}
+\end{verbatim}
+}
+
+As we learn more about OOP, we will improve this definition to be more useful and consistent with good programming practices.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Using the Dot Operator}
+
+Just like the \texttt{struct}, variables of an instance are accessed using the Dot Operator (\texttt{.}).
+
+\texttt{Car prius = new Car( );}\\
+\quad Declares and instantiates a \texttt{Car} object.
+
+After creation with \texttt{new}, we may access the variables of the instance:\\
+\quad \texttt{prius.make  = "Toyota";}\\
+\quad \texttt{prius.model = "Prius";}\\
+\quad \texttt{prius.year  = 2010;}
+
+Trying to use the dot operator if the instance is \texttt{null} will result in a \texttt{NullReferenceException}.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Classes are Reference Types, II}
+Let's keep using this instance: \texttt{Car prius = new Car( );}
+
+Note that the declaration \texttt{Car prius2 = prius;} creates a second reference to the same memory location of \texttt{prius}.
+
+Thus, the statement \texttt{prius2.year = 2011;} has the same effect as \texttt{prius.year = 2011;}
+
+Recall from arrays: a reference is directions to a memory location.\\
+\quad References \texttt{prius} and \texttt{prius2} are directions to the same spot.\\
+\quad \texttt{prius.year} and \texttt{prius2.year} are at the same place in memory.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Making a Copy of an Instance}
+
+If we have an instance of an object like a \texttt{struct}, we created a copy with the assignment operator (\texttt{point2 = point1;}).
+
+This won't work; we must allocate and create another instance.\\
+\quad To create another instance of \texttt{Car}, use the \texttt{new} keyword again.\\
+\quad \texttt{Car prius2 = new Car( );}
+
+To make a copy, create a new instance, and copy the data from the original object to the new instance, one variable at a time.
+
+(In the next lecture, we'll learn a better way to do this.)
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Building on the Car Example}
+
+Let's build on the example of the \texttt{Car} class and look at a dealership.
+
+A car dealership has zero or more cars on its parking lot.\\
+\quad A good way to implement this might be an array of \texttt{Car} objects.
+
+Just like the \texttt{struct} we can have an array of objects.
+
+When a sales associate wants to find a car to show a customer, they make the lights flash and the horn honk to find the car in the lot.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The Car Dealership}
+
+Suppose the parking lot has 42 spaces.
+
+\begin{verbatim}
+public class CarDealership
+{
+    public Car[] availableCars = new Car[42];
+
+    public void ParkCar( Car newCar, int position )
+    {
+        availableCars[position] = newCar;
+    }
+    // Other methods and variables not shown
+}
+\end{verbatim}
+
+Of course, this example ignores what happens if someone tries to park a car in a position that is already occupied.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Finding a Specific Car}
+
+Now let's write a method to find a specific car in the lot when we know the make, model, and year.
+
+\begin{verbatim}
+public void FindCar( String make, String model, int year )
+{
+    for ( int i = 0; i < availableCars.Length; i++ )
+    {
+        if ( availableCars[i] != null &&
+             availableCars[i].make == make &&
+             availableCars[i].model == model &&
+             availableCars[i].year == year)
+             {
+                 availableCars[i].HonkHorn();
+                 availableCars[i].FlashLights();
+             }
+    }
+}
+\end{verbatim}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Use of Methods and Variables}
+A common mistake when working with classes is a method call like:\\
+\quad \texttt{Car.HonkHorn();}
+
+The compiler identifies this as an error. 
+
+To call the \texttt{HonkHorn()} method, an instance of the class is needed.\\
+\quad Which instance of \texttt{Car} do we mean? The Prius? The Jetta?\\
+\quad Correct usage: \texttt{prius.HonkHorn();}
+
+Why? These are \alert{instance methods}: they belong to an instance. 
+
+You may have noticed that \texttt{HonkHorn()} doesn't have the \texttt{static} keyword in front of them like methods we have written so far.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{static} Keyword}
+What does the \texttt{static} keyword mean? The member applies to the type, not an instance.
+
+The keyword \texttt{static} may apply to a field or method.
+
+Consider this very simple class definition:
+\begin{verbatim}
+public class ExampleClass
+{
+    public int value;
+    public static int count;
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Static vs. Instance Members}
+
+In this class, \texttt{value} is an instance member: a new \texttt{int} variable is created whenever a new instance of \texttt{ExampleClass} is created.
+
+But \texttt{count} is a static member: there is only one \texttt{int} variable created, regardless of how many instances of \texttt{ExampleClass} there are.\\
+\quad This variable is shared between all instances.\\
+\quad It can even be accessed without an instance.
+
+Invalid: \texttt{ExampleClass.value = 1;}\\
+Valid: \texttt{ExampleClass.count = 1;}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Static vs. Instance Members}
+Consider this code:
+
+\begin{verbatim}
+ExampleClass e1 = new ExampleClass( );
+ExampleClass e2 = new ExampleClass( );
+
+e1.value = 7;
+e2.value = -8;
+
+e1.count = 2;
+
+Console.WriteLine( "e1 value: " + e1.value );
+Console.WriteLine( "e2 value: " + e1.value );
+Console.WriteLine( "e1 count: " + e1.count );
+Console.WriteLine( "e2 count: " + e2.count );
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Static vs. Instance Members}
+In the previous slide, we used an instance, \texttt{e1}, to assign the variable \texttt{count}, even though \texttt{count} is \texttt{static}.
+
+This practice is discouraged; if a variable is \texttt{static}, it should be accessed using the \texttt{class} name, not an instance reference.\\
+\quad \texttt{ExampleClass.count = 2;}
+
+The compiler may identify this as a warning.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Static vs. Instance Members}
+
+A \texttt{static} method can make use of static variables and call other static methods, but cannot use instance variables/methods.
+
+Why? Inside the static method, there is no instance to reference.
+
+This is why, to use a function we have defined from within \texttt{static void Main( )} we must declare that function \texttt{static} as well.
+
+An instance method can make use of \underline{both} instance and static variables and can call both static and instance methods.
+
+Why? Static methods and variables are always available, as they belong to the type itself.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Static Members}
+
+In the \texttt{VoltageSource} class is an array of the different voltage levels:\\
+\quad \texttt{public int[] voltageLevels = \{0, 6, 12, 18, 24\};}
+
+This is a good candidate to be declared \texttt{static} since the voltage levels will be the same in all of the instances of the class.
+
+\texttt{public static int[] voltageLevels = \{0, 6, 12, 18, 24\};}
+
+In general, any constant is likely to be a good candidate to be declared \texttt{static}.
+
+\end{frame}
+
+
+\end{document}
+

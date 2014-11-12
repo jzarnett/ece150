@@ -1,0 +1,553 @@
+\input{configuration}
+
+\title{Lecture 35 --- Polymorphism \& Inheritance }
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: W.D. Bishop}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Object-Oriented Design Revisited}
+
+So far, our discussion of object-oriented design has been limited to relatively simple classes.
+
+Often, object-oriented design provides little benefit for ``toy'' applications such as the applications developed in this course.
+
+Many of the things we have written in the class can be done with one class, or a handful of classes.
+
+For large application programs developed by a team of software developers, object-oriented design is necessary.\\
+\quad Programs will be too complex to leave unmanaged.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Coping with Evolving Software Demands}
+
+Two key characteristics are often desirable to cope with the evolving demands of software:
+\begin{enumerate}
+\item \alert{Polymorphism} \\
+    Define methods and collections that work with a variety of types
+\item \alert{Extensibility}\\
+    Enhance existing types without changes to already-existing code
+\end{enumerate}
+
+Not all object-oriented languages provide full support for both polymorphism and extensibility.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Polymorphism}
+The word polymorphism comes from Greek and means ``many forms''.
+
+Polymorphic code works for or on multiple types of object.\\
+\quad The code is ``generic'' or flexible in what it accepts.
+
+The same function, method, or collection can be used with many different types (without relying on type promotion).
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Examples of Polymorphism}
+
+We have already seen some examples of polymorphism in the course.
+
+\texttt{ArrayList} is a polymorphic collection:\\
+\quad We can put many different types of object in the collection.
+
+\texttt{ArrayList.Sort} is a polymorphic function:\\
+\quad It will sort the objects in the array, whatever kind of object they are.
+
+
+
+Polymorphism exploits characteristics common to a set of types.\\
+\quad Example: if two objects can be compared, they can be sorted.\\
+\quad ... regardless of the actual types of the instances.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Polymorphic Functions}
+A polymorphic function operates on a related set of object types.
+
+\texttt{ArrayList.Sort} does not need to know the type of the objects, but it does need to know how to compare the objects in the array.
+
+A function with an \texttt{object} parameter is automatically polymorphic.\\
+\quad We've seen \texttt{Equals} as an example of that.\\
+\quad Hence why we need to use the \texttt{is} keyword to check the input.
+
+A function can be polymorphic without having an \texttt{object} parameter.\end{frame}
+
+
+\begin{frame}
+\frametitle{Run-Time Type Identification}
+Previously, we saw the \texttt{is} operator that returns true if an instance of an object is compatible with a given type.
+
+At run-time, the \texttt{GetType( )} method returns the precise type of an object, such as \texttt{o1.GetType( );}
+
+This may be useful when using polymorphism.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Type Conversion with \texttt{as}}
+
+We have already done type conversion with explicit casting.\\
+\quad Example: \texttt{double d = (double) x;}
+
+The \texttt{as} operator allows a software developer to convert the type of an object to another compatible type at run-time.
+
+Polymorphic functions and collections often benefit from the use of run-time type conversion.
+
+For example, arrays of objects can be created. At run-time:\\
+    \quad The type of array elements can be identified.\\
+    \quad Entries can be converted to a compatible type for processing.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Use of the \texttt{as} Operator}
+
+{\small
+\begin{verbatim}
+object[] myWishList = new object[5];
+myWishList[0] = "Remote-Controlled Car";
+myWishList[1] = "Porsche 911 Turbo";
+myWishList[2] = 75000d;
+myWishList[3] = "An easy final exam";
+myWishList[4] = null;
+
+Console.WriteLine( "\nMy WishList\n" );
+
+for( int i = 0; i < myWishList.Length; i++ )
+{
+    string s = myWishList[i] as string;    
+    if ( s != null )
+    {
+        Console.Write( "{0}: ", (i + 1) );
+        Console.WriteLine( s );
+    }
+}
+\end{verbatim}
+}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Comments on the \texttt{as} Example}
+The key statement is \texttt{string s = myWishList[i] as string;}
+
+This will attempt a type conversion if the source and destination types are compatible.
+
+If the type conversion is not compatible, null is assigned.\\
+\quad Thus it is important to check for null after an \texttt{as} statement.
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Inheritance}
+
+Inheritance: a class is based upon (or derived from) another class.
+
+The original class is referred to as the ``base'' or ``parent'' class.\\
+\quad We say the derived class ``inherits'' from the parent class.
+
+What does it inherit? Fields, methods, et cetera.
+
+Inheritance provides extensibility and reduces duplicate code.
+
+This provides two advantages:
+\begin{enumerate}
+    \item Reduce the amount of code required for objects that are related
+    \item Promote the consistent behaviour of related objects
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{C\# Inheritance Rules}
+
+In C\#, a class may only inherit from one other class.\\
+\quad Or, put another way, each class can have at most one parent class.
+
+The parent class can be referred to using the \texttt{base} keyword.
+
+It should be noted that some other languages (notably C++) allow inheritance from multiple base classes.
+
+Follow the inheritance hierarchy upwards for any class in C\# eventually you will reach \texttt{object}.\\
+\quad If you don't explicitly declare a base class, the base class is \texttt{object}.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Inheriting from a Base Class}
+
+The syntax for inheriting from a base class is essentially the same as for implementing an interface:
+
+\textit{attributes modifiers} class \textit{identifier} : \textit{base}\\
+\quad Example: \texttt{public class DerivedClass : BaseClass}
+
+Followed by the internal implementation of the derived class.
+
+Note that the implementation of the derived class does not repeat the member function and variable declarations of the base class.\\
+\quad Unless there is a need for them to have a different implementation.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Inheritance Syntax}
+
+\begin{verbatim}
+class BaseClass
+{
+    // Declares a base class from which other classes 
+    // may be derived.  This class will automatically
+    // inherit from the object class.
+}
+
+class DerivedClass : BaseClass
+{
+    // Declares a derived class that inherits fields 
+    // and functions from the BaseClass.
+}
+
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Employee Example}
+
+Let's start out with a simple class \texttt{Employee}:
+
+\begin{verbatim}
+class Employee
+{
+    protected string name;
+    protected string title;
+    protected string sin;
+
+    public Employee( string n, string t , string s)
+    {
+        name = n;
+        title = t;
+        sin = s;
+    }
+}
+\end{verbatim}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Employee Example}
+
+Now let's add a new kind of \texttt{Employee}: the \texttt{HourlyEmployee}.
+
+\begin{verbatim}
+class HourlyEmployee : Employee
+{
+    double wage;
+    double weeklyHours;
+
+    public HourlyEmployee( string n, string t, string s,
+                           double w, double h )
+    {
+        base.name = n;
+        base.title = t;
+        base.sin = s;
+        wage = w;
+        weeklyHours = h;
+    }
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Observations on \texttt{HourlyEmployee}}
+
+The \texttt{HourlyEmployee} class inherits all of the fields and functions of the \texttt{Employee} class. They need not be duplicated.
+
+It also adds two new fields only applicable to hourly employees.
+
+The keyword \texttt{base} is used in the derived class to refer to the methods and fields of the base class.
+
+Another new keyword appeared on that slide: \texttt{protected}\\
+\quad Let's take a look at that on the next slide.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Access Modification}
+In addition to the access modifier keywords \texttt{public} and \texttt{private}, there is a third option: \texttt{protected}.
+
+Declaring a field or method as \texttt{protected} means it is accessible only from within the class where it is declared and \underline{any derived class}.
+
+In some cases, you may not want a derived class to be able to access member fields directly; in that case, use \texttt{private}.
+
+Using properties and the \texttt{base} keyword, it is possible to reduce the need for protected fields.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Employee Example}
+
+Now let's add another kind of \texttt{Employee}: the \texttt{SalaryEmployee}.
+
+\begin{verbatim}
+class SalaryEmployee : Employee
+{
+    double salary;
+
+    public SalaryEmployee( string n, string t, 
+                           string s, double m )
+    {
+        base.name = n;
+        base.title = t;
+        base.sin = s;
+        salary = m;
+    }
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Employee Example}
+
+We can use the \texttt{base} keyword to reduce the amount of code we have to write here by calling the constructor of the base class:
+
+\begin{verbatim}
+class SalaryEmployee : Employee
+{
+    double salary;
+
+    public SalaryEmployee( string n, string t, 
+                           string s, double m ) 
+                           : base (n, t, s)
+    {
+        salary = m;
+    }
+}
+\end{verbatim}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Observations on \texttt{SalaryEmployee}}
+
+The \texttt{SalaryEmployee} class is closely related to \texttt{HourlyEmployee}.
+
+Both classes inherit from the \texttt{Employee} class.\\
+\quad Common elements need only be defined once.
+
+Inheritance represents the ``is-a'' relationship:\\
+\quad Hourly Employee is an Employee;\\
+\quad Salary Employee is an Employee.
+
+Because of this relationship, this is legal:\\
+\quad \texttt{Employee e = new HourlyEmployee( )};
+
+We can refer to an instance of \texttt{HourlyEmployee} as if it's an instance of \texttt{Employee}: an hourly employee is an employee.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Moving Beyond Salary and Hourly}
+Now suppose you wanted to add a category of employee: \texttt{Manager}.
+
+You may decide that \texttt{Manager} is a kind of \texttt{SalaryEmployee}.
+
+A \texttt{Manager} has a list of employees who report to him or her.\\
+Managers can also get bonuses at the end of the year.
+
+Solution: extend \texttt{SalaryEmployee} to make \texttt{Manager}.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{Manager}}
+
+{\small
+\begin{verbatim}
+class Manager : SalaryEmployee
+{
+    ArrayList reports;
+    double bonus;
+
+    public Manager( string n, string t,  string s, double m,
+                    double b )
+    {
+        base.name = n;
+        base.title = t;
+        base.sin = s;
+        salary = m;
+        bonus = b;
+        reports = new ArrayList( );
+    }
+}
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}
+
+\texttt{Manager} inherits from \texttt{SalaryEmployee} which in turn inherits from \texttt{Employee}.
+
+\frametitle{More About the \texttt{Manager}}
+The ``is-a'' relationship is transitive:\\
+\quad Manager is a Salary Employee;\\
+\quad Salary Employee is an Employee;\\
+\quad Therefore Manager is an Employee.
+
+Because of this relationship, this is also legal:\\
+\quad \texttt{Employee e = new Manager( )};
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Overriding Methods}
+We have already used the \texttt{override} keyword to implement \texttt{ToString}.
+
+That is a specific example of replacing the behaviour of a base class by writing a new implementation of that method.
+
+Suppose we add the following method to \texttt{SalaryEmployee}:
+\begin{verbatim}
+public double ComputePay( )
+{
+    return salary;
+}
+\end{verbatim}
+
+This method is available and can be called on instances of \texttt{SalaryEmployee} and \texttt{Manager}.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Overriding Methods}
+Now imagine we'd like to override this behaviour in \texttt{Manager} to account for the fact that managers can get a bonus.
+
+\begin{verbatim}
+public override void ComputePay( )
+{
+    return salary + bonus;
+}
+\end{verbatim}
+
+\texttt{ComputePay( )} can still be called on \texttt{Manager} and \texttt{SalaryEmployee}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Overriding Methods}
+
+When calling \texttt{ComputePay( )} on an instance of \texttt{SalaryEmployee}, the method in \texttt{SalaryEmployee} is run.
+
+When calling \texttt{ComputePay( )} on an instance of \texttt{Manager}, the method in \texttt{Manager} is run.\\
+\quad Why? It is overidden in \texttt{Manager}.
+
+What if the code just refers to an instance of \texttt{SalaryEmployee} and we're not sure if it's a manager or not?
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Inheritance and Polymorphism}
+
+At run-time, the system knows what kind of object a given instance is.
+
+Thus, the code may refer to \texttt{Employee}, but the system knows if it is really a \texttt{HourlyEmployee}, \texttt{SalaryEmployee}, or \texttt{Manager}.
+
+It will therefore execute the appropriate method based on the actual type of the instance.
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Inheritance Plus Polymorphic Functions}
+Earlier we asserted that a function can be polymorphic without having an \texttt{object} parameter. Inheritance is the reason for this.
+
+Suppose we have a method \texttt{double ComputeArea( Shape s ) }.
+
+Let's say that \texttt{Shape} is a base class and there are many derived classes: \texttt{Triangle, Rectangle, Circle, Polygon}...
+
+When calling \texttt{ComputeArea}, because \texttt{Triangle} derives from \texttt{Shape} it is legal to provide a \texttt{Triangle} instance as the actual parameter.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Inheritance Plus Interfaces}
+
+A class can inherit from a base class and implement one or more interfaces concurrently.
+
+
+\begin{verbatim}
+class ImplClass : IFace1, IFace2
+{
+    // Declares a class that implements 
+    // two interfaces (IFace1 and IFace2).
+}
+
+class DerivedImplClass : BaseClass, IFace1, IFace2
+{
+    // Declares a derived class that inherits fields 
+    // and functions from the base class ImplClass and 
+    // also implements two interfaces (IFace1 and IFace2).
+}
+
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Inheritance Plus Interfaces}
+Because of the ``is-a'' relationship, if a base class implements an interface, the derived classes will benefit as well.
+
+Example: modifying \texttt{Employee} to implement \texttt{IComparable}.\\
+\quad Suppose we sort the employees by SIN (Social Insurance Number).
+
+If implemented on \texttt{Employee}, instances of \texttt{HourlyEmployee}, \texttt{SalaryEmployee}, and \texttt{Manager} will all be comparable.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Further Object-Oriented Design}
+
+There is much more to object-oriented programming and design than we have discussed in ECE~150.
+
+In future courses, notably ECE~155, you will learn more about object-oriented design.
+
+
+
+\end{frame}
+
+
+
+\end{document}
+

@@ -1,0 +1,454 @@
+\input{configuration}
+
+\title{Lecture 4 --- Console Input/Output; Comments}
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: D.W. Harder, W.D. Bishop, N. Armstrong}
+  \end{center}
+ \end{frame}
+ 
+
+\part{Console Input/Output}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}
+\frametitle{Console Input/Output}
+
+\vspace{-5em}
+\begin{center}
+	\textit{Garbage In, Garbage Out}
+\end{center}
+\vspace{-5em}
+\hfill --- Common Programmer Saying
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Our First C\# Program}
+
+\begin{verbatim}
+using System;
+
+class HelloWorld
+{
+    static void Main( )
+    {
+        Console.WriteLine( "Hello World" );
+    }
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Console Output}
+In the Hello World program, we already had our first introduction to console output: \texttt{Console.WriteLine( "Hello World" );}
+
+Then later, we showed console output of the \texttt{'X'} character.
+
+Let's take some time to examine this idea of console output.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Console Output}
+
+We can output text (enclosed in the " double-quotes character) to the console, just as we can print numbers or variables.
+
+\texttt{int numberOfPages = 99;}\\
+\texttt{Console.WriteLine( numberOfPages );}
+
+When using \texttt{Console.WriteLine}, at the end of printing, the program output goes to the next line.
+
+If you do not want this behaviour, replace \texttt{Console.WriteLine} with \texttt{Console.Write}.
+
+In this way, you can print multiple things on the same line.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{\texttt{Console.Write} Example}
+
+\texttt{int numberOfPages = 99;}\\
+\texttt{Console.Write( "The Number of Pages is" );}\\
+\texttt{Console.Write( numberOfPages );}
+
+There is a problem with this when printed to the screen.
+
+[Demo: In-class examination of what's wrong here]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Strings}
+So far we have seen a few examples of text shown in the double quotation marks.
+
+This is another kind of type, called the \alert{\texttt{string}}.
+
+Examples we have seen so far:\\
+\texttt{"Hello World"}\\
+\texttt{"The Number of Pages is"}
+
+We could also have written:\\
+\texttt{string helloWorld = "Hello World";}\\
+\texttt{Console.WriteLine( helloWorld );}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Strings}
+The length of a \texttt{string} may be zero or more characters...
+
+The \texttt{string} resembles the \texttt{char} in many ways.\\
+\quad We'll examine this subject in more detail later on.
+
+For now, however, just think of a \texttt{string} as a grouping of characters.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{New Lines in Output}
+We can go to the next line by using \texttt{Console.WriteLine}, but there is another way to put a new line wherever it is needed.
+
+There is a special character that indicates to the console to go to the next line, but that character is not found on the keyboard.
+
+To signal that character, we need to use an \alert{escape sequence}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Escape Sequence}
+An escape sequence already appeared in the slides when we looked at \texttt{char} variables. \texttt{char example = '\textbackslash x0058';} includes one.
+
+A backslash (\textbackslash) preceding a sequence of characters tells the compiler that the characters following the backslash has a special meaning.
+
+There should be no space between the backslash and the character to which it applies.
+
+To put a backslash in text to be output, you must escape the backslash: (\textbackslash\textbackslash.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Escape Sequence Examples}
+\begin{center}
+\begin{tabular}{l|l}
+	\textbf{Escape Sequence} & \textbf{Meaning} \\ \hline
+	\texttt{\textbackslash n} & New line \\ \hline
+	\texttt{\textbackslash t} & Horizontal tab \\ \hline
+	\texttt{\textbackslash '} & Single quote character \\ \hline
+	\texttt{\textbackslash "} & Double quote character \\ \hline
+	\texttt{\textbackslash\textbackslash} & Backslash \\ \hline
+	\texttt{\textbackslash xAAAA} & Hex number AAAA \\ \hline
+	\texttt{\textbackslash uXXXX} & Unicode character XXXX (XXXX in hex)\\
+	
+\end{tabular}
+\end{center}
+
+This is not an exhaustive list.
+
+Don't confuse the backslash (\textbackslash) with the forward slash (/).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Outputting a New Line Character}
+
+The escape sequence for a new line is \texttt{\textbackslash n}.
+
+Thus the following two statements are equivalent:\\
+\texttt{Console.WriteLine("ABCD");}\\
+\texttt{Console.Write("ABCD\textbackslash n");}
+
+Any escape sequence like \texttt{\textbackslash n} must be inside the string literal, or in a char variable.
+
+When displaying something that isn't already a string, it is converted to a string before being put out to the console.
+
+Later in the course, we'll see exactly how this happens.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Console Input}
+Now let's examine console input (reading data into the program).
+
+Console input can be performed using the following:
+\begin{itemize}
+	\item \texttt{Console.Read();}
+	\item \texttt{Console.ReadKey();}
+	\item \texttt{Console.ReadLine();}
+\end{itemize}
+These functions return a value representing a character or a string, depending upon the function used.
+
+Most often, you will use \texttt{System.Console.ReadLine()} to obtain a string from the console.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{\texttt{Console.Read()}}
+
+\texttt{Console.Read()} behaves strangely.
+
+It processes one character at a time once an ENTIRE line of console input has been entered.
+
+It waits for the user to press enter before beginning processing.
+
+Avoid use of \texttt{Console.Read()}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{\texttt{Console.ReadKey()}, \texttt{Console.ReadLine()}}
+\texttt{Console.ReadKey()} behaves much less strangely: it reads one key at a time, as soon as the key is pressed.
+
+As expected, it reads the key press in as a \texttt{char}.
+
+\texttt{Console.ReadLine()} also behaves nicely: it reads the full line of text after the user presses enter.
+
+It reads the whole line in as a \texttt{string}.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Using \texttt{Console.ReadLine()}}
+
+\begin{verbatim}
+using System;
+class Repeat
+{
+    static void Main( )
+    {
+       Console.Write( "Please input some text: " );
+       string userInput = Console.ReadLine();
+       Console.Write( "You entered: " );
+       Console.WriteLine( userInput );
+    }
+}
+\end{verbatim}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Reading Input and Execution}
+When you have a statement like \texttt{Console.ReadLine()} in your program, when the execution gets to that statement, what happens?
+
+Answer: the program waits for the user.
+
+Later statements do not execute until the read statement is complete (e.g, the user presses enter and you store his/her input in a variable).
+
+It is a good idea to indicate to the user you are waiting for input. Otherwise, the user may not realize the program is awaiting input.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Reading in Numbers}
+Suppose we need to ask the user for a number rather than some text.
+
+The reading options operate on strings (or characters) \& not numbers.
+
+We need to convert the text from a \texttt{string} to a numeric type.
+
+The process of conversion from a string is called \alert{parsing}.
+
+More formally: parsing is the act of extracting data in a particular format from a string of text.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Parsing Numbers}
+
+
+
+Analogy: writing down a number someone says out loud.
+
+When they speak, they say ``eight six seven five three oh nine''
+
+You listen to the spoken words and convert their sound representation into a written representation: 8675309.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Parsing Numbers}
+To parse a string, it's important to know what kind of number it is.
+
+Trying to read a number like 456.149 into an \texttt{int} may be a problem.
+
+The syntax for parsing, unsurprisingly, uses the word \texttt{Parse}.
+
+\texttt{String costString = "9.99";}\\
+\texttt{double costNumeric = double.Parse( costString );}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Parsing Numbers}
+Of course, you would rarely want to convert a literal like \texttt{"9.99"}.
+
+Much more commonly, you convert something the user typed in.
+
+If the user gives in some invalid input, we might see an error.\\
+\quad Later on in the course, we'll discuss how to handle errors.
+
+The next slide shows an example program combining all the things we've discussed in this lecture so far:
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Combining Parsing, Input, \& Output}
+
+\begin{verbatim}
+using System;
+
+class ParseTest
+{
+    static void Main( )
+    {
+        double d;
+
+        d = double.Parse( Console.ReadLine() );
+
+        Console.Write( "d = " );
+        Console.Write( d );
+        Console.Write( "\n" );
+    }
+}
+\end{verbatim}
+
+[Demo: running this program to see what happens for (in)valid input]
+
+\end{frame}
+
+
+\part{Comments}
+\begin{frame}\partpage\end{frame}
+
+%\begin{frame}
+%\frametitle{Program Style}
+%
+%The style of how your write your program might not seem important.
+%
+%The compiler doesn't care much about formatting.
+%
+%But help us help you: if you format your code properly, it makes it much easier for course staff to help you if needed.
+%
+%\end{frame}
+
+
+\begin{frame}
+\frametitle{Code Comments}
+A comment is some text in the source code of a program that is ignored by the compiler.
+
+It is intended to be significant to other programmers (or oneself) when reading the code later.
+
+Good comments make the code easier to understand.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Code Comments in C\#}
+
+The recommended way to add a comment is to use two slashes: \texttt{//}.
+
+All the text between the \texttt{//} and the end of the line will be considered a comment and is ignored by the compiler.
+
+\texttt{force = mass * acceleration; // Compute the force}
+
+The text ``Compute the force'' appears after the \texttt{//} so it is a comment.
+
+(There is a less common way that uses \texttt{/* */}, but this is a legacy from older programming languages and is not recommended).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Code Comments}
+Comments can appear above code. The double slash may start a line:\\
+\texttt{// Compute the force}\\
+\texttt{force = mass * acceleration; }
+
+When programming, you might use comments to write out the steps in plain language before you write the actual code.
+
+If you want to temporarily remove a statement from your program, you can put the \texttt{//} in front of it to ``comment it out''.
+
+Then when you want to add it back, just remove the \texttt{//} and you don't have to rewrite the statement.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Code Comments}
+
+The lecture notes may contain lines that are commented to explain what that line or group of statements do/does.
+
+It is not necessary to put a comment on everything.
+
+Because they are ignored by the compiler, comments have no effect on the code's execution or performance.
+
+Good comments help others understand what code does and why.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Without Comments}
+
+It's unfortunately easy to write code that is difficult to update/change.
+
+If you do not document code, you can find out exactly what it does, but you have no understanding of why it is done that way.
+
+To add new functionality, we must determine:
+
+\begin{enumerate}
+	\item What the code does
+	\item What the problems are that the programmer is trying to solve
+	\item How the problem is being solved
+	\item Why the given approach was taken
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Without Comments}
+
+If there is only the code, the reader must figure the four items on the previous slide out for him/herself.
+
+This can lead to many wasted hours. Code is often written once but read many times.
+
+If you as an engineer do not comment code, you will not expect this of your fellow programmers.
+
+Don't write good comments? Maintenance costs skyrocket.
+
+If maintenance costs skyrocket, it's bad for the company \& your career.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Writing Good Comments}
+Especially with new coders, writing this seems like a good comment:
+
+\texttt{// Add 4 to x\\
+x += 4;}
+
+The other developers would rather see:
+
+\texttt{//Pad x so that the label doesn't run into the textfield\\
+x += 4;}
+
+Comment about \underline{why}, not what.
+
+Choosing good identifier names can reduce the need for comments.
+
+\end{frame}
+
+\end{document}
+

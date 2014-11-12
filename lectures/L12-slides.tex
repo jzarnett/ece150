@@ -1,0 +1,348 @@
+\input{configuration}
+
+\title{Lecture 12 --- More About Arrays }
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: W.D. Bishop}
+  \end{center}
+ \end{frame}
+ 
+
+\part{The \texttt{foreach} Loop}
+\begin{frame}\partpage\end{frame}
+
+
+\begin{frame}
+\frametitle{Iterating Over an Array}
+
+Last time, we iterated over entries of an array using the \texttt{for} loop.
+
+C\# provides another construct to iterate over all the entries in an array: the \texttt{foreach} statement.
+
+The \texttt{foreach} statement is just some slightly more convenient syntax; anything we do with it we could do with a regular \texttt{for} loop.
+
+Let's assume we have an integer array (\texttt{int[]} grades) defined.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Use of the \texttt{foreach} Statement}
+
+The syntax is: foreach (\textit{type identifier} in \textit{arrayIdentifier})
+
+\begin{verbatim}
+int[] grades;
+
+// Initialization of grades not shown
+
+foreach ( int num in grades )
+{
+    // Loop Body
+}
+\end{verbatim}
+
+The \textit{type} in the expression must be the same as the type of the array.
+
+Let's look at an example with the loop body filled in.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Using the \texttt{foreach} Statement}
+\begin{verbatim}
+string[] months = { "January", "February", "March", 
+        "April",  "May", "June", "July", "August",
+        "September", "October", "November", "December"
+         };
+
+foreach ( string s in months )
+{
+    Console.WriteLine( s );
+}
+\end{verbatim}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Use of the \texttt{foreach} Statement}
+
+Any \texttt{foreach} loop could also be replaced with a \texttt{for} loop.
+
+Here's a \texttt{foreach} loop to print all the grades in the array \texttt{grades}.
+
+
+\begin{verbatim}
+foreach ( int num in grades )
+{
+    Console.WriteLine( num );
+}
+\end{verbatim}
+
+Now, rewrite this using \texttt{for}:
+
+\begin{verbatim}
+for ( int index = 0; index < grades.Length; index++ )
+{
+    Console.WriteLine( grades[index] );
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Using the \texttt{foreach} Statement}
+Rewriting the months example:
+
+\begin{verbatim}
+string[] months = {"January", "February", "March", "April", 
+        "May", "June", "July", "August", "September", 
+        "October", "November", "December" };
+
+for ( int i = 0; i < months.Length; i++ )
+{
+    Console.WriteLine( months[i] );
+}
+\end{verbatim}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Comparing \texttt{for} and \texttt{foreach}}
+
+The \texttt{for} and \texttt{foreach} loops are often functionally equivalent.
+
+The \texttt{break} and \texttt{continue} work as expected in \texttt{foreach}.
+
+The \texttt{foreach} syntax is focused on iterating over all the entries of an array; the \texttt{for} loop is more flexible.
+
+Recall that the \texttt{for} loop can have any stopping condition (and therefore behave like the \texttt{while} loop).
+
+The \texttt{for} loop can also go backwards, skip every second item, etc.
+
+\end{frame}
+
+
+
+
+\part{The String Revisited}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{string} Revisited}
+
+We have already learned about a string type, but we haven't examined it in much detail.
+
+The string was just a bunch of text, but there is much more to it than we might think at first glance...
+
+\texttt{string svar1; // Creates uninitialized string}\\
+\texttt{string svar2 = "Literal"; // Initialized.}\\
+\texttt{string svar3 = ""; // Initialized to the empty string.}
+
+The \texttt{string} is a complex type (there's a reason it wasn't introduced in the simple types alongside \texttt{int} and \texttt{double}).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{String Concatenation}
+
+Strings can appear in expressions using the \texttt{+} operator. It does not add up the values, but instead performs \alert{concatenation}.
+
+\texttt{string verb = "fore" + "see";}
+
+This means the variable \texttt{verb} contains \texttt{"foresee"}.
+
+The use of \texttt{+=} can also be used for concatenation:\\
+\quad \texttt{verb += "n";} $\rightarrow$ \texttt{verb} is now \texttt{foreseen}.
+
+Remember that for concatenation, like an arithmetic expression, it is necessary to assign the value somewhere.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Strings are Complex}
+
+It turns out that the string has a member variable \texttt{Length} that tells you the number of characters in the \texttt{string}.
+
+This information, combined with the fact that a \texttt{string} is a bunch of text characters should lead you to the conclusion that...
+
+The \texttt{string} is really an \alert{array of \texttt{char}s}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{An Array of \texttt{char}}
+
+This means we can access individual characters within a \texttt{string} using their index values (just as if they were entries of an array).
+
+If the string is \texttt{string ex1 = "example"}, the \texttt{char} at \texttt{ex1[3]} is \texttt{'m'}.
+
+We could use a \texttt{for} (or \texttt{foreach}) loop to iterate over all the characters of the \texttt{string} if we are looking for something specific.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Iterating Over the \texttt{string}}
+
+\begin{verbatim}
+string s = "Hello World!";
+
+for ( int i = 0; i < s.Length; i++ )
+{
+    Console.WriteLine( s[i] );
+}
+
+for ( int j = s.Length -1; j >= 0; j-- )
+{
+    Console.Write( s[j] );
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Mutating \texttt{string} Elements}
+
+Characters within a \texttt{string} cannot be changed using index values.
+
+This is different from an array of \texttt{int} where we could assign \texttt{array[7] = -98;}
+
+The string type is \alert{immutable}. \texttt{string} variables cannot be changed.
+
+Every time a string must be ``changed'', a new \texttt{string} must be created.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Immutable \texttt{string} Variables}
+
+If we have a statement \texttt{string text = name + suffix;} after this statement, there are 3 strings in memory: \texttt{text, name, suffix}.
+
+That's not surprising, but consider this: \texttt{name += suffix;}\\
+\quad There are still three strings stored in memory after this statement.\\
+\quad \texttt{suffix}, the new value of \texttt{name}, and the old value of \texttt{name}.
+
+The \texttt{+=} operation did two things: 
+\begin{enumerate}
+\item Created a new string and (the concatenation of \texttt{name} and \texttt{suffix}) and stored it in memory.
+\item Changed the memory location \texttt{name} is associated with to the location of the new string.
+\end{enumerate}
+
+\end{frame}
+
+
+\part{Multi-Dimensional Arrays}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}
+\frametitle{Arrays of Arrays}
+
+You may have wondered if we can have an array of any type, can we have an array of arrays? Yes!
+
+A \alert{multi-dimensional array} is an array of array types.
+
+The following statement declares and instantiates a multi-dimensional array of \texttt{int} named \texttt{day}: \texttt{int[][] day = new int [n][]};
+
+Is this syntax confusing? Perhaps imagine it like this: \texttt{(int[])[]}
+
+The type is \texttt{int[]} (in brackets) and when we declare an array of a type, write \texttt{[]} after the type.
+
+Hence, we declare an array of type \texttt{int[]} (integer array).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Arrays of Arrays}
+
+\texttt{day[0]} is a reference to the first integer array\\
+\texttt{day[1]} is a reference to the second integer array\\
+\texttt{day[n-1]} is a reference to the nth integer array
+
+
+The length of \texttt{day[0]} and \texttt{day[1]} may be different.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Setting up A Multi-Dimensional Array}
+
+\begin{verbatim}
+int[] daysInMonth = { 31, 28, 31, 30, 31, 30, 
+                     31, 31, 30, 31, 30, 31 };
+
+int[][] year = new int[12][];
+
+for ( int month = 0; month < 12; ++month )
+{
+    year[month] = new int[ daysInMonth[month] ];
+	
+    for ( int day = 0; d < daysInMonth[month]; ++d )
+    {
+        year[month][day] = 1;
+    }
+
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Setting up A Multi-Dimensional Array}
+
+Now let's print out this calendar.
+
+\begin{verbatim}
+for ( int month = 0; month < 12; ++month )
+{
+    for ( int day = 0; d < daysInMonth[month]; ++d )
+    {
+        Console.Write( year[month][day] );
+        Console.Write( " " );
+    }
+    Console.WriteLine( "" );
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Further Initialization of Multi-Dimensional Arrays}
+It is possible to initialize a multi-dimensional array when it is declared.
+
+For example, the following code defines a multi-dimensional array of characters named \texttt{myChars}:
+
+\begin{verbatim}
+char[][] myChars = {
+          new char[] { 'B', 'i', 'l', 'l' },
+          new char[] { 'D', 'a', 'v', 'e' },
+          new char[] { 'G', 'e', 'o', 'r', 'g', 'e' }
+          };
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Arrays of Arrays of Arrays...}
+
+The multi-dimensional array examples we have shown so far are all ``two dimensional''.
+
+We could have more, such as \texttt{int[][][] coordinates;} to describe x, y, and z co-ordinates.
+
+In C\# the term for arrays of these kinds is ``\alert{jagged} arrays''.
+
+C\# also supports \alert{rectangular} arrays, which we'll come back to later. 
+
+\end{frame}
+
+\end{document}
+

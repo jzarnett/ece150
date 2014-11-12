@@ -1,0 +1,431 @@
+\input{configuration}
+
+\title{Lecture 19 --- Exception Handling }
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: W.D. Bishop}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Kinds of Exceptions}
+
+An exception is an instance of a detected run-time error.
+
+Exceptions can be generated ``automatically'' or thrown ``manually''.
+
+A ``manually'' generated exception is when the keyword \texttt{throw} appears in the code. A programmer has explicitly \texttt{throw}n an exception.
+
+An ``automatically'' generated exception appears without the appearance of the \texttt{throw} keyword. An example is a division by zero.
+
+The line of code is\\
+\quad \texttt{double result = input / divisor; }\\
+ but an exception will occur here if divisor is zero.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Exceptions are Thrown}
+
+
+In reality, exceptions are always thrown... 
+
+Some exceptions are thrown by the system libraries and built-in code, so they appear to be ``automatically'' generated.
+
+Regardless of the source, handling is the same.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Exception Handling}
+
+The process of detecting an exception and attempting to correct the situation is known as exception handling.
+
+Exceptions can be handled or unhandled:
+\begin{itemize}
+	\item A \alert{handled} exception is caught by a portion of the program and corrective action is taken to fix the situation
+	\item An \alert{unhandled} exception is not caught by a portion of the program and it results in the termination of the program
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Undhandled Exception}
+
+Here is an example of an unhandled exception:
+
+\begin{verbatim}
+static void Main( )
+{
+    int i = 0;		
+    Console.Write( "100 / 0 = " );
+    Console.WriteLine ( 100 / i );
+}
+\end{verbatim}
+
+The C\# compiler is clever enough to detect an error if we explicitly write (100 / 0) as an expression, so we have to put 0 in a variable \texttt{i}.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Handling an Exception}
+
+The keyword for handling an exception is \texttt{catch}.\\
+\quad (The opposite of \texttt{throw}.)
+
+Much like someone who is trying to catch a ball in the air, the \texttt{catch} statement needs to be looking in the right direction.
+
+A \texttt{catch} statement therefore is explicitly applied to a block of code.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Try-Catch}
+The syntax for exception handling is the \texttt{try-catch} statement.
+
+\begin{verbatim}
+try
+{
+    // Statement Block
+}
+catch( ExceptionType e )
+{
+    // Exception Handling Block
+}    
+\end{verbatim}
+
+The keyword \texttt{try} indicates what a \texttt{catch} is looking at.
+
+The \texttt{catch} applies to the statements inside the \texttt{try} block.\\
+\quad It will catch an exception only if it comes from within the \texttt{try} block.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{ExceptionType}
+
+In the syntax for \texttt{catch} there is: \texttt{ExceptionType e}.
+
+\texttt{Exception} is the general form. There are more specific exception types, to allow us to tell different sorts of errors apart.
+
+In addition to saying where we are looking for an exception to be thrown, we also specify what kind of exception we want to \texttt{catch}.
+
+\texttt{Exception} is general and if we just write \texttt{catch ( Exception e )} we will catch most types of exception.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{C\# Important Exception Types}
+
+Some common Exception Types in C\#:
+
+{\scriptsize
+\begin{center}
+\begin{tabular}{l|l}
+\textbf{Exception Name} & \textbf{Description} \\ \hline
+\texttt{Exception} & General exception \\ \hline
+\texttt{ArgumentException} & Error in an argument passed to a function \\ \hline
+\texttt{ArithmeticException} & Some type of arithmetic (mathematical) error \\ \hline
+\texttt{DivideByZeroException} & Division by zero arithmetic error \\ \hline
+\texttt{ArrayTypeMismatchException} & Type of an array does not match with the type required \\ \hline
+\texttt{FormatException} & Problem with the formatting of input \\ \hline
+\texttt{IndexOutOfRangeException} & An array index beyond the bounds of an array \\ \hline
+\texttt{NullReferenceException} & Use of a null reference \\
+\end{tabular}
+\end{center}
+}
+
+Don't memorize this list, but you may use it for reference.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Try-Catch Example}
+
+Let's fill in the try-catch example from before.
+
+\begin{verbatim}
+try
+{
+  double result = input / divisor;
+  Console.Write( "Result: ");
+  Console.WriteLine( result );
+}
+catch( DivideByZeroException e )
+{
+  Console.WriteLine( "Division By Zero Error Detected!" );
+}    
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Try-Catch Execution}
+
+The only output was the error message.\\
+\quad The statements to output ``Result: '' and the number did not occur.
+
+Like \texttt{return} or \texttt{break}, when an exception is encountered, execution of the current block is stopped at the point of the exception.
+
+If an exception occurs, no further statements of the \texttt{try} block run.
+
+The system will then look for a \texttt{catch} block matching the type of the exception that was encountered.
+
+In the example above, there is a matching \texttt{catch} block.\\
+\quad What happens if none is found?
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Looking for Someone to Catch}
+
+The system will continue looking by going up a level to the function that called the function where the exception was encountered.
+
+\begin{verbatim}
+static void Main ( )
+{
+    try
+    {
+      divideNumbers( 100, 0 );
+    }
+    catch ( DivideByZeroException e )
+    {
+      Console.WriteLine( "Division By Zero Detected" );
+    }
+}
+\end{verbatim}
+
+In the above example, an exception happened in \texttt{divideNumbers()} but the \texttt{catch} block is found in \texttt{Main}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Looking for Someone to Catch}
+
+If the calling function lacks a matching \texttt{catch} block, the system goes up another level and repeats this procedure until it gets to \texttt{Main}.
+
+If \texttt{Main} does not have one either, it's an unhandled exception.\\
+\quad The program terminates with an error message.
+
+In both of the preceding examples, we found a \texttt{catch} block matching the type of the exception, so it is handled.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Try-Catch Example}
+{\small
+\begin{verbatim}
+try
+{
+    double result = input / divisor;
+    Console.Write( "Result: ");
+    Console.WriteLine( result );
+}
+catch( DivideByZeroException e )
+{
+  Console.WriteLine( "Division By Zero Error Detected!" );
+}    
+\end{verbatim}
+}
+
+So after the exception occurs, control goes to the \texttt{catch} block and the statement there executes.
+
+Then the next statement executed is after the end of the \texttt{catch} block.\\
+\quad Not the console writes.
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Variable Scope in Try-Catch}
+
+Note that our usual rules of variable scope apply in a \texttt{try-catch}.
+
+In the previous example \texttt{double result} is only in scope within the \texttt{try} block and not after the \texttt{try-catch} is done.
+
+Like a function parameter, \texttt{DivideByZeroException e} is a parameter available in the \texttt{catch} block.
+
+Right now, we won't make use of \texttt{e}, but if you are feeling ambitious you can play around with what it contains.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Multiple Types of Exceptions}
+
+It is possible to \texttt{catch} more than one type of exceptions from a single \texttt{try} block.
+
+The syntax and execution for this works like an \texttt{if-else} statement.
+
+When an exception is encountered, the exceptions are checked in order from top to bottom, like the \texttt{if-else}.\\
+\quad The first \texttt{catch} that matches executes.
+
+Only one of the \texttt{catch} blocks will execute (mutual exclusivity).
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Multiple Types of Exceptions}
+
+
+\begin{verbatim}
+try
+{
+   complicatedFunction( );
+}
+catch( DivideByZeroException e )
+{
+  Console.WriteLine( "Division By Zero Error Detected!" );
+}
+catch ( ArithmeticException e2 )
+{
+  Console.WriteLine( "Arithmetic Error Detected!" );
+}
+catch ( IndexOutOfRangeException e3 )
+{
+  Console.WriteLine( "Index out of range!" );
+}
+\end{verbatim}
+
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Handling All Exceptions}
+
+It's possible to catch most exceptions using \texttt{catch ( Exception e )}
+
+However, there are a few exceptions that will not be caught by this.
+
+To be sure to \texttt{catch} \underline{all} exceptions, use the \texttt{catch} statement without the brackets and exception type:
+
+\begin{verbatim}
+try
+{
+    // Try block
+}
+catch
+{
+    // All exceptions caught
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{\texttt{finally}}
+
+The \texttt{finally} statement provides a mechanism for executing code immediately after the (partial) execution of a try block.
+
+It may be desirable to save the state of the program prior to exiting, regardless of whether an exception has been handled or not.
+
+The \texttt{finally} statement enables a program to exit gracefully, even in the presence of exceptions.
+
+The \texttt{finally} block comes after the \texttt{catch} blocks, if any.
+
+The \texttt{finally} block executes regardless of whether or not an exception is thrown.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{\texttt{finally} Syntax}
+
+Here is the syntax for the \texttt{try-catch-finally} statement:
+
+\begin{verbatim}
+try
+{
+    // Statement Block
+}
+catch( ExceptionType e )
+{
+    // Exception Handling Block
+}
+finally
+{
+    // Finally Block
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{\texttt{finally} Syntax}
+
+Here is an example of the \texttt{try-catch-finally} statement:
+
+\begin{verbatim}
+try
+{
+    Console.WriteLine( "Attempting Division..." );
+    divideNumbers(100, 0);
+    Console.WriteLine( "Division Succeeded." );
+}
+catch( ExceptionType e )
+{
+    Console.WriteLine( "Division by zero detected." );
+}
+finally
+{
+    Console.WriteLine( "Operation Complete." );
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{\texttt{finally} Syntax}
+
+What if we don't have \texttt{catch}?
+
+\begin{verbatim}
+try
+{
+    Console.WriteLine( "Attempting Division..." );
+    divideNumbers(100, 0);
+    Console.WriteLine( "Division Succeeded." );
+}
+finally
+{
+    Console.WriteLine( "Operation Complete." );
+}
+\end{verbatim}
+
+The \texttt{finally} block runs before the exception terminates the program.
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{What to Do with Exceptions}
+
+Sometimes, when an exception is encountered, the program can take some corrective action and deal with the problem in the \texttt{catch} block.
+
+In this lecture we have mostly handled errors by simply reporting them and carrying on.
+
+If the program is a calculator and it takes as input two numbers and an operation, one exception should not end the program.
+
+In other cases, carrying on is harmful and we should stop execution of the program before anything else goes wrong.
+
+\end{frame}
+
+
+
+
+\end{document}
+

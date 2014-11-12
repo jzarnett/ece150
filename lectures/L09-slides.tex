@@ -1,0 +1,384 @@
+\input{configuration}
+
+\title{Lecture 9 --- Loops II}
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: D.W. Harder, W.D. Bishop}
+  \end{center}
+ \end{frame}
+ 
+
+\begin{frame}
+\frametitle{Loops, Continued}
+Last time, we examined the \texttt{while} and \texttt{do-while} loops.
+
+We also mentioned, but did not examine, the third kind of loop:\\
+\quad the \texttt{for} loop.
+
+Let's start by re-examining a \texttt{while} loop.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Countdown Loop}
+
+\begin{verbatim}
+int countdown = 10;
+while ( countdown > 0 ) 
+{
+    Console.WriteLine( countdown );
+    countdown--;
+}
+\end{verbatim}
+
+This is a counted loop. Observe three statements:
+\begin{enumerate}
+	\item \texttt{int countdown = 10;}\\
+		\quad Declares and initializes the counter variable.
+	\item \texttt{while (countdown > 0)}\\
+		\quad The loop test condition.
+	\item \texttt{countdown{-}{-};}\\
+		\quad Decrement the counter variable.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Counted Loops}
+Counted loops are very common. The \texttt{for} loop syntax puts all three of those statements in one line. The proper names for these elements:
+
+\begin{enumerate}
+	\item \texttt{int countdown = 10;}\\
+		\quad \alert{Initialization}
+	\item \texttt{while (countdown > 0)}\\
+		\quad \alert{Condition}
+	\item \texttt{countdown{-}{-};}\\
+		\quad \alert{Modification}
+\end{enumerate}
+
+Now we can see the syntax of the for loop.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{for} Loop}
+
+for ( \textit{initialization}; \textit{condition}; \textit{modification} )
+
+Using the countdown example:\\
+\quad \texttt{for ( int countdown = 10; countdown > 0; countdown{-}{-} )}
+
+And as always, the declaration is followed by the \{ and \} braces to enclose the loop body (statement block).
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Rewriting the Countdown Loop}
+
+Let's rewrite the countdown loop using \texttt{for}:
+
+\begin{verbatim}
+for ( int countdown = 10; countdown > 0; countdown-- )
+{
+    Console.WriteLine( countdown );
+}
+\end{verbatim}
+
+Important note: there is no semicolon after the modification expression. A \texttt{for} loop has exactly two semicolons.
+
+(Technical explanation: the three elements are expressions and not statements, and that's why no semicolon is required.)
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Execution Order of the \texttt{for} Loop}
+
+Let's examine the execution order of this loop:
+
+\begin{verbatim}
+for ( int i = 0; i < 1; ++i )
+{
+    // Loop Body
+}
+\end{verbatim}
+
+\begin{enumerate}
+	\item The initialization: \texttt{int i = 0;}
+	\item The condition is checked: \texttt{i < 1;}
+	\item The condition is true, so the loop body executes
+	\item The modification: \texttt{++i}
+	\item Control goes back to the start of the loop; condition is checked
+	\item The condition is false, so the loop body is skipped
+\end{enumerate}
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{For Loop Execution Comments}
+
+Like the \texttt{while} loop, the \texttt{for} loop is a pretest loop.
+
+If the condition is not satisfied, the loop body does not execute.\\
+\quad This may mean the loop executes zero times.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Optional Parts of the \texttt{for} Loop}
+
+Technically, each of the 3 elements of the \texttt{for} statement are optional.
+
+In this example, initialization is missing:
+
+\begin{verbatim}
+int countdown = int.Parse(Console.ReadLine());
+for ( ; countdown > 0; countdown-- )
+{
+    Console.WriteLine( countdown );
+}
+\end{verbatim}
+
+The semicolon is still needed after the spot where the initialization would otherwise go.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Optional Parts of the \texttt{for} Loop}
+
+In this example, the modification expression is elsewhere in the loop:
+
+\begin{verbatim}
+for ( int countdown = 10; countdown > 0; )
+{
+    Console.WriteLine( countdown );
+    countdown--;
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Optional Parts of the \texttt{for} Loop}
+
+Let's combine the last two examples:
+
+\begin{verbatim}
+int countdown = int.Parse(Console.ReadLine());
+for ( ; countdown > 0; )
+{
+    Console.WriteLine( countdown );
+    countdown--;
+}
+\end{verbatim}
+
+This is also acceptable. If you use only the middle expression (condition) of the \texttt{for} loop, it works just like the \texttt{while loop}.
+
+(In fact, any \texttt{while} loop can be trivially converted to a \texttt{for} loop by using this syntax.)
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Optional Parts of the \texttt{for} Loop}
+
+And if we delete the condition, too?
+
+\begin{verbatim}
+int countdown = int.Parse( Console.ReadLine() );
+for ( ; ; )
+{
+    Console.WriteLine( countdown );
+    countdown--;
+    if ( countdown < 0 )
+    {
+        break;
+    }    
+}
+\end{verbatim}
+
+If no condition is specified, it's an infinite loop; the same as if we wrote \texttt{while (true)}.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{For Loop Flexibility}
+
+The elements of the \texttt{for} loop are pretty flexible. The initialization and modification expressions may do more than one thing.
+
+The expressions are separated by commas.
+
+\begin{verbatim}
+for ( int x = 10, int y = 0; x > 0; x--, y++ )
+{
+    // Loop Body
+}
+\end{verbatim}
+
+This is uncommon and may be confusing, especially to non-experts. It is not recommended as a good practice.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Pitfall: Extra Semicolon}
+
+Potential pitfall: there is an extra semicolon after the closing bracket.
+
+\begin{verbatim}
+for ( int x = 10; x > 0; x-- );
+    Console.WriteLine( "Hello World" );
+\end{verbatim}
+
+The for loop will run, but the \texttt{Console.WriteLine} statement will execute only once.
+
+The semicolon creates an ``empty statement'' and that forms the body of the loop. That empty statement executes with each iteration.
+
+Solution: like with \texttt{if}, use the \{ and \} braces to prevent this problem.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Use of \texttt{break} and \texttt{continue}}
+
+The \texttt{break} and \texttt{continue} statements can also appear in the body of the \texttt{for} loop as they do in the \texttt{while} loop.
+
+As before, \texttt{break} exits from the loop and takes us to the next statement after the loop.
+
+\texttt{continue} still means ``go back to the start of the loop'', but the modification statement is executed before the condition is checked.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Use of \texttt{continue} in a \texttt{for} Loop}
+In this example, numbers that are multiples of 8 are not printed.
+\begin{verbatim}
+int numberPrinted = 0;
+for ( int i = 0; i < 100; ++i )
+{
+    if ( i % 8 == 0 )
+    {
+        continue;
+    }
+    Console.WriteLine( i );
+    numberPrinted += 1;
+}
+Console.Write( numberPrinted );
+Console.WriteLine ( " numbers printed in total." );
+\end{verbatim}
+
+If \texttt{i} is a multiple of 8, the next iteration of the loop is started.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Confusing \texttt{continue} and \texttt{break}}
+What if instead of using \texttt{continue} we used \texttt{break} instead?
+\begin{verbatim}
+int numberPrinted = 0;
+for ( int i = 0; i < 100; ++i )
+{
+    if ( i % 8 == 0 )
+    {
+        break;
+    }
+    Console.WriteLine( i );
+    numberPrinted += 1;
+}
+Console.Write( numberPrinted );
+Console.WriteLine ( " numbers printed in total." );
+\end{verbatim}
+
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Nested Loops}
+
+It is legal to nest one loop statement inside another.\\
+\quad Even different types (e.g., a \texttt{for} inside a \texttt{while}).
+
+When nesting \texttt{for} loops, they should use different counter variables.\\
+\quad Common choices are \texttt{i}, \texttt{j}, and \texttt{k}.\\
+\quad Choosing more descriptive names can be helpful.
+
+A \texttt{break} or \texttt{continue} statement applies to the innermost loop statement containing that statement.
+
+(We can also put a \texttt{switch} statement inside a loop; a \texttt{break} statement at the end of an option applies to the \texttt{switch}, not the loop.)
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Nested Loop Example}
+
+\begin{verbatim}
+for ( int i = 0; i < 10; i++ )
+{
+    for (int j = 0; j < 10; j++ )
+    {
+        Console.Write( "i = " );
+        Console.Write( i );
+        Console.Write( ", j = " );
+        Console.Write( j );
+        Console.Write( "\n" );
+    }
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Nested Loop with \texttt{break} Example}
+
+\begin{verbatim}
+for ( int i = 0; i < 10; i++ ) // Outer loop
+{
+    for (int j = 0; j < 10; j++ ) // Inner loop
+    {
+        if ( j == 9 )
+        {
+            break; // End inner loop
+        }
+        Console.Write( "i = " );
+        Console.Write( i );
+        Console.Write( ", j = " );
+        Console.Write( j );
+        Console.Write( "\n" );
+    }
+}
+\end{verbatim}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Comments on Iteration Statements}
+
+As you've seen, it doesn't matter what iteration statement you choose;\\
+\quad It's possible to rewrite any loop as another kind.
+
+Some tips about when to use each of the loops:
+
+\begin{itemize}
+	\item The \texttt{for} statement is a slightly better choice for deterministic loops (i.e., loops that require a fixed number of iterations)
+	\item The \texttt{while} statement is slightly better for non-deterministic loops (i.e., loops that require a flexible number of iterations)
+	\item The \texttt{do-while} statement is slightly better for statement blocks that must execute at least once (but is still not recommended)
+\end{itemize}
+\end{frame}
+
+
+
+
+\end{document}
+

@@ -1,0 +1,592 @@
+\input{configuration}
+
+\title{Lecture 7 --- Selection Statements}
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: W.D. Bishop}
+  \end{center}
+ \end{frame}
+ 
+\begin{frame}
+\frametitle{Selection Statements}
+Thus far, our programs execute every statement, sequentially, from top to bottom.
+
+Sometimes we have to make a decision about what to do next.
+
+\alert{Selection Statements} allow a program to decide what instructions to execute next, based on the current state of the program.
+
+Selection statements are an example of \alert{control statements}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Types of Selection Statements}
+
+There are three kinds of selection statement in C\#:
+
+\begin{enumerate}
+	\item \texttt{if}
+	\item \texttt{if-else}
+	\item \texttt{switch}
+\end{enumerate}
+
+We will examine each of these.
+
+\end{frame}
+
+\part{The \texttt{if} Statement}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{if} Statement}
+
+The simplest of the three is the \texttt{if} statement.
+
+The basic format of this statement is as follows:
+
+\begin{verbatim}
+if ( condition ) {
+    // Statement Block
+}
+\end{verbatim}
+
+If the \textit{condition} is true, then the statement block will execute.
+
+If the \textit{condition} is false, the statement block is skipped.\\
+\quad The statements in that block are not executed.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Use of the if-Statement}
+
+\begin{verbatim}
+using System;
+
+class HelloWorld
+{
+    static void Main( )
+    {
+        int x = int.Parse( Console.ReadLine() );
+        
+        if ( x >= 25 ) {
+            Console.WriteLine( "Condition is true." );
+        }
+        Console.WriteLine( "Program Finished." );
+    }
+}
+\end{verbatim}
+
+[In-Class Demo: the output of this program]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{if} Statement}
+A condition may be a boolean variable, or it can be an expression that evaluates to \texttt{true} or \texttt{false}.
+
+It may be a simple condition expression (\texttt{ x > 0 }) or a more complex one (\texttt{ y < 100 \&\& z > 0 }).
+
+Remember that the condition will be short-circuit evaluated.
+
+A more complicated example follows on the next slide:
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Use of the if-Statement}
+
+{\scriptsize
+\begin{verbatim}
+using System;
+
+class Test
+{
+    static void Main( )
+    {
+        int output = 0;
+
+        Console.WriteLine( "Enter Input 1: " ); 
+        int input1 = int.Parse( Console.ReadLine() );
+        Console.WriteLine( "Enter Input 2: " ); 
+        int input2 = int.Parse( Console.ReadLine() );
+
+        if ( (input1 == 0 && input2 == 1) || ( input1 == 1 && input2 == 0 ) )
+        {
+            output = 1; 
+        }
+        Console.WriteLine( "Output = " + output );
+    }
+}
+\end{verbatim}
+}
+
+[In-Class Demo: the output of this program]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{if Statement Pitfall}
+There is a potential pitfall to the if statement. Use of the \{ \} braces for the statement block following the if statement is technically optional.
+
+This is not a syntax error:\\
+\texttt{if (x > 0)}\\
+\quad\texttt{y = 1;}
+
+The statement \texttt{y = 1;} is executed only if the condition \texttt{x > 0} is true.
+
+If later we edit this code and add the following:
+
+\texttt{if (x > 0)}\\
+\quad\texttt{y = 1;}\\
+\quad\texttt{z = 2;}
+
+This is a potential source of error, but why?
+
+\end{frame}
+
+\begin{frame}
+\frametitle{if Statement Pitfall}
+
+\texttt{if (x > 0)}\\
+\quad\texttt{y = 1;}\\
+\quad\texttt{z = 2;}
+
+\texttt{z = 2;} is executed regardless of whether \texttt{x} is greater than zero.
+
+That might be what you intended, but it might also be an error.
+
+Solution: always use the \{ and \} braces when writing an if-statement.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{if-else} Statement}
+
+We can build on the if statement with the \texttt{else} keyword.
+
+\begin{verbatim}
+if ( condition ) {
+    // Statement Block 1
+} else {
+    // Statement Block 2
+}
+\end{verbatim}
+
+If the \textit{condition} is true, then statement block 1 will execute; statement block 2 will not execute.
+
+If the \textit{condition} is false, then statement block 2 will execute; statement block 1 will not execute.
+
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{if-else} Statement}
+
+\begin{verbatim}
+
+Console.Write( "Enter your age: " );
+int age = int.Parse( Console.ReadLine() );
+
+if ( age >= 16 )
+{
+  Console.WriteLine( "You may take the driving test." );
+}
+else 
+{
+  Console.WriteLine( "You are not old enough. Sorry." );
+}
+\end{verbatim}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Use of the if-Statement}
+
+{\scriptsize
+\begin{verbatim}
+static void Main( )
+{
+    int output = 0;
+
+    Console.WriteLine( "Enter Input 1: " ); 
+    int input1 = int.Parse( Console.ReadLine( ) );
+    Console.WriteLine( "Enter Input 2: " ); 
+    int input2 = int.Parse( Console.ReadLine( ) );
+
+    if ( input1 == 0 )
+    {
+        output = 1; 
+    }
+
+    if ( input1 != 0 && input2 == 1 )		
+    {				
+        output = 2; 			
+    }				
+    Console.WriteLine( "Output = " + output );
+}
+\end{verbatim}
+}
+
+[In-Class Demo: the output of this program]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Comments on the Previous Program}
+
+You may have noticed some redundancy in the previous program:
+
+
+Two if conditions, one with \texttt{input == 0} and one with \texttt{input != 0}.
+
+We have the else-if statement to deal with this situation.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Use of the if-Statement}
+
+{\scriptsize
+\begin{verbatim}
+static void Main( )
+{
+    int output = 0;
+
+    Console.WriteLine( "Enter Input 1: " ); 
+    int input1 = int.Parse( Console.ReadLine( ) );
+    Console.WriteLine( "Enter Input 2: " ); 
+    int input2 = int.Parse( Console.ReadLine( ) );
+
+    if ( input1 == 0 )
+    {
+        output = 1; 
+    } 
+    else if ( input2 == 1 )		
+    {				
+        output = 2; 			
+    }				
+    Console.WriteLine( "Output = " + output );
+}
+\end{verbatim}
+}
+
+[In-Class Demo: the output of this program]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Use of if, else if, else}
+
+We always have to start with an if statement.
+
+Zero or more ``else if'' statements can be added on.
+
+At the end, we may optionally put the else statement.
+
+What if some of the conditions are the same?
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Mutually Exclusive If/Else-If}
+
+{\scriptsize
+\begin{verbatim}
+static void Main( )
+{
+    int output = 0;
+
+    Console.WriteLine( "Enter Input 1: " ); 
+    int input1 = int.Parse( Console.ReadLine( ) );
+    Console.WriteLine( "Enter Input 2: " ); 
+    int input2 = int.Parse( Console.ReadLine( ) );
+
+    if ( input1 == 0 )
+    {
+        output = 1; 
+    } 
+    else if ( input1 == 0 )		
+    {				
+        output = 2; 			
+    }				
+    Console.WriteLine( "Output = " + output );
+}
+\end{verbatim}
+}
+
+[In-Class Demo: the output of this program]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Mutually Exclusive}
+
+Only one of the blocks will execute; they are all mutually exclusive.\\
+\quad In fact, the condition of the second block will not be evaluated.\\
+\quad Another example of short-circuit evaluation.
+
+In the previous slide, we had two checks of \texttt{input1 == 0}.
+
+The first one encountered resolves to true and that block executed.\\
+\quad \texttt{output} receives a value of 1.
+
+The next statement executed is the \texttt{Console.WriteLine} statement.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Nested if Statements}
+It is certainly permitted to have \alert{nested} if statements.
+
+\begin{verbatim}
+if ( x > 0 ) {
+    if ( y < 100 ) {
+        output = 7;
+    } else {
+        output = 10;
+    }
+}
+\end{verbatim}
+
+Writing a condition in this way may be clearer than having a lot of else if statements.
+
+There is no effective limit on how many nested if statements you can have, but sometimes it is sensible to combine them for clarity.
+
+\end{frame}
+
+\part{The \texttt{switch} Statement}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{switch} Statement}
+
+The switch statement evaluates a single variable against a large range of alternatives and selects which statement block to execute.
+
+\begin{verbatim}
+switch ( selector )
+{
+    case label1:
+        // Statement block 1
+        break;
+    case label2:
+        // Statement block 2
+        break;
+    default:
+        // Default statement block
+        break;
+}
+\end{verbatim}
+
+There can be as many cases as we like.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{switch} Statement}
+
+The \textit{selector} must be an expression that evaluates to one of: \\
+\quad \texttt{bool}, \texttt{char}, \texttt{int}, or \texttt{string}.
+
+
+The value of the selector is compared to whatever comes after the keyword \texttt{case} (e.g., \texttt{label1}).
+
+If they are equal, that statement block is executed.
+
+The statement \texttt{break;} is used to indicate the end of that option's statement block.
+
+If none of the case options match the selector, the \texttt{default} statement block is executed.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{switch} Example}
+
+\begin{verbatim}
+char keystroke = Console.ReadKey( );
+switch( keystroke )
+{
+    case 'A':
+        Console.Write( "1" );
+        break;
+    case 'B':
+        Console.Write( "2" );
+        break;
+    case 'C':
+        Console.Write( "3" );
+        break;
+    default:
+        Console.Write( "0" );
+        break;
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Analysis of Previous Example}
+
+It would be an error if we had two cases labelled with \texttt{'A'}.
+
+Like the \texttt{if} statement, the cases are mutually exclusive.\\
+\quad Although for \texttt{switch}, this is enforced by the compiler.
+
+The \texttt{break;} statement is needed to indicate the end of an option. 
+
+The \texttt{default} block executes if the input didn't match \texttt{'A'}, \texttt{'B'}, or \texttt{'C'}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Default Block}
+The \texttt{default} block executes if the input matches none of the labels.
+
+However, the \texttt{default} block is optional; it doesn't have to appear.
+
+If it is not present, and the input does not match any of the labels, none of the blocks will execute. In other words: nothing happens.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Multiple-Case Example}
+
+To avoid having to copy and paste code, you can associate a block of statements with multiple labels.
+
+\begin{verbatim}
+char keystroke = (char) Console.ReadKey( );
+switch( keystroke )
+{
+    case 'a':
+    case 'A':
+        Console.Write( "1" );
+        break;
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Remember to Take a \texttt{break}}
+
+This, however, is an error in C\#:
+
+\begin{verbatim}
+char keystroke = (char) Console.ReadKey( );
+switch( keystroke )
+{
+    case 'a':
+        Console.Write( "7" );
+    case 'A':
+        Console.Write( "1" );
+        break;
+}
+\end{verbatim}
+
+The \texttt{break;} statement is missing after case \texttt{'a'}.
+
+In some other programming languages, this would mean that the output would be ``71''. In C\# it is a compile time error.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Remember to Take a \texttt{break}}
+
+The concept of going on from one case to the one below is called ``fall through''.
+
+The designers of C\# recognized that this was a common source of programmer error.
+
+They therefore chose to explicitly forbid it.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{\texttt{switch} vs \texttt{if}}
+The \texttt{switch} and \texttt{if} statements are two different ways to represent the same idea: selection statements.
+
+The \texttt{switch} statement can be rewritten as an \texttt{if-else} statement.
+
+Let's see an example of \texttt{switch} and its equivalent \texttt{if}.
+
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Making the \texttt{switch}}
+
+{\scriptsize
+\begin{verbatim}
+int switchExpression = 3;
+switch (switchExpression)
+{
+    case 0:
+    case 1:
+        Console.WriteLine( "Case 0 or 1" );
+        break;
+    case 2:
+        Console.WriteLine( "Case 2" );
+        break;
+     // 7 - 4 in the following line evaluates to 3. 
+     case 7 - 4:
+         Console.WriteLine( "Case 3" );
+         break;   
+     default:
+         Console.WriteLine( "Default case (optional)" );
+         break;
+}
+\end{verbatim}
+}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Making the \texttt{switch}}
+
+{\scriptsize
+\begin{verbatim}
+int switchExpression = 3;
+
+if ( switchExpression == 0 || switchExpression == 1 )
+{
+    Console.WriteLine( "Case 0 or 1" );
+} 
+else if ( switchExpression == 2 )
+{
+    Console.WriteLine( "Case 2" );
+} 
+else if ( switchExpression == (7 - 4) )
+{
+    Console.WriteLine( "Case 3" );
+}
+else
+{
+    Console.WriteLine( "Default case (optional)" );
+}
+\end{verbatim}
+}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{When to Use \texttt{if} vs \texttt{switch}}
+
+You can use the \texttt{if-else} statement to replace a \texttt{switch} statement so the \texttt{if} statement is always applicable.
+
+The \texttt{switch} statement may be better when repeatedly checking the value of a single variable.
+
+\end{frame} 
+
+
+\end{document}
+

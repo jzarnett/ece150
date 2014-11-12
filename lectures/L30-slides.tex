@@ -1,0 +1,437 @@
+\input{configuration}
+
+\title{Lecture 30 --- The Linked List}
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: W.D. Bishop}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+\frametitle{Arrays and Collections}
+We've established that we would like to have a dynamic collection that does not rely on an array.
+
+When using an array, we have a reference to the array.\\
+\quad The reference tells us where the start of the array is in memory.\\
+\quad The index tells us which entry of the array to access.
+
+In a collection, the array serves the purpose of keeping the elements next to one another so that we can move from one to the next.\\
+\quad To find the next object in an array, we increment the index by 1.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Linking Collection Elements}
+If the elements are not stored in an array, given that we know where the first object is, how might we get to the next object?
+
+Idea: use a reference to link the objects together.
+
+In the simplest case, each object has a reference to the next object.\\
+\quad A null reference indicates there is no next object.
+
+Analogy: pirate treasure map.\\
+\quad Follow the map's directions; it leads to treasure and another map.\\
+\quad The 2$^{nd}$ map says how to find another treasure and a third map.\\
+\quad ... and repeat until we get to the final treasure (that has no map).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Linked List}
+
+Linked lists are similar in function to arrays but are more flexible:
+\begin{itemize}
+    \item The size of a linked list is not fixed
+    \item Objects may be easily inserted or deleted from a linked list
+    \item Objects may be sorted (if desired)
+\end{itemize}
+
+Linked lists are formed using self-referential classes:\\
+\quad A class that has a reference to an object of the same type.
+
+For example, a class \texttt{ListEntry} can contain one or more data fields as well as a reference to another object of type \texttt{ListEntry}.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Self-Referential Classes}
+
+Wait a minute, we previously said this is a compile-time error:
+
+\begin{verbatim}
+struct Invoice
+{
+    public int number;
+    public Date date;
+    public bool paid;
+    public Invoice previousInvoice;
+};
+\end{verbatim}
+
+The difference is \texttt{struct} is a value type and \texttt{class} is a reference type.
+
+A reference variable may be null; a structure variable may not.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Linking Objects}
+
+Let's write a very simple \texttt{ListEntry} class.
+
+\begin{verbatim}
+public class ListEntry
+{
+    public int data;
+    public ListEntry next;
+}
+\end{verbatim}
+
+This works because \texttt{next} can be null. 
+
+The compiler can figure out how much memory \texttt{ListEntry} needs because it knows the size of an \texttt{int} and the size of a reference (\texttt{next}).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Creating a List of Integers}
+
+Using the class previously defined, it is possible to create a collection of records known as a singly linked list.
+
+For example, it is possible to define a list containing a set of integers \{3,1,6\} as follows:
+
+\begin{center}
+    \includegraphics[width=\textwidth]{images/list316.png}
+\end{center}
+
+When a reference is null, it is sometimes drawn as if it's an electrical connection to ground.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Accessing the Linked List}
+The linked list on the previous slide has no references pointing to it...
+
+Developers often keep a reference to the head and the tail of the list:
+
+\begin{center}
+    \includegraphics[width=\textwidth]{images/listheadtail.png}
+\end{center}
+
+A tail reference is not strictly needed; it's a perfectly functional linked list with only a head reference. A tail reference can be convenient.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Less Minimal \texttt{ListEntry}}
+{\scriptsize
+\begin{verbatim}
+class ListEntry
+{
+    int data;
+    ListEntry next;
+    public ListEntry( int d )
+    {
+        data = d;
+        next = null;
+    }
+    public int Data
+    {
+        get{ return data; }
+        set{ data = value; }
+    }
+    public ListEntry Next
+    {
+        get{ return next; }
+        set{ next = value; }
+    }
+    public override string ToString( )
+    {
+        return( data.ToString( ) );
+    }
+}
+\end{verbatim}
+}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{The \texttt{List} Class}
+
+Next, a class to store a reference to the head and tail of the linked list.
+
+For the purpose of this example, this class is named \texttt{List}.
+
+This class often provides the following features:
+\begin{itemize}
+    \item Member fields to refer to the head and the tail of the list
+    \item A constructor
+    \item A \texttt{ToString( )} method
+    \item A \texttt{Clear( )} method
+    \item An \texttt{Append( )} method
+    \item A \texttt{DeleteFirst( )} method
+    \item A \texttt{Prepend( )} method
+    \item Properties for accessing the private fields
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{List} Class}
+The \texttt{List} class is too large to fit on a single slide, but let's show the different parts.
+
+{\scriptsize
+\begin{verbatim}
+class List
+{
+  private class ListEntry
+  {
+      // It is legal to have ListEntry nested inside List
+      // In fact, if ListEntry makes no sense outside of
+      // a List, this is good practice.
+      // Not shown for space reasons
+  }
+  
+  // Private member variables
+    private ListEntry head;
+    private ListEntry tail;
+
+    // Constructor
+    public List( )
+    {
+        head = null;
+        tail = null;
+    }
+
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{List} Class : Properties}
+
+{\scriptsize
+\begin{verbatim}
+    // Properties
+    public int Head
+    {
+        get{ return head.Data; }
+    }
+
+    public int Tail
+    {
+        get{ return tail.Data; }
+    }
+
+    public bool IsEmpty
+    {
+        get{ return( head == null ); } 
+    }
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{List} Class : ToString}
+
+{\scriptsize
+\begin{verbatim}
+    // Traverse the list starting at the head
+    // Stop traversing when a null reference is found
+    public override string ToString( )
+    {
+        string tmp = "Head -> ";
+
+        ListEntry current = head;
+        if( current == null )
+        {
+            tmp = "null";
+        }
+        while( current != null )
+        {
+            tmp += current + " -> ";
+            current = current.Next;
+        }
+        return( tmp );
+    }
+\end{verbatim}
+}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{List} Class : Clear}
+{\scriptsize
+\begin{verbatim}
+    // The implementation here is trivial.
+    // By setting head and tail to null, any list entries
+    // will be garbage and subject to garbage collection.
+    public void Clear( )
+    {
+        head = null;
+        tail = null;
+    }
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{List} Class : Append}
+
+{\scriptsize
+\begin{verbatim}
+    // Add entry to the end of the list
+    // Special case: list is empty
+    public void Append( int i )
+    {
+        ListEntry tmp = new ListEntry( i );
+        
+        // Done by default, but here for clarity
+        tmp.Next = null;
+
+        if( head == null )
+        {
+            head = tmp;
+        }
+        else
+        {
+            tail.Next = tmp;
+        }
+        tail = tmp;
+    }
+\end{verbatim}
+}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{List} Class : Prepend}
+
+{\scriptsize
+\begin{verbatim}
+    // Add entry to the start of the list
+    // Special case: list is empty
+    public void Prepend( int i )
+    {
+        ListEntry tmp = new ListEntry( i );
+
+        tmp.Next = head;
+
+        if( head == null )
+        {
+            tail = tmp;
+        }
+        head = tmp;
+    }
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{List} Class : Delete First}
+
+{\tiny
+\begin{verbatim}
+   // Delete the first entry where the data is equal to i
+    public void DeleteFirst( int i )
+    {
+        ListEntry current = head;
+        ListEntry previous = null;
+
+        while( current != null && current.Data != i )
+        {
+            previous = current;
+            current = current.Next;
+        }
+        if( current == null )
+        {
+            throw new ArgumentException( "List entry not found" );
+        }
+        if( current == head ) // Special case: deleting first entry
+        {
+            head = current.Next;
+        }
+        else
+        {
+            previous.Next = current.Next;
+        }
+        if( current == tail ) // Special case: deleting last entry
+        {
+            tail = previous;
+        }
+    }
+} // End of List class
+\end{verbatim}
+}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{List Creation Demonstration}
+
+Let's work with this code and represent visually what the following series of statements would look like when executed.
+
+\texttt{
+\begin{enumerate}
+	\item List list = new List();
+	\item list.Append( 3 );
+	\item list.Append( 1 );
+	\item list.Append( 6 );
+	\item list.Prepend( 4 );
+	\item list.Prepend( 5 );
+	\item list.DeleteFirst( 4 );
+	\item list.Prepend( 2 );
+	\item list.Clear( );
+\end{enumerate}
+}
+
+[Demo done on the board to facilitate understanding.]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Other Methods of \texttt{List}}
+
+It may be desirable to add methods for searching, sorting and inserting new items:
+\begin{itemize}
+	\item \texttt{void Sort( )}
+	\item \texttt{ListEntry FindFirst( )}
+	\item \texttt{ListEntry FindNext( )}
+	\item \texttt{void InsertBefore( )}
+	\item \texttt{void InsertAfter( )}
+	\item \texttt{bool Contains( )}
+\end{itemize}
+It should be noted that many of these methods are similar in complexity to the \texttt{DeleteFirst( )} method.
+
+Also, it should be noted that more error checking could be added to the methods that have been presented.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Expanding on the Simple Linked List}
+
+A second reference in each \texttt{ListEntry} that refers to the previous element can simplify deletion and other complex operations.\\
+\quad This is known as a doubly-linked list.
+
+The use of dummy items (i.e., dummy head or dummy tail) can simplify some the termination conditions for some loops.
+
+A dummy item is a \texttt{ListEntry} that has a valid reference but never any valid data. It is constructed when the list is constructed.
+
+A length member field can be added to keep track of the length of the list as items are added and removed.
+
+\end{frame}
+
+\end{document}
+

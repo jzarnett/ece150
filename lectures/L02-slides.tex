@@ -1,0 +1,556 @@
+\input{configuration}
+
+\title{Lecture 2 --- Computer Basics; Intro to C\#}
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: W.D. Bishop}
+  \end{center}
+ \end{frame}
+ 
+\part{Computer Basics}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}
+\frametitle{von Neumann Computer Architecture}
+
+\begin{center}
+\includegraphics[width=0.75\textwidth]{images/vonNeumann.png}
+\end{center}
+
+\tiny{Source: J. von Neumann, First Draft of a Report on the EDVAC.  Technical Report W-6700RD-492, Moore School of Electrical Engineering, University of Pennsylvania, June 1945.}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Central Processing Unit}
+
+The CPU contains a central control unit and a central arithmetic unit.
+
+CPU may also contain registers (high-speed storage locations) to store intermediate results and system state.
+
+CPUs control computer systems using a sequence of instructions.\\
+\quad Instructions manipulate data and control peripheral devices.
+
+Intel Pentium IV processor is an example of a CPU.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Central Control Unit}
+Central control unit performs two functions:
+\begin{enumerate}
+\item Fetches instructions from memory
+\item Performs instruction sequencing
+\end{enumerate}
+
+All information flow within the computer is directed by the central control unit.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Central Control Unit}
+
+Central arithmetic unit performs two functions:
+
+\begin{enumerate}
+\item Arithmetic operations (e.g., add, subtract, etc.)
+\item Logic operations (e.g., bit-wise AND, bit-wise OR, etc.)
+\end{enumerate}
+
+Data is manipulated by the central arithmetic unit.
+
+The central arithmetic unit is also sometimes called the \alert{arithmetic and logic unit (ALU)}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Memory Systems}
+
+Memory systems use a linearly addressable array of cells to store binary information:
+\begin{itemize}
+	\item Each cell has a unique address
+	\item Each cell stores a single binary digit (bit)
+	\item  Cells are grouped to represent a larger range of possible values
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{l l l}
+	\textbf{Grouping} & \textbf{Number of Bits} & \textbf{Number of Values Represented} \\ \hline
+	Nybble & 4 bits & 16 values \\
+	Byte   & 8 bits & 256 values \\
+	Word   & $n$ bits & $2^{n}$ values \\
+	Long Word & $2n$ bits & $2^{2n}$ values\\
+\end{tabular}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Memory Systems}
+
+Memory systems can store both instructions and data.
+
+Programs keep track of which memory cells contain instructions and which memory cells contain data.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Input \& Output Systems}
+
+\alert{Input / output (I/O)} systems allow the exchange of information between a computer system and its environment.
+
+\begin{center}
+\begin{tabular}{l l l l}
+	\textbf{System Type} & \textbf{Source} & \textbf{Destination} & \textbf{Examples} \\ \hline
+	Input & Environment & Computer & Keyboard, Mouse \\
+	Output & Computer & Environment & Printer, Monitor\\
+	I/O & Either & Either & Network Card, Modem\\
+	\end{tabular}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Basic Execution Cycle of a Computer}
+
+Computers typically perform the following steps to execute a single instruction:
+\begin{enumerate}
+	\item Fetch the next instruction to be performed
+	\item Decode the instruction
+	\item Fetch operands (if necessary)
+	\item Perform the operation
+	\item Store the result (if necessary)
+\end{enumerate}
+
+Computers use a \alert{program counter} to store the address of the next instruction to be performed.
+
+This counter is automatically updated by the computer as instructions are performed.
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Computer System}
+
+Computer systems are comprised of hardware, software, and firmware.
+
+\alert{Hardware} is a term for the physical components of a computer system. \\
+\quad Examples include the CPU, network cards, etc. 
+
+\alert{Software} is a term for the programs, procedures, and documentation associated with a computer system.\\
+\quad Examples include MS-Word, MS-Excel, etc.
+
+\alert{Firmware} is a term for programs stored within a read-only hardware device within a computer system.\\
+\quad An example is the BIOS (Basic I/O System).
+
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Computer Program}
+
+A computer program is an instruction sequence to perform a particular task.
+
+Programs can be created in machine language but this development process is very tedious.
+
+As an example, the following machine language program adds two numbers on an Intel Pentium processor:
+\begin{center}
+{\small
+\begin{verbatim}
+	10100001 01101000 10111100 01000001 00000000
+	00000011 00000101 01101100 10111100 01000001 00000000
+	10100011 01110000 10111100 01000001 00000000
+\end{verbatim}
+}
+\end{center}
+
+Software developers use assemblers, interpreters, and compilers to build computer programs.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Understanding Binary Quantities}
+A sequence of 0s and 1s can have many meanings
+
+Consider the quantity \texttt{1011001000100100}:
+
+\begin{center}
+\includegraphics[width=0.85\textwidth]{images/binary.png}
+\end{center}
+
+Conclusion: \alert{Context is very important}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Assemblers}
+
+\alert{Assembler}: a program to translate simple instructions named mnemonics from a human readable form to a machine readable form.
+
+Assemblers translate assembly language into machine language.
+
+Assembly language uses mnemonics to represent bit patterns.
+
+Assembly language mnemonics (usually) have a 1:1 correspondence with machine language instructions.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Interpreter}
+
+An \alert{interpreter} is a program to translate a high-level description of a program into a machine readable form at execution time.
+
+One statement in a high-level programming language may correspond with many machine language instructions.
+
+Interpreters may be capable of performing code optimization at execution time.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Compiler}
+
+A \alert{compiler} is a program to translate a high-level description of a program into a machine readable form prior to execution.
+
+One statement in a high-level programming language may correspond with many machine language instructions.
+
+Compilers can perform code optimization at compile time.
+
+Free compilers exist for all popular high-level programming languages including C, C++, Java, and C\#.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Just-In-Time (JIT) Compilers}
+
+A \alert{just-in-time compiler} is a special class of compiler.
+
+Like interpreters, just-in-time compilers translate high-level descriptions of programs at execution time.
+
+However, unlike interpreters, just-in-time compilers use a two stage compilation process.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Just-In-Time (JIT) Compilers}
+This allows code optimization at both compile and execution time.
+
+Programs are first compiled into an intermediate language that is independent of the machine language of the computer.
+
+At execution time, the intermediate language is translated to machine language by the JIT compiler.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{High-Level Programming Languages}
+
+\alert{High-level programming languages} make it easier to develop, test, maintain, and reuse software.
+
+Two programming paradigms are popular:
+\begin{itemize}
+	\item Structured Programming (SP):  A program is designed using a top-down approach based on the use of instruction sequences called functions
+	\item Object-Oriented Programming (OOP):  A program is designed using a set of objects that encapsulate data and the functions performed on the data
+\end{itemize}
+
+Other programming paradigms exist but are rarely used.
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Syntax}
+
+\alert{Syntax} refers to the way in which language constructs are written to form a computer program.
+
+Forgetting a semicolon at the end of a line is a syntax error.
+
+Missing a closing quote on a string is an example of a common syntax error.
+
+Syntax errors prevent compilation.
+
+Context-sensitive text editors can help reduce the frequency of syntax errors prior to compilation.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Semantics}
+
+\alert{Semantics} refers to the underlying meaning of a language construct.
+
+Using the incorrect loop construct for a particular problem is an example of an error in semantics.
+
+Errors in semantics do not prevent compilation but do result in a program behaving unexpectedly.
+
+Errors in semantics can only be avoided by thoroughly understanding the programming language.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Types of Software}
+
+\alert{Application software} solves a problem or provides a service in a particular application domain.
+
+Examples: word processors, spreadsheets, and engineering software.
+\end{frame}
+
+\begin{frame}
+\frametitle{Types of Software}
+\alert{System software} supports the development and use of application software.
+
+Examples: operating systems, software development kits, and compilers.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{The Software Design Process}
+
+\vspace{5em}
+
+\begin{quote}
+There are two ways of constructing a software design. One way is to make it so simple that there are obviously no deficiencies. And the other way is to make it so complicated that there are no obvious deficiencies.
+\end{quote}
+\hfill - C. A. R. Hoare
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Software Design Process}
+
+
+Software design is an iterative process.
+
+The steps are:
+\begin{enumerate}
+	\item Define the problem
+	\item Develop an algorithm to solve the problem
+	\begin{itemize}
+		\item Determine the sequence of steps required to solve a problem
+		\item Several algorithms may exist to solve a specific problem
+		\item Algorithm development may involve evaluating >1 option
+	\end{itemize}
+	\item Convert the algorithm to a specification in a suitable high-level programming language
+	\item Debug the computer program
+	\item Verify the operation of the computer program on a carefully chosen set of inputs
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Software Documentation}
+
+Software documentation describes the behaviour of software using text and/or graphics.
+
+Documentation is an essential part of software development.
+
+Well-documented software is easier to understand and maintain.
+
+Often, three software documentation approaches are used:
+
+\begin{itemize}
+\item Pseudocode in the early stages of algorithm design
+\item Unified Modeling Language (UML) in the latter stages of design
+\item Source code comments during the construction of designs
+\end{itemize}
+
+\end{frame}
+
+\part{Elements of a Program}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}
+\frametitle{Elements of a Program}
+
+At a very high level, a program consists of just data and instructions.
+
+In memory, they look the same: a sequence of 1s and 0s.
+
+We build a program by writing instructions to use \& manipulate data.
+
+Thus, instructions are the building blocks of programming.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Elements of a Program: Instructions}
+
+Our programs will be built using the following elements:
+\begin{itemize}
+	\item Variable declarations define storage for data
+	\item Assignment statements assign a value to variable
+	\item Loop statements perform repetitive tasks
+	\item Selection statements choose between 2+ paths of execution
+	\item Function declarations define a reusable set of statements
+	\item Function invocations use a function to perform a task
+	\item Input statements retrieve data from a computing device
+	\item Output statements send data to a computing device
+\end{itemize}
+
+As we go through the course, we'll learn about each of these.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Elements of a Program: Instructions}
+
+Each instruction has a specific format.\\
+\quad The format is defined by the programming language standard.
+
+Failure to follow the format may be a syntax or semantic error.
+
+An instruction is built of one or more words or symbols.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Keywords, Identifiers, and Literals}
+
+\alert{Keywords} are language-defined reserved words.\\
+	\quad Keywords denote language constructs.\\
+	\quad Keywords may be reserved always or reserved in certain contexts.
+	
+
+\alert{Identifiers} are user-defined reserved words.\\
+	\quad Identifiers denote classes, variables, functions, and constants.\\
+	\quad Identifiers must start with a letter.\\
+	\quad Identifiers are case-sensitive.\\
+	\quad Keywords may not be used as identifiers.
+	
+	
+\alert{Literals} are constant values that can be assigned to variables.\\
+	\quad Literals are associated with a particular data type\\
+	\quad The data type of a literal is determined by:\\
+	\quad\quad its usage in the program and the way it is formatted.
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Keywords}
+
+In any modern programming text editor, keywords will be highlighted.
+
+This will help you spot them in the program, and also help you recognize that you cannot use one as an identifier name.
+
+Don't attempt to memorize the list of keywords. If you practice programming, you will become familiar with the important ones.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Program Structure}
+
+All programs consist of many lines of code.
+
+For a very simple program, this will all be in one file.
+
+Complex programs will use multiple files \& folders of files...
+
+\end{frame}
+
+\begin{frame}
+\frametitle{User Interface}
+Programs almost always have a user interface: the part of the software that interacts with humans.
+
+In this course, we'll work with Console Applications that interact with the user just via text on the screen and keyboard input.
+
+Most of the pieces of software you are familiar with have \alert{Graphical User Interfaces (GUIs)} with pictures (icons) and buttons.
+
+GUIs may look really neat, but they are complex and focus on them would be a barrier to learning the programming fundamentals.
+
+\end{frame}
+
+
+\part{Introduction to C\#}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}
+\frametitle{The C\# Programming Language}
+\alert{C\#} (``See Sharp'') is a language standard developed by Microsoft.
+
+It's very similar to Java and borrows concepts from C, C++.
+
+It is a compiled, object-oriented programming language.
+
+It is also a \alert{high level language}:\\
+\quad\quad One keyword may equal many machine instructions.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{C\# Reserved Keywords}
+{\small\tt
+\begin{center}
+\begin{tabular}{l l l l l}
+abstract & as & base & bool & break\\
+byte & case & catch & char & checked\\
+class & const & continue & decimal & default\\
+delegate & do & double & else & enum\\
+event & explicit & extern & false & finally\\
+fixed & float & for & foreach & goto\\
+if & implicit & in & int & interface\\
+internal & is & lock & long & namespace\\
+new & null & object & operator & out\\
+override & params & private & protected & public\\
+readonly & ref & return & sbyte & sealed\\
+short & sizeof & stackalloc & static & string\\
+struct & switch & this & throw & true\\
+try & typeof & uint & ulong & unchecked\\
+unsafe & ushort & using & virtual & void\\
+volatile & while & & & \\
+\end{tabular}
+\end{center}
+}
+Don't try to memorize all of these; as we go through the course we will use some, but not all, of them.
+\end{frame}
+
+\begin{frame}
+\frametitle{C\# Contextual Keywords}
+
+There are a few more keywords that are reserved in certain contexts.
+
+You can use one as an identifier, but it's very bad practice:
+
+{\small\tt
+\begin{center}
+\begin{tabular}{l l l l l}
+from & get & group & into & join\\
+let & orderby & partial & select & set\\
+value & where & yield &  & \\
+\end{tabular}
+\end{center}
+}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{C\# Programming}
+To create and run a C\# program, the flow looks something like this:
+
+\begin{enumerate}
+	\item Write the program in an editor
+	\item The first stage of compilation takes place
+	\item Launch the program
+	\item The program is Just-In-Time compiled
+	\item The program executes
+\end{enumerate}
+
+In the next lecture we'll create our very first C\# Program: Hello World.
+
+\end{frame}
+
+
+\end{document}
+

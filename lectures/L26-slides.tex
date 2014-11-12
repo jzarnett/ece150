@@ -1,0 +1,347 @@
+\input{configuration}
+
+\title{Lecture 26  --- Pointers }
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: D.W. Harder, W.D. Bishop}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Introduction to Pointers}
+\alert{Pointers} are considered one of the most difficult programming topics.\\
+\quad It is also one of the most important.
+
+A pointer is, in simplest terms, the memory address of a variable.\\
+\quad It's called a pointer because it ``points'' to the variable's location.
+
+To provide backwards compatibility with C and C++, C\# allows the use of pointers in addition to references.
+
+Advanced students may be interested in a much more detailed examination of pointers vs. references:\\
+\scriptsize{\url{http://blogs.msdn.com/b/ericlippert/archive/2009/02/17/references-are-not-addresses.aspx}}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Memory Addresses}
+Recall that when we use a variable or object, this data is stored somewhere in main memory.
+
+When a variable \texttt{int x} is created, somewhere in memory, some area of memory is designated as the location of \texttt{x}.
+
+This area of memory has an address. So to find \texttt{x} again when we need it, we go to the memory address of \texttt{x}.
+
+Our model of memory is a linear array of ``boxes''.\\
+\quad Each box is associated with a numerical address.\\
+\quad Memory addresses are just numbers.
+
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Pointer Variables}
+Even though a pointer is a memory address and a memory address is just a number, storing a pointer in a regular variable doesn't work.
+
+Instead, declare a pointer type. This declares a pointer variable that points to a variable of type \texttt{int}:\\
+\quad \texttt{int* p;}
+
+The use of the asterisk (\texttt{*}) indicates that \texttt{p} is a pointer.
+
+Each variable type (\texttt{int, double, char}, etc...) requires a different pointer type.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Different Pointer Types}
+Why do the different variable types require different pointer types?
+
+The size of a memory address is the same regardless of what kind of data you want to locate in memory.
+
+We must tell the compiler what kind of pointer it is so the compiler knows what to do when we access whatever is stored at that address.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Pointer Declaration Pitfall}
+Although we don't do this in the lecture notes, it is legal to declare two \texttt{int} variables in one line, like this:\\
+\quad \texttt{int x, y;}
+
+This is equivalent to:\\
+\quad \texttt{int x;}\\
+\quad \texttt{int y;}
+
+When declaring a pointer you can write \texttt{int *x;}\\
+\quad You may think of the ``type'' of a pointer as \texttt{int*}.\\
+\quad This is dangerous: it's correct in C\#, but NOT in C or C++.
+
+Common source of confusion: writing \texttt{int* x, y;}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Pointer Declaration Pitfall}
+\texttt{int* x, y;} in C\# is equivalent to:\\
+\quad \texttt{int *x;} \\
+\quad \texttt{int *y;}
+
+Both \texttt{x} and \texttt{y} are integer pointers in C\#.
+
+\texttt{int* x, y;} in C or C++ is equivalent to:\\
+\quad \texttt{int *x;}\\
+\quad \texttt{int y;}
+
+In C/C++, \texttt{x} is an integer pointer, but \texttt{y} is an ordinary integer.\\
+%\quad When declaring a pointer, you must use \texttt{*} on \underline{each} variable.\\
+%\quad The \texttt{*} associates with the variable, not the type.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Pointer Declaration Pitfall}
+There could be confusion about how \texttt{int* x, y} will be compiled.
+
+
+Code with the potential to cause confusion is not good practice; especially when working with others.
+
+
+To avoid this problem altogether, don't put multiple variable declarations on the same line.
+
+There is no extra cost for using another line in the source file.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{I Know Your Address}
+Now, for a pointer to be useful, we need to put an address in it.
+
+Perhaps we already know a specific address we would like to use, such as an address agreed upon in advance.
+
+Example: an input/output device is mapped to a memory location.\\
+\quad This is known as \alert{memory-mapped I/O}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Memory-Mapped I/O}
+Memory-mapped I/O is a way of interacting with input/output devices.
+
+A specific memory location is designated as belonging to a device. 
+
+Writing a value to the designated memory location of an output device results in the value being output via the device.
+
+Reading a value from the designated memory location of an input device is how we receive input.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Writing to Memory-Mapped I/O}
+
+Let's say we have a parallel port mapped to memory location \texttt{0x378}.
+
+In practice, this means to send output to the parallel port, we just write the value to location \texttt{0x378}, and that data gets sent to the port.
+
+As we know the address that delivers the data to the parallel port, we can just set the pointer's address explicitly:\\
+\quad \texttt{int* parallelPort;\\
+\quad parallelPort = 0x378;}
+
+This stores the memory address \texttt{0x378} in the pointer \texttt{parallelPort}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Writing to Memory-Mapped I/O}
+Now we'd like to output the data 65 to the parallel port.
+
+If \texttt{parallelPort} contains the address, we need a way to follow the pointer (the directions) to get to the memory location.
+
+The syntax is: \texttt{*parallelPort = 65;}		
+
+This is called \alert{dereferencing} a pointer. \\
+\quad Dereferencing is going to the address the pointer contains.
+
+The use of the \texttt{*} in this context denotes dereferencing.\\
+\quad 65 is written to the location pointed to by \texttt{parallelPort}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Reading from Memory-Mapped I/O}
+Suppose the response to our action will be found in address \texttt{0x3A8}.
+
+\texttt{int* outputLocation = 0x3A8;}\\
+\quad Allocates a pointer to an integer, and sets the address to \texttt{0x3A8}.
+
+To read the value at \texttt{0x3A8}, once again, use the dereferencing operator \texttt{*}.
+
+\texttt{int latestValue = *outputLocation;}
+
+This dereferences the pointer \texttt{outputLocation}; the value there is, let's say, 128, so 128 is stored in the integer variable \texttt{latestValue};
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Summing Up Memory-Mapped I/O}
+
+The table below summarizes the expressions and values we have seen in the memory-mapped I/O example.
+
+\begin{center}
+\begin{tabular}{l|l}
+	\textbf{Expression} & \textbf{Value} \\ \hline
+	\texttt{parallelPort} & \texttt{0x378} (Decimal: 888) \\ \hline
+	\texttt{*parallelPort} & \texttt{65}\\ \hline
+	\texttt{outputLocation} & \texttt{0x3A8} (Decimal: 936) \\ \hline
+	\texttt{*outputLocation} & \texttt{128}\\ \hline
+	\texttt{latestValue} & \texttt{128}\\
+\end{tabular}
+\end{center}
+
+The variable \texttt{latestValue} is an \texttt{int}, not a pointer, and therefore it cannot be dereferenced.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{What's Your Address?}
+Under most circumstances, we don't have an agreed-upon memory location that we know in advance.
+
+There is a unary operator we can use to get the address of a variable.\\
+\quad The addressof operator is \texttt{\&}
+
+\texttt{int y = 0;\\
+int* ptr = \&y;}
+
+The value stored in \texttt{ptr} is the \underline{address of} \texttt{y}.
+
+We now have two ways to refer to \texttt{y}:\\
+\quad Through the regular variable \texttt{y}; and\\
+\quad By following the address stored in \texttt{ptr}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Address Of and Pointers}
+
+Now add a third statement to this list:\\
+\texttt{int y = 0;\\
+int* ptr = \&y;\\
+*ptr = 42;}
+
+The value of \texttt{y} has been changed to 42 by the assignment. Why?
+
+When we dereference \texttt{ptr}, we go to the memory location stored in \texttt{ptr}. The memory location in \texttt{ptr} is the address of \texttt{y}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Pointer Assignment}
+If \texttt{p1} and \texttt{p2} are pointer variables, the assignment \texttt{p1 = p2} changes the address stored in \texttt{p1} to the address stored in \texttt{p2}.
+
+Be sure not to confuse:\\
+\texttt{p1 = p2;}\\
+with \\
+\texttt{*p1 = *p2;}
+
+When you add the asterisk, you are not dealing with the pointers, but instead the variables to which they are pointing.
+
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{Pointers in C\#/C++/C}
+
+
+
+C and C++ use pointers  instead of references to refer to objects.\\
+\quad A pointer provides the memory address of an object.
+
+Unlike references, pointers are not managed by C\# and its automatic memory management system.
+
+A pointer changes only when the program explicitly changes its value.
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{References vs. Pointers in C\#}
+
+\textbf{References:}
+\begin{itemize}
+	\item Provide access to specific objects in memory
+	\item Can be modified by the automatic memory management system
+\end{itemize}
+
+\textbf{Pointers:}
+\begin{itemize}
+	\item Provide access to specific addresses in memory
+	\item Cannot be modified by the automatic memory management system
+\end{itemize}
+
+\end{frame}
+
+
+
+
+
+\begin{frame}
+\frametitle{Using Pointers in C\#}
+
+To use pointers in C\#, you must do two things:
+\begin{enumerate}
+	\item Use the \texttt{unsafe} modifier to identify the scope in which pointers will be used
+	\item Compile your program using the unsafe compiler option (/unsafe+)
+\end{enumerate}
+
+The unsafe modifier / compiler option simply indicates that C\# does not manage the code in the typical way.
+
+For example, unsafe code is not subject to array bounds checking and some forms of type checking.
+
+The \texttt{unsafe} keyword can be applied to classes, methods, blocks of code enclosed in braces, and specific variables.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Unsafe Code Example}
+
+{\scriptsize
+\begin{verbatim}
+unsafe static void Swap( int * a, int * b )
+{
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+unsafe static void Main( )
+{
+    int x = 5;
+    int y = 12;
+    Console.WriteLine( "x = " + x + ", y = " + y );
+	
+    Swap( &x, &y );
+
+    Console.WriteLine( "x = " + x + ", y = " + y );
+}
+\end{verbatim}
+}
+
+Because the addresses of integers \texttt{x} and \texttt{y} were used, the values could be swapped without the use of pass-by-reference.
+
+\end{frame}
+
+\end{document}
+

@@ -1,0 +1,463 @@
+\input{configuration}
+
+\title{Lecture 14 --- More About Functions}
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: W.D. Bishop}
+  \end{center}
+ \end{frame}
+ 
+\part{Re-Using Functions}
+\begin{frame}\partpage\end{frame}
+
+
+\begin{frame}
+\frametitle{Functions, Continued}
+In the last lecture, we discussed the ``what'' of functions, but not why.
+
+One of the strategies for engineering problem-solving is the \alert{divide-and-conquer} approach.
+
+Break a large problem into smaller sub-problems. Solve the smaller problems, then recombine the answers to get the final answer.
+
+A major advantage of functions is the ability to re-use some code we have already written.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Re-Use of Functions}
+
+{\scriptsize
+\begin{verbatim}
+int students = 385;
+int[] assignments = new int[students];
+int[] midterms = new int[students];
+int[] finals = new int[students];
+
+for ( int i = 0; i < assignments.Length; i++ )
+{
+    assignments[i] = 0;
+}    
+for ( int j = 0; j < midterms.Length; j++ )
+{
+    midterms[j] = 0;
+}
+for ( int k = 0; k < finals.Length; k++ )
+{
+    finals[k] = 0;
+}
+\end{verbatim}
+}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Re-Use of Functions}
+
+First, define the function \texttt{fillWithZeros()}:
+
+{\scriptsize
+\begin{verbatim}
+void fillWithZeros( int[] array ) 
+{
+    for ( int i = 0; i < array.Length; i++ )
+    {
+        array[i] = 0;
+    }
+}    
+\end{verbatim}
+}
+
+Then, use it:
+{\scriptsize
+\begin{verbatim}
+int students = 385;
+int[] assignments = new int[students];
+int[] midterms = new int[students];
+int[] finals = new int[students];
+
+fillWithZeros( assignments );
+fillWithZeros( midterms );
+fillWithZeros( finals );
+\end{verbatim}
+}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Advantages of Re-Using Functions}
+
+\begin{enumerate}
+	\item Decompose the problem into smaller subproblems
+	\item Reduce duplicate code in the program
+	\item Allow re-use of code elsewhere in the program
+	\item Hide the implementation details
+\end{enumerate}
+
+Duplicate code is usually produced by copy-and-pasting existing code.
+
+That means twice as many places to change to fix something.
+
+Avoid duplicating code where possible.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Structuring Your Program}
+Functions also give us the ability to structure our program, rather than just have all parts of it jammed together in \texttt{Main}.
+
+It should be possible to summarize the purpose of a function in a sentence or two. 
+
+If a function is long or does multiple things, chances are that there are smaller functions within the code that can be separated out. 
+
+Writing code with good structure will make your program:
+\begin{itemize}
+	\item Easier to understand
+	\item Easier to update in the future
+	\item Easier to fix if it's not correct
+	\item More re-usable
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{On Good Structure}
+Using good structure may not seem like it makes a difference in programming for ECE~150 since the amount of code written is small.
+
+Get into proper habits now and it will save you headaches later on.
+
+In later courses (operating systems, fourth year design project), you will write a lot more code and you'll need to manage it properly.
+
+In industry, codebases can be hundreds of thousands of lines. Without structure, the program will quickly become a disaster.
+
+\end{frame}
+
+\part{Documenting Functions}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}
+\frametitle{Documentation}
+This is not intended as a long essay on documentation; just a strategy that will help you write better functions.
+
+Using comments, above each function you write, take a moment to write the \alert{precondition} and \alert{postcondition}.
+
+Precondition: anything that is assumed to be true when the function is called. 
+
+Postcondition: the effect of the function call (i.e., what happens if you call it when the precondition is true).
+
+These two pieces of documentation can tell you how to use a function properly, without having to examine the implementation.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Using Pre- and Postconditions}
+
+\begin{verbatim}
+// Precondition: there is at least one grade in the array
+// Postcondition: the average of all the grades in the 
+//                array is returned
+static double calculateAverage( double[] grades )
+{
+    double sum = 0;
+    for ( int i = 0; i < grades.Length; i++ )
+    {
+        sum += grades[i];
+    }
+    return ( sum / grades.Length ); 
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Violating the Precondition}
+What happens if we violate the precondition of \texttt{calculateAverage()} and \texttt{grades} is an array of capacity 0?
+
+And who is at fault if the precondition is violated and an error occurs?
+
+Think of pre- and postconditions as a contract. 
+
+If the caller of the function lives up to the precondition, the function is responsible for fulfilling the postcondition.
+
+\end{frame}
+
+\part{Variable Scope}
+\begin{frame}\partpage\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Variable Scope}
+You may have noticed:
+
+\begin{verbatim}
+for ( int i = 0; i < 10; i++ )
+{
+    // Loop Body
+}
+
+Console.WriteLine( i );
+\end{verbatim}
+
+... produces a compile-time error at the \texttt{Console.WriteLine} statement, because the compiler does not know what \texttt{i} is.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Variable Scope}
+The \alert{scope} of a variable is the context in which that variable is declared and available for use.
+
+Here, variable \texttt{i} below is available only within the body of the loop.
+
+\begin{verbatim}
+for ( int i = 0; i < 10; i++ )
+{
+    Console.WriteLine( i ); // Valid
+}
+
+Console.WriteLine( i ); // Compile time error
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Variable Scope in Functions}
+This same principle applies to functions.\\
+\quad A variable defined in \texttt{Main} is not defined in another function.
+
+A variable defined inside a function is called a \alert{local variable}.
+
+{\scriptsize
+\begin{verbatim}
+static void Main ()
+{
+    double val = 0;
+    int[] zeroFill = new int[42];
+    fillWithZeros( zeroFill );
+}
+\end{verbatim}
+}
+
+{\scriptsize
+\begin{verbatim}
+void fillWithZeros( int[] array ) 
+{
+    for ( int i = 0; i < array.Length; i++ )
+    {
+        array[i] = 0;
+    }
+}    
+\end{verbatim}
+}
+
+The variable \texttt{val} is not available in \texttt{fillWithZeros}.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Variable Scope in Functions}
+Further observations on that same code:
+
+{\scriptsize
+\begin{verbatim}
+static void Main ()
+{
+    double val = 0;
+    int[] zeroFill = new int[42];
+    fillWithZeros(zeroFill);
+}
+\end{verbatim}
+}
+
+{\scriptsize
+\begin{verbatim}
+void fillWithZeros(int[] array) 
+{
+    for (int i = 0; i < array.Length; i++)
+    {
+        array[i] = 0;
+    }
+}    
+\end{verbatim}
+}
+
+
+The array \texttt{zeroFill} is a parameter to \texttt{fillWithZeros} so the will be accessible, but we must refer to it using the name \texttt{array}.
+
+The name \texttt{zeroFill} is not in scope inside \texttt{fillWithZeros}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Knowing if a Variable is in Scope}
+The good news is that it is a compile-time error if we try to use a variable that is not in scope.\\
+\quad This means we know right away this needs to be fixed.
+
+The use of \{ \} braces defines the scope of a variable.\\
+\quad A variable is in scope within the braces that contain its definition.
+
+It is possible to define a variable within a function, a loop, or even a selection statement. 
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Defining a Variable within an \texttt{if}}
+
+\begin{verbatim}
+if ( x < 0 )
+{
+    bool invalid = ( x == -1 );
+    // Block 1
+    
+} else if ( x > 100 ) {
+    // Block 2
+}
+\end{verbatim}
+
+The \texttt{bool} variable is in scope only within the \texttt{if ( x < 0 )} block (1).
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Manual Variable Scope}
+It is possible to manually define the scope of a variable using braces.
+
+As before, the scope of the variable is defined by the \{ \} braces it is in.
+
+\begin{verbatim}
+int x = 100;
+{
+    int y = 54;
+    Console.WriteLine( y );
+}
+Console.WriteLine( x ); // y unavailable in this context
+\end{verbatim}
+
+But there is unlikely to be a good reason to do this.
+
+
+\end{frame}
+
+\part{Function Overloading}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}
+\frametitle{Function Overloading}
+If you just copy and paste a function, you will see a compile-time error, because you have two functions with the same signature.
+
+Yes, the signature is what matters, even if the implementations differ.
+
+If two functions have the same signature, the compiler can't tell which one you mean when you call that function.
+
+Could two functions have the same name, but different signatures?\\
+\quad Yes -- this is called \alert{function overloading}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Function Overloading}
+
+A function is \alert{overloaded} if one function name has more than one implementation. Consider the two function signatures below:
+
+\texttt{double average( double n1, double n2 )}
+
+\texttt{double average( double n1, double n2, double n3) }
+
+The compiler looks at the actual parameters when the function is called to figure out which implementation should execute.
+
+Example: if \texttt{average( 7.5, 12.5 );} is called, the first of the two signatures above will be the function that is called.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Rules for Overloading}
+
+If two functions have the same name, they must have either:\\
+\quad different numbers of formal parameters, or\\
+\quad formal parameters of different types.
+
+You cannot overload a function by giving two definitions that differ only in the return type. So this is an error:\\
+\texttt{double average( int n1, int n2 )}\\
+\texttt{int average( int n1, int n2 )}
+
+Why not? Because the compiler won't know which \texttt{average} you mean.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Overloading and Type Promotion}
+
+Type promotion is still in effect when calling overloaded functions.
+
+Picture these two functions:\\
+\texttt{int compute( int n1 )}\\
+\texttt{int compute( double n1 )}
+
+If the call is \texttt{compute( 10 )}, it's possible both of these will match: 10 may be an \texttt{int} but it could be automatically promoted to \texttt{double}.
+
+C\# will choose the ``best'' match: the first function is chosen because 
+the compiler will try to find a match without conversion, if it can.
+
+That is ``better'' than converting \texttt{int} to \texttt{double}.
+
+This may result in some unexpected behaviour, but it is consistent.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Overloading and Type Promotion}
+Sometimes, however, C\# can't figure out which choice is ``best''.
+
+Picture these two function signatures:\\
+\texttt{int compute( int n1, double n2 )}\\
+\texttt{int compute( double n1, int n2 )}
+
+If the call is \texttt{compute( 10, 10 )} there are two ways to resolve this:\\
+\quad promote the first parameter to \texttt{double}; or\\
+\quad promote the second parameter to \texttt{double}
+
+C\# can't figure out which of these is better, because they are equal. This will be a compile-time error because the situation is ambiguous.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Proper Use of Overloading}
+You can make proper use of overloading as a way to have some ``default'' values in function calls.
+
+Here are two function signatures:\\
+\texttt{double calculate( double x, double y )}\\
+\texttt{double calculate( double x, double y, bool option )}
+
+The implementation of the first function might look like this:
+\begin{verbatim}
+double calculate( double x, double y )
+{
+    return calculate( x, y, true );
+}
+\end{verbatim}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{About Overloading}
+
+Overloading may be useful in some circumstances.
+
+You can use overloading to have some ``default'' values, or in cases where you want to perform the same operation using different inputs.
+
+Avoid overloading where there is the possibility for confusion, such as in the presence of type promotion.
+
+\end{frame}
+
+
+\end{document}
+

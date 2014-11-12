@@ -1,0 +1,389 @@
+\input{configuration}
+
+\title{Lecture 13 --- Functions }
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: D.W. Harder, W.D. Bishop}
+  \end{center}
+ \end{frame}
+ 
+\begin{frame}
+\frametitle{Mathematical Functions}
+
+You are no doubt familiar with the concept of a mathematical function: a relation between a set of inputs and output.
+
+Mathematical functions take arguments in specific domains and return a value in another domain.
+
+Consider $sin : R \rightarrow R$.\\
+\quad Given a right-angled triangle with an angle $\theta$, return the ratio of the length of the opposite side to the length of the hypotenuse.
+
+
+It takes a real number input  (in $R$) and returns a real number output.\\
+\quad Each input is related to exactly one output. 
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Mathematical Functions}
+
+Then there is evaluation of a function, such as $f(x) = x^{2}$.
+
+$x$ is the input to this function, and the function returns some output, like $f(-5) = 25$. 
+
+We often graph (on an x-y plane) the output of a function: $y = f(x)$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Mathematical Functions}
+
+You've used mathematical functions a lot over the years:
+
+Trigonometric functions: $cos(x), sin(x), tan(x)$\\
+Absolute value function: $|x|$\\
+Square root function: $\sqrt{x}$
+
+These examples all take a single input, but there's no reason this has to be the case. Imagine a function $g(x, y) = x^{y}$, for example.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Functions in Programs}
+In a program, a function is much like a mathematical function.
+
+A function takes 0 or more inputs and returns 0 or 1 values.
+
+A function is sometimes also called a procedure or subroutine.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Using a Function}
+Assume for now that there is a defined function in the system for the absolute value function, $|x|$.
+
+To make use of this function, we need to know its \alert{signature}.
+
+The function signature tells us the name, what type(s) the input to the function is, and the type of the output.
+
+The format is: \textit{returnType name} ( \textit{formalParameters...} )
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Formal Parameters}
+
+We may have zero or more \alert{formal parameters}: a placeholder for whatever value will be given as input. 
+
+The \textit{formalParameters} is a list of variables in the form \textit{type name1, type name2, ... type nameN}.
+
+In $f(x)$, we state that $x$ is a formal parameter: it's a variable that we use in defining how $f(x)$ works.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{abs} Function}
+
+Suppose this is the function signature: \texttt{double abs ( double x )}
+
+Let's look at it from left to right:
+
+The return type is \texttt{double}: the output will be a \texttt{double}.
+
+The name of the function is \texttt{abs} (for \textbf{abs}olute value).
+
+The formal parameters (inputs) are in the (~) brackets. There is one input, a \texttt{double} named \texttt{x}.
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Calling a Function}
+
+Now that we know the function signature, we know how to use it.
+
+Function \texttt{abs} expects the input of a \texttt{double} \& will output a \texttt{double}.
+
+We are now ready to \alert{call} (or \alert{invoke}) this function.
+
+To do so, we use the name \texttt{abs} followed by \texttt{(~)} brackets.\\
+\quad Inside those brackets, we put the \alert{actual parameters}.
+
+\texttt{double absX = abs( -9.5 );}
+
+The output is the \alert{return value}, which is then stored in \texttt{absX}.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Actual Parameters}
+We saw already the formal parameters for \texttt{abs} is one variable: \texttt{double~x}.
+
+The \alert{actual parameters} are the values actually given as input to the function at the time we want the function to execute.
+
+We must provide one actual parameter value for each of the formal parameter values in the signature. 
+
+The types must match (therefore order matters).
+
+In the case of \texttt{abs}, we provide one actual parameter of type \texttt{double}; in this case, the literal \texttt{-9.5}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Call Me Maybe?}
+
+We can also use a variable as an actual parameter:\\
+\quad \texttt{double absY = abs( y );}
+
+Variable \texttt{absY} will hold the absolute value of whatever \texttt{y} contained at the time the function was called.
+
+Same thing with expressions:\\
+\quad \texttt{double absZ = abs( y + 7 )}
+
+Type promotion rules apply, so if \texttt{y} is an \texttt{int}, the actual parameter will be promoted to \texttt{double} before it is used in the function call.
+
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Using vs. Defining a Function}
+Thus far it was assumed that there exists the \texttt{abs} function.\\
+\quad i.e., someone else wrote it.
+
+We now understand how to use an already-existing function.
+
+Most of the time, however, we must define a function if we want to use it, since it won't already exist for us.
+
+But: don't re-invent the wheel. If there already is an implementation, it is usually better to use that than to write your own.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Defining a Function}
+
+
+A function definition has two parts: the signature and the body.
+
+\begin{verbatim}
+static double abs ( double x ) 
+{
+    // TODO: Implement Body
+}
+\end{verbatim}
+
+We've already examined the signature; the first line of the definition.
+
+For now we have to precede a function signature with \texttt{static}.\\
+\quad Later in the course we'll find out what it means.
+
+The body is some block of statements that we have to write to make the function do something useful.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{return} Keyword}
+
+There's a keyword needed to implement a function: \texttt{return}.\\
+\quad The \texttt{return} keyword is followed by the \alert{return value}.
+
+The return value is the output of the function.
+
+The \texttt{return} statement could appear anywhere within the function (but commonly it's at the end).
+
+When a \texttt{return} statement is encountered, the return value becomes the function output and the execution of the function ends.
+
+In this respect, \texttt{return} is a bit like the \texttt{break} statement.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{abs} Function Implemented}
+
+\begin{verbatim}
+static double abs ( double x ) 
+{
+    if ( x >= 0 ) 
+    {
+        return x;
+    }  else  {
+        return -x;
+    }
+}
+\end{verbatim}
+
+In the definition, we use the formal parameter names. 
+
+(In $f(x)$: the formal parameter $x$ is used to define the function ($x^{2}$).)
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Execution Semantics}
+When we call \texttt{double y = abs( -5.0 );}, what happens?
+
+Much like when we evaluate an expression:\\
+\quad \texttt{ a = b + 7;}\\
+before we can do the assignment we have to evaluate the right side.
+
+When we evaluate a function call, we go to the function definition and execute the lines of code there.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Execution Semantics}
+
+\begin{verbatim}
+static double abs ( double x ) 
+{
+    if ( x >= 0 ) 
+    {
+        return x;
+    }  else  {
+        return -x;
+    }
+}
+\end{verbatim}
+
+If \texttt{abs} was called with the actual parameter of \texttt{-5.0}, the value of \texttt{x} is \texttt{-5.0} and that is the value used in expressions within the function.
+
+Here, the statement \texttt{return -x;} executes, which evaluates to \texttt{return - (-5.0)} $\rightarrow$ \texttt{return 5.0;}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Execution Semantics}
+
+Because we encountered a \texttt{return} statement, execution of the function is finished and we take the output of 5.0.
+
+Our original assignment statement was \texttt{double y = abs( -5.0 );}
+
+After evaluating \texttt{abs( -5.0 )}, the assignment is \texttt{double y = 5.0;}
+
+And of course, we execute this assignment and store 5.0 in variable \texttt{y}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Fulfilling the Contract}
+
+The function signature holds us to an important condition: we have to send back output in the type of the return type.
+
+So for \texttt{abs}, because the return type is \texttt{double}, a call to that function must always return a \texttt{double}.
+
+
+Our implementation is valid; it lives up to the condition that whatever the control flow in the function, a value of type \texttt{double} is returned.
+
+If we forgot the \texttt{return} statement in the \texttt{else} block, that would be a compile-time error.
+
+Of course, the compiler doesn't check the semantics: if you put \texttt{return 0.0d;} as the body of the function, it compiles (but is wrong).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Return Types}
+The \texttt{abs} example has a return type of \texttt{double}, but any type can be the return type of a function.
+
+This includes enumerated and programmer-defined (\texttt{struct}) types.
+
+Every function must have a return type, but not all functions have a return value.
+
+A function that does not return a value has a return type of \texttt{void}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Into the \texttt{void}}
+If a function has return type \texttt{void}, it can still take input of zero or more input parameters. It simply returns no output value.
+
+The \texttt{return} statement can appear in a \texttt{void} function, but when it does so, there's no return value following it.
+
+The statement just appears as: \texttt{return;}
+
+When a \texttt{return} statement is encountered in a \texttt{void} function, it just means to stop function execution at that point.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Into the \texttt{void}}
+
+A function with return type \texttt{void} doesn't need a \texttt{return} statement.
+
+If the end of the statement block is reached without encountering \texttt{return}, it's as if there is a \texttt{return} statement there.
+
+\begin{verbatim}
+public void PrintData( )
+{
+    // Additional statements not shown for space reasons
+    Console.WriteLine( "-- End of List --" );
+}
+\end{verbatim}
+
+After the \texttt{Console.WriteLine} statement, the function will return.\\
+\quad The compiler will put \texttt{return;} there if it's not explicitly written.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{\texttt{Main}}
+
+We've been using a function in our code all along, although we never really discussed it: \texttt{static void Main()}.
+
+Ignoring the keyword \texttt{static} for now, which we'll come to in a later lecture, let's look at the parts of this.
+
+The return type is \texttt{void}. Thus, it returns no value.
+
+The name is \texttt{Main}. No surprise there.
+
+The list of formal parameters is enclosed in \texttt{( )} brackets, and for \texttt{Main}, it is empty (so there are none).
+
+And the block of statements enclosed in \texttt{\{ \}} braces is the body.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Function Example: Temperature Converter}
+
+This function converts temperatures in fahrenheit to celsius.
+
+\begin{verbatim}
+// Precondition: provided temperature is in Fahrenheit
+// Postcondition: returns equivalent temp in Celsius
+public double ConvertToCelsius ( double temperatureInF )
+{
+    return ( temperatureInF - 32 ) * 5.0d / 9.0d;
+}
+\end{verbatim}
+
+We can then call this function:\\
+\quad \texttt{double bodyTemp = ConvertToCelsius( 98.6 );}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Re-Usable Elements}
+We already saw in the \texttt{struct} that we could re-use some already existing constructs like the \texttt{Date} structure.
+
+Functions allow us to re-use groups of statements.
+
+In this lecture we have examined the ``what'' of functions, but have not yet examined the ``why''.
+
+In the next lecture, we will discuss the motivation for using functions.
+
+
+\end{frame}
+
+
+\end{document}
+

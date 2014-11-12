@@ -1,0 +1,325 @@
+\input{configuration}
+
+\title{Lecture 18 --- Testing \& Error-Checking }
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: D.W. Harder, W.D. Bishop}
+  \end{center}
+ \end{frame}
+
+\begin{frame}
+\frametitle{Programming Errors}
+
+A programming error is any kind of mistake that occurs during the development and/or maintenance of a computer program.
+
+Even experienced developers will make mistakes. Nobody's perfect.
+
+Errors can be classified into three broad categories:
+\begin{itemize}
+	\item Compile-time errors; and
+	\item Run-time errors
+	\item Logic errors
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Compile-Time Errors}
+\textbf{Compile-Time Errors} are:
+\begin{itemize}
+	\item Detected when the program is compiled
+	\item Programming errors that prevent compilation of the program
+	\item An incorrect use of the programming language
+\end{itemize}
+Examples include:
+		\begin{itemize}
+			\item Forgetting a semi-colon
+			\item Misspelling a method name
+			\item Using an operand of an inappropriate type
+			\item Having unmatched brackets
+			\item Using a variable not in scope
+		\end{itemize}
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Run-Time Errors}
+\textbf{Run-Time Errors} are:
+\begin{itemize}
+	\item Programming errors that allow compilation but result in incorrect behaviour when the program is run
+	\item Detected when the program is executing
+	\item Not detectable at compile-time
+\end{itemize}
+
+Examples include:
+		\begin{itemize}
+			\item Division by zero
+			\item An infinite loop
+			\item Parsing a string input to integer when the user typed in something that's not a valid integer
+		\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Logic Errors}
+\textbf{Logic Errors} are:
+\begin{itemize}
+	\item Programming errors that allow compilation and execution, but produce incorrect results
+	\item Detected when the program is executing or after it is finished
+	\item Not detectable at compile-time
+	\item When what you wrote is valid but not what you meant to write
+\end{itemize}
+
+Examples include:
+		\begin{itemize}
+			\item Accessing index 1 of an array when you wanted index 0.
+			\item Putting in the wrong mathematical formula, such as \texttt{a / b + 1} instead of \texttt{a / (b+1)}
+			\item Using the wrong algorithm to solve a problem
+		\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The C\# Approach to Errors}
+C\# tries to detect as many types of errors as possible at compile-time.
+
+C\# imposes a very strict set of rules on the use of programming language constructs.
+
+
+The advantage is that C\# detects more errors at compile-time.
+
+The disadvantages are that the language forces us to be more explicit about things at compile time and run-time performance is slower.
+
+(Other languages like C++ may allow accessing an entry that's past the end of the array unintentionally!)
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Finding All Errors}
+If all errors were detectable at compile-time, could programmers develop error-free programs?
+
+Possibly; an error that is detected in advance is likely to be fixed.\\
+\quad Assumption: cost of fixing the error less than cost of error's impact.
+
+
+This is a matter of engineering judgement...
+
+Even in life and safety critical situations, like nuclear weapons, an assessment is done to determine the risks and how to deal with them.\\
+\quad Such analysis must decide on what an ``acceptable'' level of risk is.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Finding All Errors}
+Can we even predict all errors in advance?
+
+Unlikely. There are multiple reasons:\\
+\quad User input is unpredictable at compile-time.\\
+\quad Old or damaged hardware can result in strange behaviour.\\
+\quad The behaviour of complex systems is difficult to model.\\
+\quad ... and so on. This is not an exhaustive list.
+
+If someone invented a programming language that allowed no possibility of error at run-time, it would probably not be useful.
+
+Analogy: a computer that is unplugged and buried inside 2m of solid concrete is secure, but not useful...
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Finding Run-Time Errors}
+Acknowledging that we cannot find all errors in advance, it's still worthwhile to try to find errors.
+
+If we find errors, we can remove them, and get a little more certainty that the software does what it says it should.
+
+One basic strategy for finding errors is: \alert{software testing}.
+
+You surely have done some testing already for your assignments.\\
+\quad Any time you provided input and looked at the output was a test.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Software Testing}
+Software testing is a complex subject that will be covered more next term in ECE~155, and then in the Software Testing course later.
+
+Software testing, put simply, is a process in which we check if a piece of code does what it's supposed to do.
+
+Remember that software takes some inputs and returns outputs.\\
+\quad Thus, testing is:\\
+\quad \quad Provide inputs, examine the output, and check if it's correct.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Testing: Input \& Output}
+Recall the \texttt{factorial()} program.
+
+We can test it by providing 5 as an input to the function.
+
+Then examine the output (return value, 120) to see if it's correct.
+
+Critically, to know if the value returned is correct, we have to know what the correct value is independently of what the function returns.
+
+When it's a mathematical problem, it's easy to know what's correct.\\
+\quad Other problem domains may be much more difficult...
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Testing Your Code}
+At this stage, when you write some code, you may test it by trying out a few different inputs to see what the output is.
+
+A pairing of inputs and outputs makes a \alert{test case}.\\
+\quad Example: input 5, output 120
+
+To check the code you have written, you will execute a set of test cases to check if your code does what it should. 
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Valid and Invalid Input}
+All of the preceding discussion assumes that the input is valid.
+
+A major source of programming errors is invalid input.\\
+\quad This could be intentional or unintentional on the part of the user.
+
+To reduce the possibility of negative outcomes from errors, we can implement \alert{error-checking} in the code.
+
+An implementation of error checking detects invalid input and deals with it in some way.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Why Check for Errors?}
+
+It's not strictly necessary to check for errors; we can just ignore them all and forge ahead regardless.
+
+If we ignore an error, however, we are likely to get incorrect output. 
+
+Maybe the program keeps running; its state is corrupted and that may manifest in incorrect output or behaviour later.
+
+Some errors cannot be ignored; they will result in the termination of the program. Example: stack overflow in a recursive function.
+
+Ideally, check for errors in advance, such as ensuring that the divisor is not zero before a division operation.
+
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Checking for Errors In Advance}
+
+Checking for an error in advance might allow us to deal with something before it becomes a bigger problem.
+
+\begin{verbatim}
+static void printGreetings ( int n )
+{
+    while ( n != 0 )
+    {
+        Console.WriteLine( "Greetings!" );
+        n--;
+    }
+}
+\end{verbatim}
+If \texttt{n} starts as less than 0, this will be an infinite loop.\\
+\quad Reporting the error is much better than the program getting stuck.
+
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Checking the Precondition}
+The precondition of a function, as you recall, is whatever is assumed to be true when a function is called.
+
+Check these assumptions at the start of the function!
+
+If the precondition is that the value of \texttt{n} must be greater than or equal to 1, we can implement a check for that in code:
+
+\begin{verbatim}
+// Precondition: the value of n must be >= 1
+static int factorial ( int n )
+{
+     if ( n < 1 )
+     {
+          // Error has occurred
+     }
+// Rest of the implementation not shown for space reasons
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Reporting the Error}
+Detecting a violation of the precondition is not enough on its own; we also have to alert the user that something is wrong.
+
+Consider that in \texttt{factorial()} if the input was outside of the valid range (integers >= 1), this is an \textit{exception} to what is expected.
+
+The C\# concept for this is the \texttt{Exception}.
+
+Instead of returning a value when an unexpected situation occurs, instead the code \alert{throw}s an exception.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Throwing Exceptions}
+
+Here are a few reasons why a programmer might throw an exception:
+
+\begin{itemize}
+	\item To provide the programmer with detailed information on the event that caused the error to occur
+	\item To halt program execution at the point at which the error manifests itself
+	\item To prevent further damage to data used by the program
+\end{itemize}
+
+When a program throws an exception, it indicates that it has encountered a situation that it is not immediately ready to handle.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Throwing an Exception}
+
+When throwing an exception, we can provide some text to explain what went wrong or why we are throwing the exception.
+
+\begin{verbatim}
+// Precondition: the value of n must be >= 1
+static int factorial ( int n )
+{
+     if ( n < 1 )
+     {
+        throw new Exception( "n must be >= 1." );
+     }
+// Rest of the implementation not shown for space reasons
+}
+\end{verbatim}
+
+Note: it's necessary to use the \texttt{new} keyword in creating an exception.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exceptions}
+
+The keyword \texttt{throw} is similar to \texttt{return}, although the path back is slightly different.
+
+If there is no code set up to \alert{catch} an exception that has been thrown, the exception will terminate the program.
+
+In the next lecture, we'll examine in more detail what happens when an exception is thrown.
+
+We will also learn how to handle (catch) an exception, and what to do with one if we do catch it.
+
+
+\end{frame}
+
+\end{document}
+

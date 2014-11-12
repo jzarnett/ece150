@@ -1,0 +1,308 @@
+\input{configuration}
+
+\title{Lecture 1 --- Introduction to the Course}
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: W.D. Bishop}
+  \end{center}
+ \end{frame}
+ 
+\begin{frame}
+\frametitle{Course Objectives}
+
+\textit{The purpose of computing is insight, not numbers.}\\
+\hfill - R. W. Hamming
+
+Goal: students gain insight into software design \& construction.
+
+You will have an opportunity to achieve the following three goals:
+\begin{enumerate}
+\item Learn to develop algorithms to solve programming problems
+\item Acquire an understanding of a programming language
+\item Establish a foundation for future courses
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Course Syllabus}
+As our first order of business, we'll go over the course syllabus.
+\end{frame}
+
+\begin{frame}
+\frametitle{What is a Computer?}
+
+\alert{Computer}: a programmable device that can store, retrieve, and process data.
+
+\alert{Program}: to work out a sequence of operations to be performed by a mechanism.
+
+(Merriam-Webster Online Dictionary Definitions)
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Definition of a Computer}
+
+The formal definition of a computer system encompasses devices other than just personal computers.
+
+Embedded computer systems use computing devices to control other systems:
+
+\begin{itemize}
+\item Anti-lock braking systems
+\item MP3 players
+\item Cellular phones
+\item Televisions
+\end{itemize}
+
+Statistically speaking, personal computers (PCs) represent a very small fraction of the computer marketplace.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{History of the Programmable Computer}
+\underline{Z3 (1941)}\\
+\quad Lacked support for conditional branch instructions
+
+\underline{Colossus (1943)}\\
+\quad Targeted a specific application (code breaking)
+
+\underline{Harvard Mark I (1944)}\\
+\quad Used separate storage units for instructions \& data
+
+\underline{ENIAC (1946)}\\
+\quad Required hard-wiring of the control paths.
+
+\underline{Manchester Baby (1948)}\\
+\quad Implemented first working von Neumann computer architecture.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{About the ENIAC}
+
+Built in 1944, the ENIAC had the following components:
+\begin{itemize}
+	\item 17 468 vacuum tubes
+	\item 1 500 relays
+	\item 7 200 crystal diodes
+	\item 70 000 resistors
+	\item 10 000 capacitors
+	\item 5 000 000 hand-soldered joints
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{About the ENIAC}
+
+The ENIAC had the following properties:
+\begin{itemize}
+	\item 30 tons in weight
+	\item 167 m$^{3}$ in volume
+	\item 160 kW of power consumption
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{ENIAC}
+\begin{center}
+\includegraphics[width=0.75\textwidth]{images/eniac.jpg}
+
+\tiny{Source: \texttt{http://en.wikipedia.org/wiki/ENIAC}}
+\end{center}
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Computer Development Milestones}
+{\tiny
+\begin{center}
+\begin{tabular}{|p{1cm}|p{2cm}|p{3cm}|p{3.5cm}|}
+	\hline
+	\textbf{Generation} & \textbf{Technology} & \textbf{Examples} & \textbf{Comments}\\ \hline 
+	$0^{th}$ \mbox{(1642-1940)} & Mechanical Systems & Pascalene, Analytical Engine & Simple machines performing addition and subtraction \\\hline
+	$1^{st}$ \mbox{(1940-1955)} & Vacuum Tubes & Z3, Colussus, ENIAC, EDVAC, Harvard Mark I, IBM 701, Manchester Baby, Univac I & Mostly special purpose computers for military applications \\\hline
+	$2^{nd}$ \mbox{(1955-1965)} & Transistors & DEC PDP-1, IBM 7030, CDC 6600 & Computers with support for high level programming languages \\\hline
+	$3^{rd}$ \mbox{(1965-1975)} & Integrated Circuits & DEC PDP-8, DEC PDP-11, IBM System/360 & Computers with faster memory and operating systems \\\hline
+	$4^{th}$ \mbox{(1975-1990)} & Very Large Scale Integration (VLSI) & DEC MicroVAX, IBM 3090, IBM PC, Cray X-MP, Osborne 1, Apple II, Apple Macintosh & First personal computers and the first portable computers \\\hline
+	$5^{th}$ \mbox{(1990-)} & Nanotechnology, Massive Parellelism & IBM BlueGene/L, IBM x345, OLPC, Apple Macbook, Sun Ultra II & Massive supercomputers, powerful workstations, portable computers \\\hline
+	
+\end{tabular}
+
+\tiny{Source: IEEE Computer Society (http://www.computer.org/portal/cms\_docs\_computer/computer/timeline/timeline.pdf)}
+
+\end{center}
+}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Digital Computers}
+A \alert{Digital Computer} uses electronic circuits to implement a programmable computer.
+
+All information within a digital computer is represented using a sequence of \texttt{0}s and \texttt{1}s.
+
+Typically built using chips known as ASICs (Application-Specific Integrated Circuits) made of millions of transistors.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{von Neumann Computer Architecture}
+
+\begin{center}
+\includegraphics[width=0.75\textwidth]{images/vonNeumann.png}
+\end{center}
+
+\tiny{Source: J. von Neumann, First Draft of a Report on the EDVAC.  Technical Report W-6700RD-492, Moore School of Electrical Engineering, University of Pennsylvania, June 1945.}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Software Construction Fundamentals}
+Before learning to program, let's examine why people program...
+
+Computers are best suited to solving problems that involve repetitive processing or large amounts of data.
+
+Computers do not (yet) exhibit intelligence like humans.
+
+They do exactly what they are instructed to do.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Why Create Software?}
+Computers are well-suited to reliably performing repetitive tasks.
+
+Humans get distracted and this leads to mistakes.
+
+Computers don't get bored!
+
+Also, computers are often much faster...
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Why Create Software?}
+
+Imagine your task is to calculate the sum of integers from 1 to 10 000.
+
+You can do this with a calculator, but: slow, boring, error-prone.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Summing Integers: Analytical Approach}
+
+A smart student might observe that half the values will be 5,000 or less and half the values will be 5,001 or more. 
+
+Estimate the result to be close to 50,000,000. 
+
+The exact answer: multiplying the average (5,000.5) by total number of values (10,000) to produce: 50,005,000.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Summing Integers: Computer Approach}
+Write software to do it for you!
+
+Even a novice programmer would need only a few minutes.
+
+A computer calculates the exact sum very quickly.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Summing Integers: Repeat}
+Performing only once? the analytical approach might be best.
+
+Suppose you need to do this task for different ranges of integers.
+
+Programming makes a good solution to automate this boring task.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{When Does it Make Sense to Write Programs?}
+
+A few examples of useful computer programs:
+
+\begin{enumerate}
+	\item Databases (store, process, \& retrieve information) 	
+	\item Spreadsheets (manipulates tables of numbers; produces graphs)
+	\item Word processors (edit letters, reports, and books)
+	\item Social networking (exchange photographs and messages)
+	\item Audio/video players (record and playback songs and videos)
+	\item Videogames (entertainment)
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Goals of Programming}
+Arguably, the most important goal is correctness.
+
+A calculator gets the answer right 99\% of the time. Would you buy it?
+
+Computers must provide correct answers if they are to be trusted and used effectively.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Goal 1: Correctness}
+Developing a program that produces correct output for all possible inputs is very challenging (if not impossible).
+
+\alert{Functional correctness} examines whether the outputs are correct for the inputs provided.
+
+The program must also be predictable; the program is not correct if it produces the right answer only some of the time.
+
+The program must also provide a logical user interface.\\
+\quad\quad  If users don't understand it, they'll use it incorrectly.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Secondary Goals of Software}
+Other potential goals during the design \& construction of software:
+
+\begin{itemize}
+	\item maintainability
+	\item efficiency
+	\item readability
+	\item usability
+	\item security
+	\item reliability
+	\item robustness
+	\item simplicity
+	\item portability
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{About Computer Programming}
+Computer programming can be challenging, exciting, frustrating, rewarding, fun, interesting...
+
+Think of it like another kind of literacy. \\
+\quad You learned to read \& write, to count, and now... to program.
+
+Programming is not always easy, but it's a skill well worth learning.
+
+\end{frame}
+
+\end{document}
+

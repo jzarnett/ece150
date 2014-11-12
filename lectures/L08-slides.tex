@@ -1,0 +1,401 @@
+\input{configuration}
+
+\title{Lecture 8 --- Loops }
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: W.D. Bishop}
+  \end{center}
+ \end{frame}
+ 
+\begin{frame}
+\frametitle{Loops}
+
+Loops are another kind of control statement: \alert{iteration} statements.
+
+Iteration: the repetition of a group of statements.
+
+Using a loop statement in code means a block of statements is repeated for some number of iterations.
+
+This may be a fixed number or vary based on the state of the program.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Loops: Fixed vs. Variable}
+
+Some examples:
+
+A loop with fixed iterations might repeat a block of statements exactly 10 times.
+
+A loop with a variable number of iterations might repeat a block of statements until the user enters the letter 'Q' to quit.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Loop Terminology}
+
+\alert{Pretest} loops evaluate one or more expressions prior to executing the statement block.
+
+\alert{Posttest} loops execute the statement block once prior to evaluating one or more expressions.
+
+Loops come in a few different varieties:
+
+\begin{itemize}
+	\item Counter-controlled loops increment / decrement a counter until the counter reaches a threshold
+	\item Logically-controlled loops evaluate an expression and terminate when the expression is false
+	\item User-controlled loops can break out of the loop anywhere within the statement block
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{C\# Loop Types}
+C\# provides four types of loops:
+
+\begin{itemize}
+\item The \texttt{while} loop
+\item The \texttt{do-while} loop
+\item The \texttt{for} loop
+\item The \texttt{foreach} loop
+\end{itemize}
+
+Let's just jump right in and look at the syntax.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{while} Loop}
+
+This is the syntax for a \texttt{while} loop.
+
+\begin{verbatim}
+while ( condition ) 
+{
+    // Loop Body statements
+}
+\end{verbatim}
+
+Like the if-statement, \textit{condition} in this is a boolean expression.
+
+The \texttt{while} loop is a pretest loop: the condition is evaluated first.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{while} Loop}
+
+Like the if-statement, \textit{condition} is evaluated and if it is true, the block of statements in the \{ \} are executed.
+
+That block of statements is referred to as the \alert{loop body}.
+
+If \textit{condition} is false, the statements of the loop body are not executed.
+
+It may happen that the body of the loop never executes.
+
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{while} Loop: Repetition}
+
+What makes the \texttt{while} different from \texttt{if} is the \alert{repetition}.
+
+At the end of the statement body (the \} character), control goes back to the \texttt{while} statement.
+
+The condition is evaluated again.\\
+	\quad Same applies: if true, the loop body is executed.
+	
+This continues until the condition evaluates to false.
+
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{while} Loop: Countdown}
+
+Here's another example of a \texttt{while} loop:
+
+\begin{verbatim}
+
+int countdown = 10;
+
+while ( countdown > 0 ) 
+{
+    Console.WriteLine( countdown );
+    countdown--;
+}
+
+\end{verbatim}
+
+[Demo: output of this code.]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Infinite Loop}
+
+What happens if we forget the \texttt{countdown{-}{-};} statement in that loop?
+
+The variable \texttt{countdown} remains at 10 and the \texttt{while} condition will always evaluate to true.
+
+This will go on indefinitely (or until you get frustrated and close the program). The term for this is an \alert{infinite loop}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Infinite Loop}
+
+An infinite loop is very often an error condition.
+
+Most programs should terminate at some point.
+
+In some circumstances, however, the infinite loop is intended: the program should never terminate.
+
+Example: the software in your router. On boot up it starts running its program, and continues, never ending (until the plug is pulled).
+
+To create an infinite loop, write \texttt{while( true )}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{break} Statement}
+
+There are two special statements that can be written in the loop body that control the flow of execution.
+
+The first of these is the \texttt{break} statement.
+
+Yes, this is the same keyword as in the \texttt{switch} statement.\\
+\quad The context indicates it means something slightly different.
+
+When the break statement executes, it means ``exit the loop now''.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Proper use of \texttt{break}}
+
+A \texttt{break} statement may be used to jump out of a loop, even an infinite one, in the middle of a statement block.
+
+If possible, \texttt{break} statements should be avoided as they can result in code that is more difficult to debug.
+
+The rule of thumb is that the \texttt{break} statement should be used if the code is clearer with it than it would be without it.
+
+Multiple \texttt{break} statements can exist in a loop if multiple conditions for exiting the loop need to be evaluated.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{While loop with Break}
+
+\begin{verbatim}
+static void Main( )
+{
+    int counter = 0;
+
+    while( counter < 500 )
+    {
+        counter++;
+        if( counter > 4 )
+        {
+            break;
+        }
+        Console.WriteLine( counter );
+    }
+}
+\end{verbatim}
+
+[Demo: output of this program]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Proper Use of Break}
+A \texttt{break} statement completely ends the loop, no matter if the loop condition is true or not.
+
+If you write an infinite loop (\texttt{while( true )}) one way to use this properly is to have a condition inside that uses \texttt{break}.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{While loop with User Input}
+
+\begin{verbatim}
+static void Main ( )
+{
+   Console.WriteLine( "Enter a negative number to exit." );
+   int number = 0;
+    
+   while (number >= 0) 
+   {
+       Console.Write( "Enter a number: " );
+       number = int.Parse( Console.ReadLine() );
+   } // End of loop
+    
+   Console.WriteLine( "Negative number entered." );
+}    
+
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{While loop with User Input \& Break}
+
+Let's rewrite this with \texttt{break}:
+
+\begin{verbatim}
+static void Main ( )
+{
+   Console.WriteLine( "Enter a negative number to exit." );
+   int number = 0;
+    
+   while (true) 
+   {
+       Console.Write( "Enter a number: " );
+       number = int.Parse( Console.ReadLine() );
+       if ( number < 0 )
+       {
+           break;
+       }
+    }
+    Console.WriteLine( "Negative number entered." );
+}    
+
+\end{verbatim}
+\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{continue} Statement}
+The other loop body statement that controls execution is the \texttt{continue} statement.
+
+The \texttt{continue} statement works a lot like the \texttt{break} statement, except instead of exiting the loop, it means ``go back to the start of the loop''.
+
+In the \texttt{while} loop, the condition is tested, and if it's still true, the next iteration of the loop executes.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{While loop with Continue}
+
+\begin{verbatim}
+static void Main( )
+{
+    int counter = 0;
+
+    while( counter < 10 )
+    {
+        counter++;
+        if( counter == 4 )
+        {
+            continue;
+        }
+        Console.WriteLine( counter );
+    }
+}s
+\end{verbatim}
+
+[Demo: output of this program]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Use of Continue}
+Like the \texttt{break} statement, \texttt{continue} should be avoided if possible, as they can result in code that is more difficult to debug.
+
+Multiple \texttt{continue} statements can exist in a loop if multiple conditions for going to the next iteration of the loop exist.
+
+If the loop condition is no longer true, use of \texttt{continue} takes us to testing the condition; it will evaluate to false, and the loop ends.
+
+In this way, use of \texttt{continue} may have the same outcome as \texttt{break}, though it gets there by a different path.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{do-while} Loop}
+A variant of the \texttt{while} loop that remains in the language for historical reasons is the \texttt{do-while} loop.
+
+Its syntax is a lot like the \texttt{while} loop:
+
+\begin{verbatim}
+
+do 
+{
+    // Loop body
+
+} while ( condition );
+
+\end{verbatim}
+
+Note the semicolon that appears after the condition's closing bracket.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{do-while} Loop}
+
+Some important things to observe about the \texttt{do-while} loop.
+
+The loop body is preceded by \texttt{do} to indicate the start of the loop.
+
+The condition is checked at the \underline{end} of the loop body, not beginning.\\
+\quad This is a posttest loop.
+
+Key observation: the loop body will execute at least once, even if the condition is false.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{While vs. Do-While}
+
+Let's compare this while loop:
+
+\begin{verbatim}
+int count = int.Parse( Console.ReadLine() );
+while ( count > 0 ) 
+{
+    Console.WriteLine( count );
+    count--;
+}
+\end{verbatim}
+
+...with this one:
+
+\begin{verbatim}
+int count = int.Parse( Console.ReadLine() );
+do 
+{
+    Console.WriteLine( count );
+    count--;
+} while ( count > 0 );
+\end{verbatim}
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{do-while} Loop}
+
+It is still possible to write infinite loops with \texttt{do-while}.
+
+Similarly, the \texttt{break} and \texttt{continue} statements work the same way.
+
+The use of \texttt{do-while} is not recommended as it is really only in the language for historical reasons; use the \texttt{while} loop instead.
+
+\end{frame}
+
+\end{document}
+

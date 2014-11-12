@@ -1,0 +1,307 @@
+\input{configuration}
+
+\title{Lecture 16 --- Recursive Functions }
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+ \end{frame}
+
+\begin{frame}
+\frametitle{Recursion}
+
+A function that includes a call to itself is said to be \alert{recursive}.
+
+At first glance, this might seem like a really strange idea.\\
+\quad Why would a function call itself?
+
+Recall that we said earlier that a common engineering strategy is to break a big problem down into some smaller problems.
+
+Recursion is useful if we are breaking down a problem so that the subproblems are smaller versions of the same problem.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Recursion Example: Factorial}
+
+You may have learned in math class about the factorial.\\
+\quad Commonly written $n!$ in mathematical notation for a number $n$.
+
+The factorial of a non-negative integer $n$ is defined as the product of all positive integers less than or equal to $n$.
+
+Examples: \\
+\quad $1! = 1$\\
+\quad $2! = 2 \times 1 = 2$\\
+\quad $3! = 3 \times 2 \times 1 = 6$\\
+\quad $4! = 4 \times 3 \times 2 \times 1 = 24$\\
+\quad $5! = 5 \times 4 \times 3 \times 2 \times 1 = 120$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Recursion Example: Factorial}
+
+Observe that $5!$ could be rewritten as $5 \times 4!$.
+
+The problem of $5!$ can be broken down into two subproblems:
+
+\begin{enumerate}
+	\item $4!$
+	\item $5 \times$ the result of (1).
+\end{enumerate}
+
+The subproblem $4!$ is a smaller version of the problem we're working on ($5!$), so this problem is a good candidate for recursion.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Recursion Example: Factorial}
+Suppose now you are going to implement the factorial function.
+
+\begin{verbatim}
+static int factorial ( int n )
+{
+    return n * factorial( n - 1 );
+}
+\end{verbatim}
+
+There is a problem with this implementation. 
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Factorial Problem}
+
+What happens when the expression n - 1 becomes zero or negative?
+
+This loop will continue forever...\\
+\quad Except in practice this will be stopped by an error.
+
+Running this program produces an error called a \alert{Stack Overflow}.
+
+In a later lecture we will discuss what a stack is and how it works.\\
+\quad For now, a simplified view of the problem.
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Stack Overflow}
+
+When \texttt{Main()} calls \texttt{factorial()}, the computer needs to keep track of where it was in \texttt{Main()} at the time that it went to the other function.
+
+It puts that information in a designated memory area called the stack.
+
+Each time \texttt{factorial()} calls itself, more information is added to the stack to keep track of where it was in \texttt{factorial()}.
+
+If we do this too many times, the stack gets ``full'' (exceeds available memory for it) and this results in a stack overflow error.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Factorial Problem}
+\begin{verbatim}
+static int factorial ( int n )
+{
+    return n * factorial( n - 1 );
+}
+\end{verbatim}
+
+The above implementation lacks a \alert{stopping condition}.
+
+The function will keep calling itself until a stack overflow occurs.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Factorial Problem}
+
+Even if program execution did not terminate abnormally as a result of a stack overflow, there's another problem, mathematically.\\
+\quad $5! = 5 \times 4 \times 3 \times 2 \times 1$
+
+When we reach 1, we no longer multiply by the next smallest integer.
+
+Our stopping case is therefore when \texttt{n} is 1.
+
+The way the code is written, when \texttt{n} is 1 the evaluation goes on and the expression to the right of \texttt{return} is \texttt{1 * factorial( 0 )}. 
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Factorial Fixed}
+\begin{verbatim}
+static int factorial ( int n )
+{
+    if ( n == 1 )
+    {
+        return 1;
+    }
+    return n * factorial( n - 1 );
+}
+\end{verbatim}
+
+The revised implementation has the stopping condition of \texttt{n} equals 1.
+
+The function will keep calling itself until \texttt{n} is 1.\\
+\quad When that happens, 1 is returned.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Recursion}
+To make proper use of recursion, we need:
+\begin{enumerate}
+	\item One or more cases in which the function calls itself; and
+	\item One or more cases in which the function does not call itself.
+\end{enumerate}
+
+Point (2) is called the stopping case or base case.
+
+As we saw, without a properly defined stopping case, recursion will result in a stack overflow.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Recursion versus Iteration}
+
+Recursion can be a difficult or confusing topic. Is it strictly necessary?
+
+Any task that can be accomplished with recursion can be done without using recursion, such as using a loop (iteratively).
+
+As a small note on efficiency, a recursively written function may run slower than an iteratively written one. Recursion has two advantages:
+
+\begin{enumerate}
+	\item Write less code; and \\
+	\item The computer tracks state on the stack; iteratively, we must keep track of the state ourselves.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Factorial Iteratively}
+Here's the factorial function implemented iteratively:
+
+\begin{verbatim}
+static int factorial ( int n )
+{
+    int product = 1;
+    for ( int i = n; i > 1; i-- )
+    {
+        product *= i;
+    }
+    return product;
+}
+\end{verbatim}
+
+The iterative implementation uses a \texttt{for} loop, but it could have been written using a \texttt{while} loop.
+
+\end{frame}
+
+% Note: Acknowledge Absolute C++ Book for this in the notes
+\begin{frame}
+\frametitle{Thinking Recursively}
+When designing a recursive function, there are three important criteria to consider:
+
+\begin{enumerate}
+	\item There is no infinite recursion;\\
+	\quad (A chain of recursive calls eventually reaches a stopping case)
+	\item Each stopping case returns the correct value for that case; and
+	\item The final returned value is correct if the recursive call(s) returns the correct value(s).
+\end{enumerate}
+
+This is an example of \textit{mathematical induction}.\\
+If you have not yet learned about it, ignore this for now; you will see it next term in ECE~103 (Discrete Mathematics).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Applying Recursive Thinking}
+Consider another mathematical problem, exponentiation: $x^{y}$.
+
+If we wrote a function signature for exponentiation:\\ \texttt{int pow ( int x, int y )}
+
+Is this problem a good candidate for recursive solution?
+
+Mathematically, $a^{b} = a \times a^{b-1}$.
+
+So, yes, this is the kind of problem that lends itself well to recursion.
+
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Applying Recursive Thinking}
+Now, let's write an implementation for \texttt{pow()}.
+
+\begin{verbatim}
+// Precondition: y >= 0
+// Postcondition: returns x to the power of y
+static int pow ( int x, int y )
+{
+    if ( y == 0 )
+    {
+        return 1;
+    }
+    return pow( x, y - 1 ) * x;
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Applying the Test}
+Let's examine the design criteria and see if this is going to work.
+
+\textit{1. There is no infinite recursion.}\\
+\quad The second argument to \texttt{pow(x, y)} is decreased by 1 in each call,\\ \quad so eventually we must get to \texttt{pow(x, 0)}, a stopping case.\\
+\quad \quad (As long as the precondition is not violated.)
+
+Thus, there is no infinite recursion; criterion 1 is satisfied.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Applying the Test}
+
+\textit{2. Each stopping case returns the correct value for that case.}\\
+\quad Yes. $x^{0} = 1$ is mathematically correct.
+
+\textit{3. The final returned value is correct if the recursive call returns the correct value.}\\
+\quad \texttt{pow( x, y - 1 ) * x} follows the rule that $a^{b} = a^{b-1} \times a$.
+
+Criteria 2 and 3 are satisfied.
+
+Having checked those things, we can now be satisfied that the implementation of \texttt{pow()} is correct. 
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Exponentiation Iteratively}
+Here's the exponential function implemented iteratively:
+
+\begin{verbatim}
+static int pow ( int x, int y )
+{
+    int result = 1;
+    for ( int i = 0; i < y; i++ )
+    {
+        result *= x;
+    }
+    return result;
+}
+\end{verbatim}
+
+Like the factorial function, the iterative implementation uses a \texttt{for} loop, but it could have been written using a \texttt{while} loop.
+
+\end{frame}
+
+\end{document}
+

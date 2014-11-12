@@ -1,0 +1,493 @@
+\input{configuration}
+
+\title{Lecture 5 --- Expressions \& Operators }
+
+\author{J. Zarnett\\
+\texttt{jzarnett@uwaterloo.ca}}
+\institute{Department of Electrical and Computer Engineering \\
+  University of Waterloo}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+  
+  \begin{center}
+  \small{Acknowledgments: W.D. Bishop}
+  \end{center}
+ \end{frame}
+ 
+
+\begin{frame}
+\frametitle{Expressions and Operators}
+
+Expressions are a statement that is evaluated.
+
+Evaluation of a mathematical formula is an example.
+
+Expressions can produce a temporary result or modify a variable.
+
+An expression is built up using \alert{operators} and \alert{operands}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Operators vs. Operands}
+
+\alert{Operators} perform some operation (action).
+
+\alert{Operands} are the elements on which the operation is performed.
+
+Let's examine a very simple mathematical expression: $2 + 4$.
+
+
+Operators in this expression: $+$\\
+Operands in this expression: $2, 4$ 
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Expressions}
+
+Expressions can be more complicated: $(3 + 2) \times 5 - 1$
+
+In programming, mathematical expressions are not the only kind.
+
+We've already seen one kind expression frequently: assignment. 
+
+\texttt{int i = 0;}\\
+Operators in this expression: \texttt{=}\\
+Operands in this expression: \texttt{i, 0}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Operator Categories}
+Operators fall into a number of different categories. 
+
+We will examine some, but not all, of them today:
+\begin{enumerate}
+	\item Assignment operators
+	\item Arithmetic operators
+	\item Relational operators
+	\item Logical operators
+	\item Bitwise operators
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Assignment Operator}
+You have already seen the assignment operator in a previous lecture.
+
+\texttt{x = 5;} is an assignment statement.\\
+Read aloud, this is ``x is assigned five.'';
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Arithmetic Operators}
+There are five standard arithmetic operators:
+
+\begin{center}
+\begin{tabular}{l|l}
+	\textbf{Operator} & \textbf{Definition} \\ \hline
+	\texttt{+} & Adds two operands\\ \hline
+	\texttt{-} & Subtracts two operands\\ \hline
+	\texttt{*} & Multiplies two operands\\ \hline
+	\texttt{/} & Divides two operands\\ \hline
+	\texttt{\%} & Computes the remainder after division\\
+\end{tabular}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Master of the Fifth Math}
+
+The \texttt{\%} operator is called ``modulus''. 
+
+You've calculated the remainder already in school lots of times, even if you don't remember it.
+
+In elementary school math, before the concept of decimals was introduced, what did you do with an expression like $22 \div 6$?
+
+Answer: 3 remainder 4.
+
+In code: \texttt{22 \% 6} will give a result of \texttt{4}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Arithmetic Operators}
+Arithmetic operators work just as you would expect from standard math rules: $2 + 2$ will produce a result of 4.
+
+As in algebra, we can use variables in arithmetic, like \texttt{x + 4}.
+
+The result of this expression will depend on the value of \texttt{x} at the time the expression is evaluated.
+
+Of course, we will probably want to do something with that result, like store it in a variable.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Danger: Integer Division}
+There is a danger with integer division: loss of precision.
+
+Example: expression that divides 29 / 5 (even indirectly, where 29 and 5 are stored variables), your result will not be as expected.
+
+The integer result of this outcome will be 5 (not rounded to 6).\\
+
+This occurs even if the result will be stored in a \texttt{double} variable.
+
+The result is truncated. Sometimes, this may be what you want.
+
+To prevent it, make one of the types explicitly a \texttt{double}.\\
+\quad Change the equation to 29 / 5.0d
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Terminology Note}
+
+The operators we have seen so far are \alert{binary}: they take two operands.
+
+The term for an operator that takes one operand is \alert{unary}.
+
+The term for an operator that takes three operands is \alert{ternary}.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Unary Operators: Minus}
+
+A popular unary operator is the \texttt{-} (minus) operator.
+
+When applied to a number, it inverts the sign of that number.\\
+\quad Mathematically equivalent to multiplying by -1.
+
+Example:
+\vspace{-2em}
+\begin{verbatim}
+int x = 9;
+int y = -x;
+\end{verbatim}
+
+This sets the value of \texttt{y} to be \texttt{-9}.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Unary Operators: Plus}
+For symmetry, there is also a unary \texttt{+} (plus) operator.
+
+It does nothing useful. It has no effect on the value of the operand.
+
+Example:
+\vspace{-2em}
+\begin{verbatim}
+int x = -9;
+int y = +x;
+\end{verbatim}
+
+This sets the value of \texttt{y} to be \texttt{-9}. Yes, still negative.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Increment and Decrement Operators}
+
+Unary operators exist to increment \& decrement numeric types.
+
+The Increment operator (\texttt{++}) increments a variable by 1.
+
+The Decrement operator (\texttt{--}) decrements a variable by 1.
+
+Either operator may precede an operand (i.e., prefix notation): \texttt{++x;}\\
+or follow an operand (i.e., postfix notation): \texttt{x++;}
+
+When used as standalone statements, both notations are equivalent.
+
+If used inside an expression, precedence rules apply.\\
+\quad We'll talk about these rules later.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Incrementing \& Decrementing Variables}
+
+Some examples of using the increment and decrement operators:
+
+{\scriptsize
+\begin{verbatim}
+int a = 5;		// Declares a variable a of type int and sets it to 5
+int b = 3;		// Declares a variable b of type int and sets it to 3
+int c = -4; 		// Declares a variable c of type int and sets it to -4
+	
+a++;			// Increments variable a (i.e., a is now 6)
+b--;			// Decrements variable b (i.e., b is now 2)
+++c;			// Increments variable c (i.e., c is now -3)
+c++;			// Increments variable c (i.e., c is now -2) 
+\end{verbatim}
+}
+
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+\frametitle{Additional Assignment Operators}
+
+As notational convenience, the language offers a number of ``shortcut'' operators that do something and an assignment at once.
+
+A very common one is the \texttt{+=} operator.
+
+The statement \texttt{k += 7;} is equivalent to \texttt{k = k + 7;}
+
+Yes, this does mean that these statements are all equivalent:
+\vspace{-3em}
+
+\begin{verbatim}
+x = x + 1;
+x += 1;
+x++;
+++x;
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Additional Assignment Operators}
+
+A partial list of the assignment operators of C\#:
+
+\begin{center}
+\begin{tabular}{l|l}
+\textbf{Operator} & \textbf{Definition} \\ \hline
+	\texttt{=} & Assigns the result to the variable\\ \hline
+	\texttt{+=} & Adds the result to the variable\\ \hline
+	\texttt{-=} & Subtracts the result from the variable\\ \hline
+	\texttt{*=} & Multiplies the variable by the result\\ \hline
+	\texttt{/=} & Divides the variable by the result\\ \hline
+	\texttt{\%=} & Assigns the remainder to the variable\\ 
+\end{tabular}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Operator Precedence}
+
+Recall from math class that a mathematical expression has a defined order of operations. 
+
+You may have learned the acronym BEDMAS.
+
+\begin{itemize}
+	\item \textbf{B} - Brackets
+	\item \textbf{E} - Exponents
+	\item \textbf{D} - Division
+	\item \textbf{M} - Multiplication
+	\item \textbf{A} - Addition
+	\item \textbf{S} - Subtraction
+\end{itemize}
+
+The things highest in the list are done first, then move down.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Operator Precedence}
+
+Purely mathematically, consider $10 \times 12 + 2$.
+
+Follow the BEDMAS order: do the multiplication first, then addition.\\
+$10 \times 12 = 120$, $120 + 2 = 122$.
+
+If we fail to follow the order, we get the wrong answer:\\
+$12 + 2 = 14$, $10 \times 14 = 140$.
+
+To force the evaluation in a specific order, use brackets:\\
+Write $10 \times (12 + 2)$ and the answer $140$ is correct.
+
+This principle applies in code: operations have a precedence order.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Operator Precedence}
+Sadly, there is no convenient acronym for the C\# order of precedence.\\
+\quad The precedence rules in programming languages are too complex.
+
+Basic BEDMAS still applies, so elements in brackets are done first.
+
+Therefore: \underline{always} use brackets to make the order of operations clear.\\
+\quad Even if it might seem redundant.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Precedence Example}
+
+What is the value of \texttt{x} after this statement is executed?
+
+\texttt{int x = 4 + 1 * 5 - 3++;}
+
+Answer:
+\begin{enumerate}
+	\item First, \texttt{3++} is evaluated. \texttt{x = 4 + 1 * 5 - 4;}
+	\item Next, 1 * 5 is evaluated. \texttt{x = 4 + 5 - 4;}
+	\item Next, 4 + 5 is evaluated. \texttt{x = 9 - 4;}
+	\item Finally, 9 - 4 is evaluated. \texttt{x = 5;}
+\end{enumerate}
+
+Is this confusing? The lack of brackets makes the order non-obvious.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Precedence Example: Using Brackets}
+
+Now we will use brackets to force precedence:
+
+\texttt{int x = (4 + 1) * 5 - 3++;}
+
+Now the addition of (4 + 1) is evaluated first.
+
+This changes the value of \texttt{x} to 21.
+
+Brackets were used here to change the order.\\
+Adding more brackets is good practice to ensure clarity.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Type Promotion}
+
+Up until now, when we have added or assigned variables, we have ensured that they are of the same type.
+
+It's possible to write a statement in which we perform some operation using types that are not the same.
+
+If we have two different types, there are two possible outcomes: an error, or \alert{promotion}.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Type Promotion}
+Type Promotion: the compiler converts a value of one type to another.
+
+Example: \texttt{double x = 3; }\\
+\quad The literal 3 is an integer (\texttt{int} type).
+
+The compiler takes 3 and converts it to \texttt{double} to do the assignment.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Type Promotion}
+Type promotion may also take place automatically. Consider this code:
+
+\begin{verbatim}
+int x = 2;
+int y = 3;
+double z = x + y;
+\end{verbatim}
+
+When executing this instruction, the \texttt{x + y} expression is evaluated and produces an intermediate result of 5.
+
+The intermediate result is an integer.
+
+Before it is stored in the variable \texttt{z} it is converted to \texttt{double}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{C\# Type Promotion Rules}
+
+The simplified version of the type promotion rules in C\# are:
+
+\begin{enumerate}
+	\item If either operand is a \texttt{double}, the result is a \texttt{double}
+	\item Otherwise, if either operand is a \texttt{long}, the result is a \texttt{long}
+	\item Otherwise, the result is an \texttt{int}.
+\end{enumerate}
+
+Example: If we add a \texttt{long} to an \texttt{int}, the result is \texttt{long}.
+
+Example 2: If we add a \texttt{long} to a \texttt{double}, the result is a \texttt{double}.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Explicit Type Conversion}
+Is it possible to be explicit about the conversion of a type?
+
+Yes, through a process called \alert{casting}.
+
+A \alert{cast} tells the compiler explicitly to convert one type to another.
+
+Casting takes place, usually, during an assignment statement. Consider this example where we will cast \texttt{a} to \texttt{double}.
+\vspace{-3em}
+\begin{verbatim}
+int a = 7;
+double b = (double) a;
+\end{verbatim}
+
+A cast is, incidentally, another example of a unary operator.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Explicit Type Conversion}
+Automatically, the compiler will happily do type promotion: convert a variable type to a ``bigger'' type (e.g., \texttt{int} to \texttt{double}).
+
+It's possible, but sometimes dangerous, to convert to a ``smaller'' type.\\
+\quad e.g., \texttt{double} to \texttt{int}.
+
+Why is it dangerous? We might lose some data (or get a bogus value).\\
+\quad Example: the value 70 000 cannot be stored in a \texttt{ushort}.\\
+\quad The maximum value of a \texttt{ushort} is 65535.
+
+To do so without an error or warning from the compiler, it is usually necessary to make it an explicit conversion.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Explicit Type Conversion}
+
+Consider this example where we'll convert a \texttt{double} to \texttt{int}:
+
+\begin{verbatim}
+double e = 7.9;
+int f = (int) e;
+\end{verbatim}
+
+What value is stored in the variable \texttt{f}?
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Integer Division Problem}
+Earlier we saw that when dividing 29 / 5 we get the result of 5, not 6.
+
+We saw the solution of making a literal a double (5.0d).
+
+If the division is of two variables, cast one of the operands instead.\\
+\quad The compiler will promote the other variable.
+
+\texttt{double price = rate / (double) modifier;}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Other Kinds of Operators}
+
+In the next lecture, we'll examine some other kinds of operators:
+
+Logical and Bitwise operators.
+
+\end{frame}
+
+
+\end{document}
+
