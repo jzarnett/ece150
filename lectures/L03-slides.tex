@@ -38,17 +38,17 @@ Successful execution of it proves that the environment, compiler, display system
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Our First C\# Program}
+\frametitle{Our First C++ Program}
 
 \begin{verbatim}
-using System;
+#include <iostream>
 
-class HelloWorld
+using namespace std;
+
+int main()
 {
-    static void Main( )
-    {
-        Console.WriteLine( "Hello World" );
-    }
+    cout << "Hello World!" << endl;
+    return 0;
 }
 \end{verbatim}
 
@@ -69,24 +69,28 @@ What we are really interested in takes place between the inner set of \{ \} brac
 \begin{frame}
 \frametitle{Examining the Hello World Program}
 
-\texttt{using System;}\\
-\quad This indicates the use of objects in the System namespace.
+\texttt{\#include <iostream>}\\
+\quad This includes a header file for input/output purposes. Including the header file makes certain functions available for use in the program.
 
-\texttt{class HelloWorld}\\
-\quad Declares an object named \texttt{HelloWorld}
+\texttt{using namespace std;}\\
+\quad This indicates the use of functions in the std namespace.
 
-\texttt{static void Main()}\\
+\texttt{int main()}\\
 \quad This is the entry point for program execution.
 
-\texttt{Console.WriteLine("Hello World");}\\
-\quad Tells the computer to output ``Hello World'' to the console.
+\texttt{cout << "Hello World!" << endl;}\\
+\quad Tells the computer to output ``Hello World'' to the console.\\
+\quad It also tells the computer to end the line and move to the next one.
+
+\texttt{return 0;}\\
+\quad Indicates this function is finished and its return value is zero.
 
 \end{frame}
 
 \begin{frame}
 \frametitle{About Braces}
 
-In the Hello World program, we see the \{ and \} braces twice each.
+In the Hello World program, we see the \{ and \} braces.
 
 These define a \alert{block}: a grouping of statements.
 
@@ -100,13 +104,13 @@ They must be balanced (otherwise it's a syntax error).
 \begin{frame}
 \frametitle{About Semicolons}
 
-Examine: \texttt{Console.WriteLine("Hello World");}
+Examine: \texttt{cout << "Hello World!" << endl;}
 
 Note the presence of a semicolon (\textbf{;}) at the end of that statement.
 
 Often, a single statement appears on a line.
 
-In C\#, the semicolon denotes the end of many (but not all) statements.
+In C++, the semicolon denotes the end of many (but not all) statements.
 
 The end of the line doesn't indicate the end of a statement.\\
 This allows:\\
@@ -132,10 +136,10 @@ There can be only one program entry point at compilation time.
 \frametitle{The \texttt{Main} Entry Point}
 
 
-In C\#, the simplest program entry point is defined as:\\
-\quad	\texttt{static void Main( ) \{ \}}
+In C++, the simplest program entry point is defined as:\\
+\quad	\texttt{int main( ) \{ \}}
 
-Our code goes in the block between the \{ and \} braces after \texttt{Main()}.
+Our code goes in the block between the \{ and \} braces after \texttt{main()}.
 
 We can, for the moment, when creating a program, ignore all the other bits and just write our code inside this ``main'' block.
 
@@ -146,14 +150,14 @@ Later on, we'll understand all the parts.
 \begin{frame}
 \frametitle{Writing \& Compiling the Program}
 Programs are formed from source code: text written in a text file.\\
-\quad The text is written in a language the compiler understands (C\#).
+\quad The text is written in a language the compiler understands (C++).
 
-By convention,  files containing C\# code use the file extension \texttt{.cs}, such as \texttt{HelloWorld.cs}
+By convention,  files containing C++ code use the file extension \texttt{.cpp}, such as \texttt{helloworld.cpp}
 
-In this course, we will use the command-line compiler provided with the Microsoft .NET Software Development Kit.
+In this course, we will use the command-line compiler \texttt{gcc}.
 
-To compile the program at the command prompt, use the following command:\\
-\quad \texttt{csc filename.cs}
+To compile the program at the command prompt, use the command:\\
+\quad \texttt{gcc filename.cpp}
 
 \end{frame}
 
@@ -191,8 +195,10 @@ After we correct the error, compile the program again.
 \frametitle{Running the Program} 
 If compilation succeeded, an executable file was generated and we can run this file.
 
-On the command line, we start execution by using the name of the executable:\\
-\quad\texttt{HelloWorld}
+On the command line, we start execution by using the name of the executable.
+
+
+By default, \texttt{gcc} names the output executable \texttt{a.out}.
 
 \end{frame}
 
@@ -202,8 +208,8 @@ On the command line, we start execution by using the name of the executable:\\
 When this program executes, it performs the following steps:
 
 \begin{enumerate}
-	\item Starts executing instructions at the start of \texttt{Main( )}
-	\item Executes \texttt{Console.WriteLine("Hello World")} by displaying the ``Hello World'' text on the display
+	\item Starts executing instructions at the start of \texttt{main( )}
+	\item Executes \texttt{cout << "Hello World!" << endl;} displaying the ``Hello World'' text on the display
 	\item Finishes execution: returns control to the operating system
 \end{enumerate}
 
@@ -316,7 +322,7 @@ Compile time checking: avoid assigning a ``wrong'' value to a variable.\\ \quad 
 
 \begin{frame}
 \frametitle{Declaring a Variable}
-The equivalent to our algebraic statement ``let $x = 5$'' in C\# code:\\
+The equivalent to our algebraic statement ``let $x = 5$'' in C++ code:\\
 \quad \texttt{int x = 5;}
 
 This statement follows the pattern \textit{type} \textit{identifier} = \textit{value;}
@@ -356,9 +362,9 @@ If we mark a variable as \texttt{const}, it means that after assigning a value t
 \end{frame}
 
 \begin{frame}
-\frametitle{C\# Built-In Data Types}
+\frametitle{C++ Built-In Data Types}
 
-C\# has many different variable types.
+C++ has many different variable types.
 
 Most of them refer to different types of numbers.
 
@@ -368,47 +374,66 @@ There are other values we can store in variables, but we'll examine numbers firs
 \end{frame}
 
 \begin{frame}
-\frametitle{C\# Built-In Numeric Types}
+\frametitle{C++ Built-In Numeric Types}
 \begin{center}
+{\scriptsize
 \begin{tabular}{l|l}
 \textbf{Type} & \textbf{Description}\\ \hline
-\texttt{byte} & Unsigned 8-bit integer\\ \hline
-\texttt{ushort} & Unsigned 16-bit integer\\ \hline
-\texttt{uint} & Unsigned 32-bit integer\\ \hline
-\texttt{ulong} & Unsigned 64-bit integer\\ \hline
-\texttt{sbyte} & Signed 8-bit integer\\ \hline
-\texttt{short}  & Signed 16-bit integer\\ \hline
-\texttt{int} & Signed 32-bit integer\\ \hline
-\texttt{long} & Signed 64-bit integer\\ \hline
+\texttt{short int} & Signed 16-bit integer\\ \hline
+\texttt{unsigned short int} & Unsigned 16-bit integer\\ \hline
+\texttt{int} & Unsigned 16-bit integer\\ \hline
+\texttt{unsigned int} & Unsigned 16-bit integer\\ \hline
+\texttt{long int} & Signed 32-bit integer\\ \hline
+\texttt{unsigned long int} & Unsigned 32-bit integer\\ \hline
+\texttt{long long int} & Signed 64-bit integer\\ \hline
+\texttt{unsigned long long int} & Unsigned 64-bit integer\\ \hline
 \texttt{float} & Signed 32-bit floating point\\ \hline
 \texttt{double} & Signed 64-bit floating point\\ \hline
-\texttt{decimal} & Signed 128-bit high precision floating point\\
+\texttt{long double} & Signed 80-bit extended precision floating point\\
 \end{tabular}
+}
 \end{center}
+
+Note that the number of bits are the minimum bits; it varies by platform.
+
+In particular, in most cases, the regular \texttt{int} is 32 bits.
+
 \end{frame}
 
 \begin{frame}
-\frametitle{C\# Built-In Numeric Types}
-{\scriptsize
+\frametitle{C++ Built-In Numeric Types}
+
 \begin{center}
-\begin{tabular}{l|l|r|r}
-\textbf{Type} & \textbf{Epsilon Value} & \textbf{Minimum Value} & \textbf{Maximum Value} \\
- & (Min. Change) & & \\ \hline
-\texttt{byte} & $\pm$ 1 & 0 & +255 \\ \hline
-\texttt{ushort} & $\pm$ 1 & 0 & +65,535 \\ \hline
-\texttt{uint} & $\pm$ 1 & 0 & +4,294,967,295 \\ \hline
-\texttt{ulong} & $\pm$ 1 & 0 & +18,446,744,073,709,551,615 \\ \hline
-\texttt{sbyte} & $\pm$ 1 & -128 & +127 \\ \hline
-\texttt{short}  & $\pm$ 1 & -32,768 & +32,767 \\ \hline
-\texttt{int} & $\pm$ 1 & -2,147,483,648 & +2,147,483,647 \\ \hline
-\texttt{long} & $\pm$ 1 & -9,223,372,036,854,775,808 & +9,223,372,036,854,775,807 \\ \hline
-\texttt{float} & $\pm$ 1.5 x $10^{-45}$ & -3.4 x $10^{+38}$ & +3.4 x $10^{+38}$ \\ \hline
-\texttt{double} & $\pm$ 5.0 x $10^{-324}$ & -1.7 x $10^{+308}$ & +1.7 x $10^{+308}$ \\ \hline
-\texttt{decimal} & $\pm$ 1.0 x $10^{-28}$ & -7.9 x $10^{+28}$ & +7.9 x $10^{+28}$ \\
-\end{tabular}
+\includegraphics[width=.78\textwidth]{images/cppvaluerange.png}\\
+{\scriptsize Source: \url{http://en.cppreference.com/w/cpp/language/types}}
 \end{center}
-}
+
+
+
 \end{frame}
+
+%\begin{frame}
+%\frametitle{C\# Built-In Numeric Types}
+%{\scriptsize
+%\begin{center}
+%\begin{tabular}{l|l|r|r}
+%\textbf{Type} & \textbf{Epsilon Value} & \textbf{Minimum Value} & \textbf{Maximum Value} \\
+% & (Min. Change) & & \\ \hline
+%\texttt{byte} & $\pm$ 1 & 0 & +255 \\ \hline
+%\texttt{ushort} & $\pm$ 1 & 0 & +65,535 \\ \hline
+%\texttt{uint} & $\pm$ 1 & 0 & +4,294,967,295 \\ \hline
+%\texttt{ulong} & $\pm$ 1 & 0 & +18,446,744,073,709,551,615 \\ \hline
+%\texttt{sbyte} & $\pm$ 1 & -128 & +127 \\ \hline
+%\texttt{short}  & $\pm$ 1 & -32,768 & +32,767 \\ \hline
+%\texttt{int} & $\pm$ 1 & -2,147,483,648 & +2,147,483,647 \\ \hline
+%\texttt{long} & $\pm$ 1 & -9,223,372,036,854,775,808 & +9,223,372,036,854,775,807 \\ \hline
+%\texttt{float} & $\pm$ 1.5 x $10^{-45}$ & -3.4 x $10^{+38}$ & +3.4 x $10^{+38}$ \\ \hline
+%\texttt{double} & $\pm$ 5.0 x $10^{-324}$ & -1.7 x $10^{+308}$ & +1.7 x $10^{+308}$ \\ \hline
+%\texttt{decimal} & $\pm$ 1.0 x $10^{-28}$ & -7.9 x $10^{+28}$ & +7.9 x $10^{+28}$ \\
+%\end{tabular}
+%\end{center}
+%}
+%\end{frame}
 
 \begin{frame}
 \frametitle{Assigning Numeric Types}
@@ -422,27 +447,21 @@ If you don't specify, the compiler will try to guess what you meant.
 \end{frame}
 
 \begin{frame}
-\frametitle{C\# Number Formats}
+\frametitle{C++ Number Formats}
 
 \begin{itemize}
 	\item Unsigned numbers are followed by U or u\\ \quad
 Examples: 5U, 5u, etc.
 	\item Long numbers are followed by L or l\\ \quad
-Examples: 5L, 5l, etc.
-	\item Unsigned long numbers are followed by UL or ul\\ \quad
-Examples: 5UL, 5ul, etc.
+Examples: 5L, 5l, 362.f12L etc.
 	\item Single-precision, floating point numbers are followed by F or f\\ \quad
 Examples: 362.5F, 362.5f, etc.
-	\item Double-precision, floating point numbers are followed by D or d\\ \quad
-Examples: 362.5D, 362.5d, etc.
-	\item Decimal numbers are followed by M or m\\ \quad
-Examples: 362.5M, 362.5m, etc.
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}
-\frametitle{C\# Number Formats}
+\frametitle{C++ Number Formats}
 
 We can also express numbers with powers of 10.
 
@@ -455,7 +474,7 @@ Assignment statements would therefore look like:
 
 \texttt{float example2 = 365.25f;}
 
-\texttt{double example3 = 75.5e4d;}
+\texttt{double example3 = 75.5e4;}
 
 
 \end{frame}
@@ -490,20 +509,19 @@ A \texttt{bool} defines a Boolean variable.
 A Boolean variable can only have one of two possible values: \\
 \quad \texttt{true} or \texttt{false}.
 
-Unlike C++, Boolean variables may not be assigned values of 0 or 1.
+In C++, Boolean variables may be assigned values of 0 or 1.\\
+\quad But this is not recommended.
 
 Example: \texttt{bool printingEnabled = true;}
 
 \end{frame}
 
 \begin{frame}
-\frametitle{C\# Character Variables}
+\frametitle{C++ Character Variables}
 
 A \texttt{char} defines a character variable.
 
 A character is a single symbol from an alphabet, like 'a', 'z', or a Japanese kanji.
-
-Characters are stored as 16-bit quantities in Unicode format.
 
 A \texttt{char} literal is enclosed in single quotation characters (\texttt{'}).
 
@@ -513,27 +531,29 @@ Some examples of valid \texttt{char} declarations:
 \texttt{char myChar2 = '\textbackslash x0058';} -- Hexadecimal\\
 \texttt{char myChar3 = '\textbackslash u0058';} -- Unicode
 
+A character can also be used to represent a numeric quantity.
+
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Use of C\# Character Variables}
+\frametitle{Use of C++ Character Variables}
 
 \begin{verbatim}
-using System;
+#include <iostream>
 
-class HelloWorld
+using namespace std;
+
+int main()
 {
-    static void Main( )
-    {
-        char myChar1 = 'X';
-        char myChar2 = '\x0058';
-        char myChar3 = '\u0058';
-        Console.WriteLine( myChar1 );
-        Console.WriteLine( myChar2 );
-        Console.WriteLine( myChar3 );
-    }
+    char myChar1 = 'X';
+    char myChar2 = '\x0058';
+    char myChar3 = '\u0058';
+
+    cout << myChar1 << myChar2 << myChar3 << endl;
+    return 0;
 }
 \end{verbatim}
+
 
 [In-Class Demo: the output of this program]
 
@@ -542,7 +562,7 @@ class HelloWorld
 \begin{frame}
 \frametitle{Console Output}
 
-This is the second time (after the Hello World) program that we've seen console output (\texttt{Console.WriteLine} statements).
+This is the second time (after the Hello World) program that we've seen console output (\texttt{cout} statements).
 
 In the next lecture, we'll look at how console input and output work.
 

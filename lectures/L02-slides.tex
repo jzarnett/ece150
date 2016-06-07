@@ -1,6 +1,6 @@
 \input{configuration}
 
-\title{Lecture 2 --- Computer Basics; Intro to C\#}
+\title{Lecture 2 --- Computer Basics; Intro to C++}
 
 \author{J. Zarnett\\
 \texttt{jzarnett@uwaterloo.ca}}
@@ -472,16 +472,16 @@ GUIs may look really neat, but they are complex and focus on them would be a bar
 \end{frame}
 
 
-\part{Introduction to C\#}
+\part{Introduction to C++}
 \begin{frame}\partpage\end{frame}
 
 \begin{frame}
-\frametitle{The C\# Programming Language}
-\alert{C\#} (``See Sharp'') is a language standard developed by Microsoft.
+\frametitle{The C++ Programming Language}
+\alert{C++} (``See Plus Plus'') is general purpose computing language.
 
-It's very similar to Java and borrows concepts from C, C++.
+It is based on the C programming language.
 
-It is a compiled, object-oriented programming language.
+It is compiled, and can be imperative or object-oriented.
 
 It is also a \alert{high level language}:\\
 \quad\quad One keyword may equal many machine instructions.
@@ -490,34 +490,38 @@ It is also a \alert{high level language}:\\
 
 
 \begin{frame}
-\frametitle{C\# Reserved Keywords}
-{\small\tt
+\frametitle{C++ Reserved Keywords}
+{\scriptsize\tt
+\vspace{-1.3em}
 \begin{center}
 \begin{tabular}{l l l l l}
-abstract & as & base & bool & break\\
-byte & case & catch & char & checked\\
-class & const & continue & decimal & default\\
-delegate & do & double & else & enum\\
-event & explicit & extern & false & finally\\
-fixed & float & for & foreach & goto\\
-if & implicit & in & int & interface\\
-internal & is & lock & long & namespace\\
-new & null & object & operator & out\\
-override & params & private & protected & public\\
-readonly & ref & return & sbyte & sealed\\
-short & sizeof & stackalloc & static & string\\
-struct & switch & this & throw & true\\
-try & typeof & uint & ulong & unchecked\\
-unsafe & ushort & using & virtual & void\\
-volatile & while & & & \\
+alignas & alignof & and & and\_eq & asm \\ 
+atomic\_cancel & atomic\_commit  & atomic\_noexcept & auto & bitand \\
+bitor & bool & break & case & catch \\
+char & char16\_t & char32\_t & class & compl \\ 
+concept & const & constexpr & const\_cast & continue \\ 
+decltype & default & delete & do & double \\ 
+dynamic\_cast & else & enum & explicit & export \\
+extern & false & float & for & friend \\ 
+goto & if & inline & int & import \\ 
+long & module & mutable & namespace & new \\ 
+noexcept & not & not\_eq & nullptr & operator \\ 
+or & or\_eq & private & protected & public \\
+register & reinterpret\_cast & requires & return & short \\
+signed & sizeof & static & static\_assert & static\_cast \\ 
+struct & switch & synchronized & template & this \\ 
+thread\_local & throw & true & try & typedef \\ 
+typeid & typename & union & unsigned & using \\ 
+virtual & void & volatile & wchar\_t & while \\
+xor & xor\_eq & &\\
 \end{tabular}
 \end{center}
 }
-Don't try to memorize all of these; as we go through the course we will use some, but not all, of them.
+Don't try to memorize all of these; as we go through the course we will use some, but not all, of them.\\{\scriptsize Source: \url{http://en.cppreference.com/w/cpp/keyword}}
 \end{frame}
 
 \begin{frame}
-\frametitle{C\# Contextual Keywords}
+\frametitle{C++ Contextual Keywords}
 
 There are a few more keywords that are reserved in certain contexts.
 
@@ -525,29 +529,28 @@ You can use one as an identifier, but it's very bad practice:
 
 {\small\tt
 \begin{center}
-\begin{tabular}{l l l l l}
-from & get & group & into & join\\
-let & orderby & partial & select & set\\
-value & where & yield &  & \\
+\begin{tabular}{l l l l}
+override & final & transaction\_safe & transaction\_safe\_dynamic\\
 \end{tabular}
 \end{center}
 }
+{\scriptsize Source: \url{http://en.cppreference.com/w/cpp/keyword}}
 \end{frame}
 
 
 \begin{frame}
-\frametitle{C\# Programming}
-To create and run a C\# program, the flow looks something like this:
+\frametitle{C++ Programming}
+To create and run a C++ program, the flow looks something like this:
 
 \begin{enumerate}
 	\item Write the program in an editor
-	\item The first stage of compilation takes place
+	\item Compile the program
 	\item Launch the program
-	\item The program is Just-In-Time compiled
 	\item The program executes
 \end{enumerate}
 
-In the next lecture we'll create our very first C\# Program: Hello World.
+In the next lecture we'll create our very first C++ Program:\\
+\quad Hello World.
 
 \end{frame}
 
