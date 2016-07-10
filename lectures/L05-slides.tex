@@ -259,7 +259,7 @@ x++;
 \begin{frame}
 \frametitle{Additional Assignment Operators}
 
-A partial list of the assignment operators of C\#:
+A partial list of the assignment operators of C++:
 
 \begin{center}
 \begin{tabular}{l|l}
@@ -315,7 +315,7 @@ This principle applies in code: operations have a precedence order.
 
 \begin{frame}
 \frametitle{Operator Precedence}
-Sadly, there is no convenient acronym for the C\# order of precedence.\\
+Sadly, there is no convenient acronym for the C++ order.\\
 \quad The precedence rules in programming languages are too complex.
 
 Basic BEDMAS still applies, so elements in brackets are done first.
@@ -402,19 +402,21 @@ Before it is stored in the variable \texttt{z} it is converted to \texttt{double
 \end{frame}
 
 \begin{frame}
-\frametitle{C\# Type Promotion Rules}
+\frametitle{C++ Type Promotion Rules}
 
-The simplified version of the type promotion rules in C\# are:
+The principle of the rules is that when there are two types, the smaller is converted to the larger.
+
+The simplified\footnote{There is more complexity with \texttt{unsigned} and \texttt{long long}...} version of the type promotion rules in C++ if we have \texttt{int}, \texttt{long int}, and \texttt{double} are:
 
 \begin{enumerate}
 	\item If either operand is a \texttt{double}, the result is a \texttt{double}
-	\item Otherwise, if either operand is a \texttt{long}, the result is a \texttt{long}
+	\item Otherwise, if either operand is a \texttt{long int}, the result is a \texttt{long int}
 	\item Otherwise, the result is an \texttt{int}.
 \end{enumerate}
 
-Example: If we add a \texttt{long} to an \texttt{int}, the result is \texttt{long}.
+Example: If we add a \texttt{long int} to an \texttt{int}, the result is \texttt{long int}.
 
-Example 2: If we add a \texttt{long} to a \texttt{double}, the result is a \texttt{double}.
+Example 2: If we add a \texttt{long int} to a \texttt{double}, the result is a \texttt{double}.
 
 \end{frame}
 
@@ -434,6 +436,26 @@ double b = (double) a;
 \end{verbatim}
 
 A cast is, incidentally, another example of a unary operator.
+
+This is the older ``C-Style'' casting.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Explicit Type Conversion}
+
+The C++ syntax allows for a cast where we can be more explicit about the type we want to convert to.
+
+Consider again the example where we will cast \texttt{a} to \texttt{double}.
+
+\begin{verbatim}
+int a = 7;
+double b = static_cast<double> a;
+\end{verbatim}
+
+The \texttt{static\_cast} is used to indicate an explicit type conversion.
+
+The type we wish to convert to is then placed inside the \texttt{<>} brackets.
 
 \end{frame}
 
