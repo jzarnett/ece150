@@ -61,14 +61,14 @@ Loops come in a few different varieties:
 \end{frame}
 
 \begin{frame}
-\frametitle{C\# Loop Types}
-C\# provides four types of loops:
+\frametitle{C++ Loop Types}
+C++ provides four types of loops:
 
 \begin{itemize}
 \item The \texttt{while} loop
 \item The \texttt{do-while} loop
 \item The \texttt{for} loop
-\item The \texttt{foreach} loop
+\item The \texttt{foreach} loop (in C++11 and higher)
 \end{itemize}
 
 Let's just jump right in and look at the syntax.
@@ -133,9 +133,8 @@ Here's another example of a \texttt{while} loop:
 
 int countdown = 10;
 
-while ( countdown > 0 ) 
-{
-    Console.WriteLine( countdown );
+while ( countdown > 0 )  {
+    cout << countdown << endl;
     countdown--;
 }
 
@@ -202,19 +201,18 @@ Multiple \texttt{break} statements can exist in a loop if multiple conditions fo
 \frametitle{While loop with Break}
 
 \begin{verbatim}
-static void Main( )
-{
+int main ( ) {
     int counter = 0;
 
-    while( counter < 500 )
-    {
+    while( counter < 500 ) {
+    
         counter++;
-        if( counter > 4 )
-        {
+        if ( counter > 4 ) {
             break;
         }
-        Console.WriteLine( counter );
+        cout << counter <<endl;
     }
+    return 0;
 }
 \end{verbatim}
 
@@ -235,18 +233,18 @@ If you write an infinite loop (\texttt{while( true )}) one way to use this prope
 \frametitle{While loop with User Input}
 
 \begin{verbatim}
-static void Main ( )
-{
-   Console.WriteLine( "Enter a negative number to exit." );
+int main ( ) {
+   cout << "Enter a negative number to exit." << endl;
    int number = 0;
     
-   while (number >= 0) 
-   {
-       Console.Write( "Enter a number: " );
-       number = int.Parse( Console.ReadLine() );
+   while (number >= 0) {
+       cout << "Enter a number: ";
+       int number;
+       cin >> number;
    } // End of loop
     
-   Console.WriteLine( "Negative number entered." );
+   cout << "Negative number entered." << endl;
+   return 0;
 }    
 
 \end{verbatim}
@@ -258,21 +256,20 @@ static void Main ( )
 Let's rewrite this with \texttt{break}:
 
 \begin{verbatim}
-static void Main ( )
-{
-   Console.WriteLine( "Enter a negative number to exit." );
+int main ( ) {
+   cout << "Enter a negative number to exit." << endl;
    int number = 0;
     
-   while (true) 
-   {
-       Console.Write( "Enter a number: " );
-       number = int.Parse( Console.ReadLine() );
-       if ( number < 0 )
-       {
+   while (true) {
+       cout <<"Enter a number: ";
+       int number;
+       cin >> number;
+       if ( number < 0 ) {
            break;
        }
     }
-    Console.WriteLine( "Negative number entered." );
+    cout << "Negative number entered." << endl;
+    return 0;
 }    
 
 \end{verbatim}
@@ -292,20 +289,19 @@ In the \texttt{while} loop, the condition is tested, and if it's still true, the
 \frametitle{While loop with Continue}
 
 \begin{verbatim}
-static void Main( )
-{
+int main ( ) {
     int counter = 0;
 
-    while( counter < 10 )
-    {
+    while( counter < 10 ) {
         counter++;
         if( counter == 4 )
         {
             continue;
         }
-        Console.WriteLine( counter );
+        cout << counter << endl;
     }
-}s
+    return 0;
+}
 \end{verbatim}
 
 [Demo: output of this program]
@@ -364,10 +360,11 @@ Key observation: the loop body will execute at least once, even if the condition
 Let's compare this while loop:
 
 \begin{verbatim}
-int count = int.Parse( Console.ReadLine() );
-while ( count > 0 ) 
-{
-    Console.WriteLine( count );
+int count; 
+cin >> count;
+
+while ( count > 0 )  {
+    cout << count << endl;
     count--;
 }
 \end{verbatim}
@@ -375,10 +372,10 @@ while ( count > 0 )
 ...with this one:
 
 \begin{verbatim}
-int count = int.Parse( Console.ReadLine() );
-do 
-{
-    Console.WriteLine( count );
+int count;
+cin >> count;
+do {
+    cout << count << endl;
     count--;
 } while ( count > 0 );
 \end{verbatim}

@@ -38,7 +38,7 @@ Let's start by re-examining a \texttt{while} loop.
 int countdown = 10;
 while ( countdown > 0 ) 
 {
-    Console.WriteLine( countdown );
+    cout << countdown << endl;
     countdown--;
 }
 \end{verbatim}
@@ -92,7 +92,7 @@ Let's rewrite the countdown loop using \texttt{for}:
 \begin{verbatim}
 for ( int countdown = 10; countdown > 0; countdown-- )
 {
-    Console.WriteLine( countdown );
+    cout << countdown << endl;
 }
 \end{verbatim}
 
@@ -144,10 +144,11 @@ Technically, each of the 3 elements of the \texttt{for} statement are optional.
 In this example, initialization is missing:
 
 \begin{verbatim}
-int countdown = int.Parse(Console.ReadLine());
+int countdown;
+cin >> countdown;
 for ( ; countdown > 0; countdown-- )
 {
-    Console.WriteLine( countdown );
+    cout << countdown << endl;
 }
 \end{verbatim}
 
@@ -163,7 +164,7 @@ In this example, the modification expression is elsewhere in the loop:
 \begin{verbatim}
 for ( int countdown = 10; countdown > 0; )
 {
-    Console.WriteLine( countdown );
+    cout << countdown << endl;
     countdown--;
 }
 \end{verbatim}
@@ -176,10 +177,11 @@ for ( int countdown = 10; countdown > 0; )
 Let's combine the last two examples:
 
 \begin{verbatim}
-int countdown = int.Parse(Console.ReadLine());
-for ( ; countdown > 0; )
-{
-    Console.WriteLine( countdown );
+int countdown; 
+cin >> countdown;
+
+for ( ; countdown > 0; ) {
+    cout << countdown << endl;
     countdown--;
 }
 \end{verbatim}
@@ -196,13 +198,12 @@ This is also acceptable. If you use only the middle expression (condition) of th
 And if we delete the condition, too?
 
 \begin{verbatim}
-int countdown = int.Parse( Console.ReadLine() );
-for ( ; ; )
-{
-    Console.WriteLine( countdown );
+int countdown;
+cin >> countdown;
+for ( ; ; ) {
+    cout << countdown << endl;
     countdown--;
-    if ( countdown < 0 )
-    {
+    if ( countdown < 0 ) {
         break;
     }    
 }
@@ -237,10 +238,10 @@ Potential pitfall: there is an extra semicolon after the closing bracket.
 
 \begin{verbatim}
 for ( int x = 10; x > 0; x-- );
-    Console.WriteLine( "Hello World" );
+    cout << "Hello World" << endl;
 \end{verbatim}
 
-The for loop will run, but the \texttt{Console.WriteLine} statement will execute only once.
+The for loop will run, but the \texttt{cout} statement will execute only once.
 
 The semicolon creates an ``empty statement'' and that forms the body of the loop. That empty statement executes with each iteration.
 
@@ -262,20 +263,19 @@ As before, \texttt{break} exits from the loop and takes us to the next statement
 \begin{frame}[fragile]
 \frametitle{Use of \texttt{continue} in a \texttt{for} Loop}
 In this example, numbers that are multiples of 8 are not printed.
+{\scriptsize
 \begin{verbatim}
 int numberPrinted = 0;
-for ( int i = 0; i < 100; ++i )
-{
-    if ( i % 8 == 0 )
-    {
+for ( int i = 0; i < 100; ++i ) {
+    if ( i % 8 == 0 ) {
         continue;
     }
-    Console.WriteLine( i );
+    cout <<  i;
     numberPrinted += 1;
 }
-Console.Write( numberPrinted );
-Console.WriteLine ( " numbers printed in total." );
+cout << numberPrinted << " numbers printed in total." << endl;
 \end{verbatim}
+}
 
 If \texttt{i} is a multiple of 8, the next iteration of the loop is started.
 
@@ -284,20 +284,20 @@ If \texttt{i} is a multiple of 8, the next iteration of the loop is started.
 \begin{frame}[fragile]
 \frametitle{Confusing \texttt{continue} and \texttt{break}}
 What if instead of using \texttt{continue} we used \texttt{break} instead?
+{\scriptsize
 \begin{verbatim}
 int numberPrinted = 0;
-for ( int i = 0; i < 100; ++i )
-{
-    if ( i % 8 == 0 )
-    {
+for ( int i = 0; i < 100; ++i ) {
+    if ( i % 8 == 0 ) {
         break;
     }
-    Console.WriteLine( i );
+    cout <<  i;
     numberPrinted += 1;
 }
-Console.Write( numberPrinted );
-Console.WriteLine ( " numbers printed in total." );
+cout << numberPrinted << " numbers printed in total." << endl;
 \end{verbatim}
+}
+
 
 
 
@@ -323,15 +323,13 @@ A \texttt{break} or \texttt{continue} statement applies to the innermost loop st
 \frametitle{Nested Loop Example}
 
 \begin{verbatim}
-for ( int i = 0; i < 10; i++ )
-{
-    for (int j = 0; j < 10; j++ )
-    {
-        Console.Write( "i = " );
-        Console.Write( i );
-        Console.Write( ", j = " );
-        Console.Write( j );
-        Console.Write( "\n" );
+for ( int i = 0; i < 10; i++ ) {
+    for (int j = 0; j < 10; j++ ) {
+        cout << "i = ";
+        cout << i;
+        cout << ", j = ";
+        cout << j;
+        cout << endl;
     }
 }
 \end{verbatim}
@@ -342,19 +340,16 @@ for ( int i = 0; i < 10; i++ )
 \frametitle{Nested Loop with \texttt{break} Example}
 
 \begin{verbatim}
-for ( int i = 0; i < 10; i++ ) // Outer loop
-{
-    for (int j = 0; j < 10; j++ ) // Inner loop
-    {
-        if ( j == 9 )
-        {
+for ( int i = 0; i < 10; i++ ) { // Outer loop
+    for (int j = 0; j < 10; j++ ) { // Inner loop
+        if ( j == 9 ) {
             break; // End inner loop
         }
-        Console.Write( "i = " );
-        Console.Write( i );
-        Console.Write( ", j = " );
-        Console.Write( j );
-        Console.Write( "\n" );
+        cout << "i = ";
+        cout << i;
+        cout << ", j = ";
+        cout << j;
+        cout << endl;
     }
 }
 \end{verbatim}

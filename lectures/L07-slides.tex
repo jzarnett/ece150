@@ -33,7 +33,7 @@ Selection statements are an example of \alert{control statements}.
 \begin{frame}
 \frametitle{Types of Selection Statements}
 
-There are three kinds of selection statement in C\#:
+There are three kinds of selection statement in C++:
 
 \begin{enumerate}
 	\item \texttt{if}
@@ -72,19 +72,20 @@ If the \textit{condition} is false, the statement block is skipped.\\
 \frametitle{Use of the if-Statement}
 
 \begin{verbatim}
-using System;
+#include <iostream>
 
-class HelloWorld
+using namespace std;
+
+int main()
 {
-    static void Main( )
-    {
-        int x = int.Parse( Console.ReadLine() );
-        
-        if ( x >= 25 ) {
-            Console.WriteLine( "Condition is true." );
-        }
-        Console.WriteLine( "Program Finished." );
+    int x;
+    cin >> x;
+    
+    if ( x >= 25 ) {
+        cout << "Condition is true." << endl;
     }
+    cout << "Program Finished." << endl;    
+    return 0;
 }
 \end{verbatim}
 
@@ -109,25 +110,23 @@ A more complicated example follows on the next slide:
 
 {\scriptsize
 \begin{verbatim}
-using System;
+#include <iostream>
+using namespace std;
 
-class Test
-{
-    static void Main( )
-    {
-        int output = 0;
-
-        Console.WriteLine( "Enter Input 1: " ); 
-        int input1 = int.Parse( Console.ReadLine() );
-        Console.WriteLine( "Enter Input 2: " ); 
-        int input2 = int.Parse( Console.ReadLine() );
-
-        if ( (input1 == 0 && input2 == 1) || ( input1 == 1 && input2 == 0 ) )
-        {
+int main() {
+    int output = 0;
+    int input1;
+    int input2;
+    
+    cout << "Enter Input 1: ";
+    cin >> input1;
+    cout << "Enter Input 2: ";
+    
+    if ( (input1 == 0 && input2 == 1) || ( input1 == 1 && input2 == 0 ) ) {
             output = 1; 
-        }
-        Console.WriteLine( "Output = " + output );
     }
+    cout << "Output = " << output << endl;
+    return 0;    
 }
 \end{verbatim}
 }
@@ -196,16 +195,14 @@ If the \textit{condition} is false, then statement block 2 will execute; stateme
 
 \begin{verbatim}
 
-Console.Write( "Enter your age: " );
-int age = int.Parse( Console.ReadLine() );
+cout << "Enter your age: ";
+int age;
+cin >> age;
 
-if ( age >= 16 )
-{
-  Console.WriteLine( "You may take the driving test." );
-}
-else 
-{
-  Console.WriteLine( "You are not old enough. Sorry." );
+if ( age >= 16 ) {
+ cout << "You may take the driving test." << endl;
+} else {
+ cout << "You are not old enough. Sorry." << endl;
 }
 \end{verbatim}
 
@@ -217,25 +214,24 @@ else
 
 {\scriptsize
 \begin{verbatim}
-static void Main( )
-{
+int main() {
     int output = 0;
-
-    Console.WriteLine( "Enter Input 1: " ); 
-    int input1 = int.Parse( Console.ReadLine( ) );
-    Console.WriteLine( "Enter Input 2: " ); 
-    int input2 = int.Parse( Console.ReadLine( ) );
-
-    if ( input1 == 0 )
-    {
+    int input1;
+    int input2;
+    
+    cout << "Enter Input 1: ";
+    cin >> input1;
+    cout << "Enter Input 2: ";
+    
+    if ( input1 == 0 ) {
         output = 1; 
     }
 
-    if ( input1 != 0 && input2 == 1 )		
-    {				
+    if ( input1 != 0 && input2 == 1 ) {				
         output = 2; 			
     }				
-    Console.WriteLine( "Output = " + output );
+    cout << "Output = " << output << endl;
+    return 0;    
 }
 \end{verbatim}
 }
@@ -261,24 +257,22 @@ We have the else-if statement to deal with this situation.
 
 {\scriptsize
 \begin{verbatim}
-static void Main( )
-{
+int main() {
     int output = 0;
-
-    Console.WriteLine( "Enter Input 1: " ); 
-    int input1 = int.Parse( Console.ReadLine( ) );
-    Console.WriteLine( "Enter Input 2: " ); 
-    int input2 = int.Parse( Console.ReadLine( ) );
-
-    if ( input1 == 0 )
-    {
+    int input1;
+    int input2;
+    
+    cout << "Enter Input 1: ";
+    cin >> input1;
+    cout << "Enter Input 2: ";
+    
+    if ( input1 == 0 ) {
         output = 1; 
-    } 
-    else if ( input2 == 1 )		
-    {				
+    } else if ( input2 == 1 ) {				
         output = 2; 			
     }				
-    Console.WriteLine( "Output = " + output );
+    cout << "Output = " << output << endl;
+    return 0;    
 }
 \end{verbatim}
 }
@@ -305,24 +299,22 @@ What if some of the conditions are the same?
 
 {\scriptsize
 \begin{verbatim}
-static void Main( )
-{
+int main() {
     int output = 0;
-
-    Console.WriteLine( "Enter Input 1: " ); 
-    int input1 = int.Parse( Console.ReadLine( ) );
-    Console.WriteLine( "Enter Input 2: " ); 
-    int input2 = int.Parse( Console.ReadLine( ) );
-
-    if ( input1 == 0 )
-    {
+    int input1;
+    int input2;
+    
+    cout << "Enter Input 1: ";
+    cin >> input1;
+    cout << "Enter Input 2: ";
+    
+    if ( input1 == 0 ) {
         output = 1; 
-    } 
-    else if ( input1 == 0 )		
-    {				
+    } else if ( input1 == 0 ) {				
         output = 2; 			
     }				
-    Console.WriteLine( "Output = " + output );
+    cout << "Output = " << output << endl;
+    return 0;    
 }
 \end{verbatim}
 }
@@ -414,8 +406,11 @@ If none of the case options match the selector, the \texttt{default} statement b
 \begin{frame}[fragile]
 \frametitle{The \texttt{switch} Example}
 
+{\scriptsize
 \begin{verbatim}
-char keystroke = Console.ReadKey( );
+char keystroke;
+cin >> keystroke;
+
 switch( keystroke )
 {
     case 'A':
@@ -432,6 +427,7 @@ switch( keystroke )
         break;
 }
 \end{verbatim}
+}
 
 \end{frame}
 
@@ -480,7 +476,7 @@ switch( keystroke )
 \begin{frame}[fragile]
 \frametitle{Remember to Take a \texttt{break}}
 
-This, however, is an error in C\#:
+This, however, is valid syntax, but a source of many errors in C++:
 
 \begin{verbatim}
 char keystroke = (char) Console.ReadKey( );
@@ -496,7 +492,7 @@ switch( keystroke )
 
 The \texttt{break;} statement is missing after case \texttt{'a'}.
 
-In some other programming languages, this would mean that the output would be ``71''. In C\# it is a compile time error.
+This would mean that the output would be ``71''.
 
 \end{frame}
 
@@ -505,9 +501,9 @@ In some other programming languages, this would mean that the output would be ``
 
 The concept of going on from one case to the one below is called ``fall through''.
 
-The designers of C\# recognized that this was a common source of programmer error.
+The designers of C\#, for example, recognized that this was a common source of programmer error.
 
-They therefore chose to explicitly forbid it.
+They therefore chose to explicitly forbid it. But it is a problem in C++.
 
 \end{frame}
 
@@ -532,17 +528,17 @@ switch (switchExpression)
 {
     case 0:
     case 1:
-        Console.WriteLine( "Case 0 or 1" );
+        cout << "Case 0 or 1" << endl;
         break;
     case 2:
-        Console.WriteLine( "Case 2" );
+        cout << "Case 2" << endl;
         break;
      // 7 - 4 in the following line evaluates to 3. 
      case 7 - 4:
-         Console.WriteLine( "Case 3" );
+         cout << "Case 3" << endl;
          break;   
      default:
-         Console.WriteLine( "Default case (optional)" );
+         cout << "Default case (optional)" << endl;
          break;
 }
 \end{verbatim}
@@ -557,21 +553,14 @@ switch (switchExpression)
 \begin{verbatim}
 int switchExpression = 3;
 
-if ( switchExpression == 0 || switchExpression == 1 )
-{
-    Console.WriteLine( "Case 0 or 1" );
-} 
-else if ( switchExpression == 2 )
-{
-    Console.WriteLine( "Case 2" );
-} 
-else if ( switchExpression == (7 - 4) )
-{
-    Console.WriteLine( "Case 3" );
-}
-else
-{
-    Console.WriteLine( "Default case (optional)" );
+if ( switchExpression == 0 || switchExpression == 1 ) {
+    cout << "Case 0 or 1" << endl;
+} else if ( switchExpression == 2 ) {
+    cout << "Case 2" << endl;
+} else if ( switchExpression == (7 - 4) ) {
+    cout << "Case 3" << endl;
+} else {
+    cout << "Default case (optional)" << endl;
 }
 \end{verbatim}
 }
