@@ -176,7 +176,7 @@ But: don't re-invent the wheel. If there already is an implementation, it is usu
 A function definition has two parts: the signature and the body.
 
 \begin{verbatim}
-static double abs ( double x ) 
+double abs ( double x ) 
 {
     // TODO: Implement Body
 }
@@ -211,7 +211,7 @@ In this respect, \texttt{return} is a bit like the \texttt{break} statement.
 \frametitle{The \texttt{abs} Function Implemented}
 
 \begin{verbatim}
-static double abs ( double x ) 
+double abs ( double x ) 
 {
     if ( x >= 0 ) 
     {
@@ -244,7 +244,7 @@ When we evaluate a function call, we go to the function definition and execute t
 \frametitle{Execution Semantics}
 
 \begin{verbatim}
-static double abs ( double x ) 
+double abs ( double x ) 
 {
     if ( x >= 0 ) 
     {
@@ -286,7 +286,7 @@ Our implementation is valid; it lives up to the condition that whatever the cont
 
 If we forgot the \texttt{return} statement in the \texttt{else} block, that would be a compile-time error.
 
-Of course, the compiler doesn't check the semantics: if you put \texttt{return 0.0d;} as the body of the function, it compiles (but is wrong).
+Of course, the compiler doesn't check the semantics: if you put \texttt{return 0.0;} as the body of the function, it compiles (but is wrong).
 
 \end{frame}
 
@@ -325,11 +325,11 @@ If the end of the statement block is reached without encountering \texttt{return
 public void PrintData( )
 {
     // Additional statements not shown for space reasons
-    Console.WriteLine( "-- End of List --" );
+    cout << "-- End of List --" << endl;
 }
 \end{verbatim}
 
-After the \texttt{Console.WriteLine} statement, the function will return.\\
+After the \texttt{cout} statement, the function will return.\\
 \quad The compiler will put \texttt{return;} there if it's not explicitly written.
 
 \end{frame}
@@ -338,15 +338,13 @@ After the \texttt{Console.WriteLine} statement, the function will return.\\
 \begin{frame}
 \frametitle{\texttt{Main}}
 
-We've been using a function in our code all along, although we never really discussed it: \texttt{static void Main()}.
+We've been using a function in our code all along, although we never really discussed it: \texttt{int main()}.
 
-Ignoring the keyword \texttt{static} for now, which we'll come to in a later lecture, let's look at the parts of this.
+The return type is \texttt{int}. Thus, it returns an integer value.
 
-The return type is \texttt{void}. Thus, it returns no value.
+The name is \texttt{main}. No surprise there.
 
-The name is \texttt{Main}. No surprise there.
-
-The list of formal parameters is enclosed in \texttt{( )} brackets, and for \texttt{Main}, it is empty (so there are none).
+The list of formal parameters is enclosed in \texttt{( )} brackets, and for \texttt{main()}, it is empty (so there are none).
 
 And the block of statements enclosed in \texttt{\{ \}} braces is the body.
 
@@ -360,14 +358,14 @@ This function converts temperatures in fahrenheit to celsius.
 \begin{verbatim}
 // Precondition: provided temperature is in Fahrenheit
 // Postcondition: returns equivalent temp in Celsius
-public double ConvertToCelsius ( double temperatureInF )
+double convert_to_celsius ( double temp_f )
 {
-    return ( temperatureInF - 32 ) * 5.0d / 9.0d;
+    return ( temp_f - 32 ) * 5.0d / 9.0d;
 }
 \end{verbatim}
 
 We can then call this function:\\
-\quad \texttt{double bodyTemp = ConvertToCelsius( 98.6 );}
+\quad \texttt{double bodyTemp = convert\_to\_celsius( 98.6 );}
 
 \end{frame}
 

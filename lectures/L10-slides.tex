@@ -83,7 +83,6 @@ The keyword \texttt{enum} indicates this will be an enumerated type.
 The seven values inside the \{ \} braces are the members of the set;\\
 \quad the values of the enumeration.
 
-We'll see why somewhat later, but the definition must be placed before the line with \texttt{static void Main()}.
 
 \end{frame}
 
@@ -110,16 +109,16 @@ The \texttt{switch} statement is often used on an \texttt{enum}.
 \begin{verbatim}
 switch ( today )
 {
-    case Days.Monday:
-    case Days.Tuesday:
-    case Days.Wednesday:
-    case Days.Thursday:
-    case Days.Friday:
-        Console.WriteLine( "Time to go to work." );
+    case Monday:
+    case Tuesday:
+    case Wednesday:
+    case Thursday:
+    case Friday:
+        cout << "Time to go to work." << endl;
         break;
-    case Days.Saturday:
-    case Days.Sunday:
-        Console.WriteLine( "Day off!" );
+    case Saturday:
+    case Sunday:
+        cout <<  "Day off!" << endl;
         break;
 }
 \end{verbatim}
@@ -216,13 +215,13 @@ Wouldn't it be nice if we could write our own type that associates the real and 
 
 The concept for this is the \alert{structure}, which allows us to have a collection of multiple different types and treat this as a single item.
 
-Like the \texttt{enum}, the \texttt{struct} definition should be placed outside the \texttt{Main()} block of statements.
+Like the \texttt{enum}, the \texttt{struct} definition should be placed outside the \texttt{main()} block of statements.
 
 \begin{verbatim}
 struct Complex
 {
-    public double real;
-    public double imaginary;
+    double real;
+    double imaginary;
 };
 \end{verbatim}
 
@@ -239,9 +238,6 @@ The variables declared inside the \{ \} braces are called the \alert{members}.
 
 The variables inside the \texttt{struct} have an additional keyword in front of their type: \texttt{public}.
 
-The \texttt{public} keyword means the member variable can be accessed from outside the \texttt{struct} body.\\
-(Later in the course, we will examine all access control keywords.)
-
 Once a structure is defined, you can use it just like any other type.
 
 \end{frame}
@@ -250,9 +246,7 @@ Once a structure is defined, you can use it just like any other type.
 \frametitle{The Dot Operator}
 The \alert{dot operator} is used to access a member.
 
-(We actually saw, but did not define, this dot operator earlier in enumerated types where we referenced \texttt{Days.Monday})
-
-In fact, the dot operator is used in several contexts in C\#.\\
+In fact, the dot operator is used in several contexts in C++.\\
 \quad As we proceed through the course we'll see them all.
 
 \end{frame}
@@ -311,16 +305,16 @@ Are structures within structures allowed? Yes!
 \begin{verbatim}
 struct Date
 {
-    public int day;
-    public int month;
-    public int year;
+    int day;
+    int month;
+    int year;
 };
 
 struct Invoice
 {
-    public int number;
-    public Date date;
-    public bool paid;
+    int number;
+    Date date;
+    bool paid;
 };
 \end{verbatim}
 
@@ -350,10 +344,10 @@ Using the same \texttt{Date struct} we saw on an earlier slide, we can also defi
 \begin{verbatim}
 struct Cheque
 {
-    public string payee;
-    public double amount;
-    public int number;
-    public Date date;
+    string payee;
+    double amount;
+    int number;
+    Date date;
 };
 \end{verbatim}
 
@@ -368,10 +362,10 @@ This, however, is an error:
 \begin{verbatim}
 struct Invoice
 {
-    public int number;
-    public Date date;
-    public bool paid;
-    public Invoice previousInvoice;
+    int number;
+    Date date;
+    bool paid;
+    Invoice previousInvoice;
 };
 \end{verbatim}
 

@@ -64,13 +64,13 @@ for ( int k = 0; k < finals.Length; k++ )
 \begin{frame}[fragile]
 \frametitle{Re-Use of Functions}
 
-First, define the function \texttt{fillWithZeros()}:
+First, define the function \texttt{fill\_with\_zeros()}:
 
 {\scriptsize
 \begin{verbatim}
-void fillWithZeros( int[] array ) 
+void fill_with_zeros( int[] array, int length ) 
 {
-    for ( int i = 0; i < array.Length; i++ )
+    for ( int i = 0; i < length; i++ )
     {
         array[i] = 0;
     }
@@ -82,13 +82,13 @@ Then, use it:
 {\scriptsize
 \begin{verbatim}
 int students = 385;
-int[] assignments = new int[students];
-int[] midterms = new int[students];
-int[] finals = new int[students];
+int[students] assignments;
+int[students] midterms;
+int[students] finals;
 
-fillWithZeros( assignments );
-fillWithZeros( midterms );
-fillWithZeros( finals );
+fill_with_zeros( assignments, students );
+fill_with_zeros( midterms, students );
+fill_with_zeros( finals, students );
 \end{verbatim}
 }
 
@@ -114,7 +114,7 @@ Avoid duplicating code where possible.
 
 \begin{frame}
 \frametitle{Structuring Your Program}
-Functions also give us the ability to structure our program, rather than just have all parts of it jammed together in \texttt{Main}.
+Functions also give us the ability to structure our program, rather than just have all parts of it jammed together in \texttt{main}.
 
 It should be possible to summarize the purpose of a function in a sentence or two. 
 
@@ -162,26 +162,27 @@ These two pieces of documentation can tell you how to use a function properly, w
 \begin{frame}[fragile]
 \frametitle{Using Pre- and Postconditions}
 
+{\scriptsize
 \begin{verbatim}
 // Precondition: there is at least one grade in the array
-// Postcondition: the average of all the grades in the 
-//                array is returned
-static double calculateAverage( double[] grades )
+// Postcondition: the average of all the grades in the array is returned
+static double calculate_average( double[] grades, int length )
 {
     double sum = 0;
-    for ( int i = 0; i < grades.Length; i++ )
+    for ( int i = 0; i < length; i++ )
     {
         sum += grades[i];
     }
-    return ( sum / grades.Length ); 
+    return ( sum / length ); 
 }
 \end{verbatim}
+}
 
 \end{frame}
 
 \begin{frame}
 \frametitle{Violating the Precondition}
-What happens if we violate the precondition of \texttt{calculateAverage()} and \texttt{grades} is an array of capacity 0?
+What happens if we violate the precondition of \texttt{calculate\_average()} and \texttt{grades} is an array of capacity 0?
 
 And who is at fault if the precondition is violated and an error occurs?
 
@@ -205,10 +206,10 @@ for ( int i = 0; i < 10; i++ )
     // Loop Body
 }
 
-Console.WriteLine( i );
+cout << i << endl;
 \end{verbatim}
 
-... produces a compile-time error at the \texttt{Console.WriteLine} statement, because the compiler does not know what \texttt{i} is.
+... produces a compile-time error at the \texttt{cout} statement, because the compiler does not know what \texttt{i} is.
 
 \end{frame}
 
@@ -221,10 +222,10 @@ Here, variable \texttt{i} below is available only within the body of the loop.
 \begin{verbatim}
 for ( int i = 0; i < 10; i++ )
 {
-    Console.WriteLine( i ); // Valid
+    cout << i << endl; // Valid
 }
 
-Console.WriteLine( i ); // Compile time error
+cout << i << endl; // Compile time error
 \end{verbatim}
 
 \end{frame}
@@ -232,7 +233,7 @@ Console.WriteLine( i ); // Compile time error
 \begin{frame}[fragile]
 \frametitle{Variable Scope in Functions}
 This same principle applies to functions.\\
-\quad A variable defined in \texttt{Main} is not defined in another function.
+\quad A variable defined in \texttt{main} is not defined in another function.
 
 A variable defined inside a function is called a \alert{local variable}.
 
@@ -241,17 +242,17 @@ A variable defined inside a function is called a \alert{local variable}.
 static void Main ()
 {
     double val = 0;
-    int[] zeroFill = new int[42];
-    fillWithZeros( zeroFill );
+    int[42] zeroFill;
+    fill_with_zeros( zeroFill, 42 );
 }
 \end{verbatim}
 }
 
 {\scriptsize
 \begin{verbatim}
-void fillWithZeros( int[] array ) 
+void fill_with_zeros( int[] array, int length ) 
 {
-    for ( int i = 0; i < array.Length; i++ )
+    for ( int i = 0; i < length; i++ )
     {
         array[i] = 0;
     }
@@ -259,7 +260,7 @@ void fillWithZeros( int[] array )
 \end{verbatim}
 }
 
-The variable \texttt{val} is not available in \texttt{fillWithZeros}.
+The variable \texttt{val} is not available in \texttt{fill\_with\_zeros}.
 
 \end{frame}
 
@@ -269,20 +270,21 @@ Further observations on that same code:
 
 {\scriptsize
 \begin{verbatim}
-static void Main ()
+int main ()
 {
     double val = 0;
-    int[] zeroFill = new int[42];
-    fillWithZeros(zeroFill);
+    int[42] zeroFill;
+    fill_with_zeros(zeroFill, 42);
+    return 0;
 }
 \end{verbatim}
 }
 
 {\scriptsize
 \begin{verbatim}
-void fillWithZeros(int[] array) 
+void fill_with_zeros(int[] array, int length) 
 {
-    for (int i = 0; i < array.Length; i++)
+    for (int i = 0; i < length; i++)
     {
         array[i] = 0;
     }
@@ -291,9 +293,9 @@ void fillWithZeros(int[] array)
 }
 
 
-The array \texttt{zeroFill} is a parameter to \texttt{fillWithZeros} so the will be accessible, but we must refer to it using the name \texttt{array}.
+The array \texttt{zeroFill} is a parameter to \texttt{fill\_with\_zeros} so the will be accessible, but we must refer to it using the name \texttt{array}.
 
-The name \texttt{zeroFill} is not in scope inside \texttt{fillWithZeros}.
+The name \texttt{zeroFill} is not in scope inside \texttt{fill\_with\_zeros}.
 
 \end{frame}
 
@@ -337,9 +339,9 @@ As before, the scope of the variable is defined by the \{ \} braces it is in.
 int x = 100;
 {
     int y = 54;
-    Console.WriteLine( y );
+    cout << y << endl;
 }
-Console.WriteLine( x ); // y unavailable in this context
+cout << x << endl; // y unavailable in this context
 \end{verbatim}
 
 But there is unlikely to be a good reason to do this.
@@ -404,7 +406,7 @@ Picture these two functions:\\
 
 If the call is \texttt{compute( 10 )}, it's possible both of these will match: 10 may be an \texttt{int} but it could be automatically promoted to \texttt{double}.
 
-C\# will choose the ``best'' match: the first function is chosen because 
+C++ will choose the ``best'' match: the first function is chosen because 
 the compiler will try to find a match without conversion, if it can.
 
 That is ``better'' than converting \texttt{int} to \texttt{double}.
@@ -415,7 +417,7 @@ This may result in some unexpected behaviour, but it is consistent.
 
 \begin{frame}
 \frametitle{Overloading and Type Promotion}
-Sometimes, however, C\# can't figure out which choice is ``best''.
+Sometimes, however, C++ can't figure out which choice is ``best''.
 
 Picture these two function signatures:\\
 \texttt{int compute( int n1, double n2 )}\\
@@ -425,7 +427,7 @@ If the call is \texttt{compute( 10, 10 )} there are two ways to resolve this:\\
 \quad promote the first parameter to \texttt{double}; or\\
 \quad promote the second parameter to \texttt{double}
 
-C\# can't figure out which of these is better, because they are equal. This will be a compile-time error because the situation is ambiguous.
+C++ can't figure out which of these is better, because they are equal. This will be a problem because the situation is ambiguous.
 
 \end{frame}
 

@@ -94,17 +94,17 @@ The following are errors:\\
 Consider the function shown below:
 
 \begin{verbatim}
-static void changeValueTo99 ( int number )
+void change_value_to_99 ( int number )
 {
     number = 99;
 }
 \end{verbatim}
 
-And suppose this code appears in \texttt{Main}:
+And suppose this code appears in \texttt{main}:
 \begin{verbatim}
 int score = 0;
-changeValueTo99( score );
-Console.WriteLine( score );
+change_value_to_99( score );
+cout << score << endl;
 \end{verbatim}
 
 What do you expect the output will be?
@@ -117,7 +117,7 @@ Why did \texttt{score} stay at 0 and not get changed to 99?
 
 Answer: because the default behaviour is \alert{pass-by-value}.
 
-When \texttt{changeValueTo99()} is called, the parameter \texttt{number} is created and initialized with 0; the same \underline{value} as \texttt{score} holds.
+When \texttt{change\_value\_to\_99()} is called, the parameter \texttt{number} is created and initialized with 0; the same \underline{value} as \texttt{score} holds.
 
 However, \texttt{number} is its own copy, so a change made to \texttt{number} is not reflected in \texttt{score}. Two separate boxes in memory.
 
@@ -158,13 +158,13 @@ Because \texttt{x} and \texttt{y} refer to the same thing, a change made to \tex
 \begin{frame}
 \frametitle{Rules for Passing By Reference}
 
-The keyword in C\# for passing by reference is \alert{\texttt{ref}}.
+The syntax in C++ for passing by reference is \alert{\texttt{\&}}.
 
-The \texttt{ref} keyword on a function's formal parameter causes the parameter to be passed by reference.
+The \texttt{\&} operator on a function's formal parameter causes the parameter to be passed by reference.
 
 %Any changes made to the variable in the function will be reflected in the variable when control passes back to the calling function.
 
-The \texttt{ref} keyword must appear in both the declaration of the function and the invocation of the function.
+The \texttt{\&} operator must appear in the declaration of the function.
 
 %The \texttt{ref} keyword can only be applied to a variable or array that has been initialized.
 
@@ -175,17 +175,17 @@ The \texttt{ref} keyword must appear in both the declaration of the function and
 Consider the modified function shown below:
 
 \begin{verbatim}
-static void changeValueTo99 ( ref int number )
+void change_value_to_99 ( int &number )
 {
     number = 99;
 }
 \end{verbatim}
 
-And suppose this code appears in \texttt{Main}:
+And suppose this code appears in \texttt{main}:
 \begin{verbatim}
 int score = 0;
-changeValueTo99( ref score );
-Console.WriteLine( score );
+change_value_to_99( score );
+cout << score << endl;
 \end{verbatim}
 
 What do you expect the output will be now?
@@ -210,18 +210,18 @@ Instead, \texttt{number} was initialized in such a way that it is the same box i
 Consider the function shown below:
 
 \begin{verbatim}
-static void setFirstEntryToOne ( int[] numbers )
+void set_first_entry_to_one ( int[] numbers )
 {
     numbers[0] = 1;
 }
 \end{verbatim}
 
-And suppose this code appears in \texttt{Main}:
+And suppose this code appears in \texttt{main}:
 \begin{verbatim}
 int[] scores = new int[10];
 scores[0] = 0;
-setFirstEntryToOne( scores );
-Console.WriteLine( scores[0] );
+set_first_entry_to_one( scores );
+cout << scores[0] << endl;
 \end{verbatim}
 
 What do you expect the output will be?
@@ -230,9 +230,9 @@ What do you expect the output will be?
 
 \begin{frame}
 \frametitle{Value, Reference, and Arrays}
-We did not make use of the \texttt{ref} keyword, so why did the value of \texttt{scores[0]} change to 1?
+We did not make use of the \texttt{\&} operator, so why did the value of \texttt{scores[0]} change to 1?
 
-Unlike an \texttt{int}, \texttt{double}, or \texttt{struct}, in C\# an array is a \alert{reference type}.
+Unlike an \texttt{int}, \texttt{double}, or \texttt{struct}, in C++ an array is a \alert{pointer} (a reference).
 
 \texttt{int[] scores} is a reference to a memory location for the array.\\
 \quad It's directions telling us how to get to a memory location.\\
@@ -260,19 +260,20 @@ Thus, \texttt{numbers[0]} is the same location in memory as \texttt{scores[0]}.\
 Consider the revised function shown below:
 
 \begin{verbatim}
-static void setFirstEntryToOne ( int[] numbers )
+void set_first_entry_to_one ( int[] numbers )
 {
-    numbers = new int[10];
+    int new_array[10]
+    numbers = new_array;
     numbers[0] = 1;
 }
 \end{verbatim}
 
-And suppose this code appears in \texttt{Main}:
+And suppose this code appears in \texttt{main}:
 \begin{verbatim}
-int[] scores = new int[10];
+int[10] scores;
 scores[0] = 0;
-setFirstEntryToOne( scores );
-Console.WriteLine( scores[0] );
+set_first_entry_to_one( scores );
+cout << scores[0] << endl;
 \end{verbatim}
 
 What do you expect the output will be?
@@ -283,7 +284,7 @@ What do you expect the output will be?
 \frametitle{Value, Reference, and Arrays}
 This time \texttt{scores[0]} is not changed. Why?
 
-In \texttt{setFirstEntryToOne()} the \texttt{numbers} reference changed.\\
+In \texttt{set\_first\_entry\_to\_one()} the \texttt{numbers} reference changed.\\
 \quad We erased the directions and wrote new directions. 
 
 Thus when we follow the directions to \texttt{numbers} we don't end up at the same place as we would if we followed the directions to \texttt{scores}.
@@ -297,22 +298,23 @@ Thus \texttt{scores} still contains directions to the original memory location.
 \begin{frame}[fragile]
 \frametitle{Value, Reference, and Arrays}
 
-Now let's add \texttt{ref} to the array example:
+Now let's add \texttt{\&} to the array example:
 
 \begin{verbatim}
-static void setFirstEntryToOne ( ref int[] numbers )
+void set_first_entry_to_one (  int[] &numbers )
 {
-    numbers = new int[10];
+    int[10] new_array;
+    numbers = new_array;
     numbers[0] = 1;
 }
 \end{verbatim}
 
-And suppose this code appears in \texttt{Main}:
+And suppose this code appears in \texttt{main}:
 \begin{verbatim}
 int[] scores = new int[10];
 scores[0] = 0;
-setFirstEntryToOne( ref scores );
-Console.WriteLine( scores[0] );
+set_first_entry_to_one( scores );
+cout << scores[0] << endl;
 \end{verbatim}
 
 What do you expect the output will be?
@@ -321,13 +323,15 @@ What do you expect the output will be?
 
 \begin{frame}
 \frametitle{Value, Reference, and Arrays}
-Why did \texttt{scores[0]} change this time?
+Well, now we have a problem.
 
 This time the reference \texttt{scores} was passed by reference.
 
 Instead of two copies of the directions, there is only one copy.
 
 Thus when the statement \texttt{numbers = new int[10];} changes the directions to \texttt{numbers}, the directions to \texttt{score} are changed too.
+
+Except the variable \texttt{new\_array} is local to the function and goes away when the function returns!
 
 \end{frame}
 
@@ -342,33 +346,33 @@ In reality, this is rarely necessary since you can always create more functions 
 
 Passing by reference should be avoided unless absolutely necessary.
 
-We still need to examine pass by reference vs. pass by value because of the behaviour of arrays when used as function parameters.\\
-\quad Strings are immutable; to ``change'' one, we update the reference.
+We still need to examine pass by reference vs. pass by value because of the behaviour of arrays when used as function parameters.
 \end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Example: Swapping Two Integers}
 {\scriptsize
 \begin{verbatim}
-static void swap ( ref int r1, ref int r2 )
+void swap ( int &r1, int &r2 )
 {
     int tmp = r1;
     r1 = r2;
     r2 = tmp;
 }
 
-static void Main( )
+int main( )
 {
     int a = 5;
     int b = 12;
     
-    Console.WriteLine( a );
-    Console.WriteLine( b );
+    cout << a << endl;
+    cout << b << endl;
     
-    swap( ref a, ref b );
+    swap( a, b );
     
-    Console.WriteLine( a );
-    Console.WriteLine( b );
+    cout << a  << endl;
+    cout << b  << endl;
+    return 0;
 }       
 \end{verbatim}
 }

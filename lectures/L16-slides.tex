@@ -67,7 +67,7 @@ The subproblem $4!$ is a smaller version of the problem we're working on ($5!$),
 Suppose now you are going to implement the factorial function.
 
 \begin{verbatim}
-static int factorial ( int n )
+int factorial ( int n )
 {
     return n * factorial( n - 1 );
 }
@@ -96,7 +96,7 @@ In a later lecture we will discuss what a stack is and how it works.\\
 \begin{frame}
 \frametitle{Stack Overflow}
 
-When \texttt{Main()} calls \texttt{factorial()}, the computer needs to keep track of where it was in \texttt{Main()} at the time that it went to the other function.
+When \texttt{main()} calls \texttt{factorial()}, the computer needs to keep track of where it was in \texttt{main()} at the time that it went to the other function.
 
 It puts that information in a designated memory area called the stack.
 
@@ -109,7 +109,7 @@ If we do this too many times, the stack gets ``full'' (exceeds available memory 
 \begin{frame}[fragile]
 \frametitle{Factorial Problem}
 \begin{verbatim}
-static int factorial ( int n )
+int factorial ( int n )
 {
     return n * factorial( n - 1 );
 }
@@ -138,7 +138,7 @@ The way the code is written, when \texttt{n} is 1 the evaluation goes on and the
 \begin{frame}[fragile]
 \frametitle{Factorial Fixed}
 \begin{verbatim}
-static int factorial ( int n )
+int factorial ( int n )
 {
     if ( n == 1 )
     {
@@ -190,7 +190,7 @@ As a small note on efficiency, a recursively written function may run slower tha
 Here's the factorial function implemented iteratively:
 
 \begin{verbatim}
-static int factorial ( int n )
+int factorial ( int n )
 {
     int product = 1;
     for ( int i = n; i > 1; i-- )
@@ -244,7 +244,7 @@ Now, let's write an implementation for \texttt{pow()}.
 \begin{verbatim}
 // Precondition: y >= 0
 // Postcondition: returns x to the power of y
-static int pow ( int x, int y )
+int pow ( int x, int y )
 {
     if ( y == 0 )
     {
@@ -288,7 +288,7 @@ Having checked those things, we can now be satisfied that the implementation of 
 Here's the exponential function implemented iteratively:
 
 \begin{verbatim}
-static int pow ( int x, int y )
+int pow ( int x, int y )
 {
     int result = 1;
     for ( int i = 0; i < y; i++ )

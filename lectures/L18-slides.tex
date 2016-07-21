@@ -90,20 +90,6 @@ Examples include:
 
 \end{frame}
 
-\begin{frame}
-\frametitle{The C\# Approach to Errors}
-C\# tries to detect as many types of errors as possible at compile-time.
-
-C\# imposes a very strict set of rules on the use of programming language constructs.
-
-
-The advantage is that C\# detects more errors at compile-time.
-
-The disadvantages are that the language forces us to be more explicit about things at compile time and run-time performance is slower.
-
-(Other languages like C++ may allow accessing an entry that's past the end of the array unintentionally!)
-
-\end{frame}
 
 \begin{frame}
 \frametitle{Finding All Errors}
@@ -222,11 +208,11 @@ Ideally, check for errors in advance, such as ensuring that the divisor is not z
 Checking for an error in advance might allow us to deal with something before it becomes a bigger problem.
 
 \begin{verbatim}
-static void printGreetings ( int n )
+void printGreetings ( int n )
 {
     while ( n != 0 )
     {
-        Console.WriteLine( "Greetings!" );
+        cout << "Greetings!" << endl;
         n--;
     }
 }
@@ -247,7 +233,7 @@ If the precondition is that the value of \texttt{n} must be greater than or equa
 
 \begin{verbatim}
 // Precondition: the value of n must be >= 1
-static int factorial ( int n )
+int factorial ( int n )
 {
      if ( n < 1 )
      {
@@ -265,16 +251,32 @@ Detecting a violation of the precondition is not enough on its own; we also have
 
 Consider that in \texttt{factorial()} if the input was outside of the valid range (integers >= 1), this is an \textit{exception} to what is expected.
 
-The C\# concept for this is the \texttt{Exception}.
+The C++ concept for this is the \texttt{assertion}.
 
-Instead of returning a value when an unexpected situation occurs, instead the code \alert{throw}s an exception.
+Instead of returning a value when an unexpected situation occurs, instead the code uses an \texttt{assert} statement.
 
 \end{frame}
+
+
+
+\begin{frame}
+\frametitle{Make an Assertion}
+An assertion statement can be very simple: \texttt{assert( n >= 1 );} .
+
+If the function is called with a value less than 1, then program execution is immediately terminated with a terse message.
+
+This is good for catching programming errors -- but does not provide any opportunity for the program to recover from the error condition.
+
+If we want that, then we need an additional concept: the \alert{exception}.
+
+
+\end{frame}
+
 
 \begin{frame}
 \frametitle{Throwing Exceptions}
 
-Here are a few reasons why a programmer might throw an exception:
+Here are a few reasons why a programmer might throw an exception or make an assertion:
 
 \begin{itemize}
 	\item To provide the programmer with detailed information on the event that caused the error to occur
@@ -289,21 +291,20 @@ When a program throws an exception, it indicates that it has encountered a situa
 \begin{frame}[fragile]
 \frametitle{Throwing an Exception}
 
-When throwing an exception, we can provide some text to explain what went wrong or why we are throwing the exception.
+When throwing an exception, we can provide some text to explain what went wrong or why we are throwing the exception (or a numeric error code)
 
 \begin{verbatim}
 // Precondition: the value of n must be >= 1
-static int factorial ( int n )
+int factorial ( int n )
 {
      if ( n < 1 )
      {
-        throw new Exception( "n must be >= 1." );
+        throw  "n must be >= 1.";
      }
 // Rest of the implementation not shown for space reasons
 }
 \end{verbatim}
 
-Note: it's necessary to use the \texttt{new} keyword in creating an exception.
 
 \end{frame}
 

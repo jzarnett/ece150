@@ -77,11 +77,11 @@ The variable \texttt{assignments} will be a list of \texttt{int} types.
 \begin{frame}
 \frametitle{Array Declaration}
 
-A simple array declaration and initialization uses the format:\\
-\quad \textit{type[~] identifier = new type[ capacity ];}
+A simple array declaration uses the format:\\
+\quad \textit{type[ capacity ] identifier;}
 
 For example, an array of 11 integers can be declared as follows:
-\texttt{int[] assignments = new int[11];}
+\texttt{int[11] assignments;}
 
 The square brackets [~] are used for many array operations.
 
@@ -93,9 +93,9 @@ The square brackets [~] are used for many array operations.
 \frametitle{Array Allocation}
 When declaring a regular \texttt{int} we saw we don't have to initialize it at the beginning, and later we can assign it a value directly.
 
-When declaring an integer array, before we can use the array, we need to initialize it in a special way. 
+When declaring an integer array, we must remember to initialize each element.
 
-The keyword \texttt{new} is used to \alert{allocate} memory for something\\ \quad (in this case, an array).
+By default the array likely contains random garbage data and each element needs to be assigned a meaningful value before it can be used. 
 
 \end{frame}
 
@@ -148,17 +148,18 @@ This statement is an error:\\
 \begin{frame}
 \frametitle{The [~] Operator}
 
-C\# has automatic bounds checking for arrays.\\
-\quad An attempt to access \texttt{assignments[11]} is checked.\\
-\quad Only if the value is in range will the access be permitted.\\
-\quad Otherwise, we will get a run-time error immediately.
-
-Other languages like C++ do not have array bounds checking.\\
+C++ does not have array bounds checking.\\
 \quad If we attempt to read at an index after the end of the array:\\
 \begin{enumerate}
 	\item If we're ``lucky'' we may read some bogus value.\\
 	\item Or it might result in a program crash (now or later).
 \end{enumerate}
+
+Other languages, like C\#, have automatic bounds checking for arrays.\\
+\quad An attempt to access \texttt{assignments[11]} is checked.\\
+\quad Only if the value is in range will the access be permitted.\\
+\quad Otherwise, we will get a run-time error immediately.
+
 
 Automatic bounds checking seems like a good precaution. The trade-off is that it has a negative impact on performance.
 
@@ -181,10 +182,8 @@ array[2] = 856;
 
 for ( int index = 0; index < capacity; index++ )
 {
-    Console.Write( "Array at index ")
-    Console.Write( index )
-    Console.Write( " = " )
-    Console.WriteLine( array[index] );
+    cout << "Array at index << index 
+    << " = " <<  array[index] << endl;
 }
 \end{verbatim}
 
@@ -221,7 +220,7 @@ But this is a boring activity and the kind of thing a computer can do.
 Make the computer do it:
 \begin{verbatim}
 int[] assignments = new int[11];
-// Filling in the array with Console.ReadLine() not shown
+// Filling in the array with cin not shown
 
 double sum = 0.0;
 
@@ -280,19 +279,18 @@ Now we have worked out the three different grades:\\
 Let's print the maximum one to the screen.
 
 \begin{verbatim}
-double maxGrade = grade_1;
+double max_grade = grade_1;
 
-if ( grade_2 > maxGrade )
+if ( grade_2 > max_grade )
 {
-    maxGrade = grade_2;
+    max_grade = grade_2;
 }
-if ( grade_3 > maxGrade )
+if ( grade_3 > max_grade )
 {
-    maxGrade = grade_3;
+    max_grade = grade_3;
 }
 
-Console.Write( "Assignment Grade: " );
-Console.WriteLine( maxGrade );
+cout << "Assignment Grade: " << max_grade << endl;
 
 \end{verbatim}
 
@@ -327,17 +325,15 @@ for ( int i = 0; i < 5; i++ )
 {
     do
     {
-        Console.Write( "Enter Grade: ");
-        grades[i] = int.Parse( Console.ReadLine( ) );
+        cout << "Enter Grade: ";
+        cin >> grades[i];
     }
     while( (grades[i] < 0) || (grades[i] > 100) );
 }
 
 for ( int i = 0; i < 5; i++ )
 {
-    Console.Write( i )
-    Console.Write( ": " )
-    Console.WriteLine( grades[i] );
+    cout << i << ": " << grades[i] << endl;
 }
 \end{verbatim}
 }
@@ -358,44 +354,20 @@ Unlike an \texttt{enum} or mathematical set, duplicates are allowed.
 
 \end{frame}
 
+
+
 \begin{frame}
-\frametitle{The Array \texttt{Length}}
-Remember from the structure that we accessed \texttt{today.year} using the dot operator.
+\frametitle{Array Length}
 
-It turns out that in C\# the array is in its own way, a kind of structure.
+In C++, the array does not have any additional associated properties.
 
-Every array therefore has the member variable \texttt{Length} that tells you the length of the array (without looking at the allocation).
+So without additional information, if provided only an array, it is not easy to determine the length of the array.
 
-If the array was allocated as \texttt{float[10]} the \texttt{Length} will be 10.
-
-But remember the last index of the array is 9 (\texttt{Length} -1);\\
-\quad Trying to access \texttt{temperature[temperature.Length]} is an error.
+For this reason, keeping track of the size of the array is important.
 
 \end{frame}
 
 
-\begin{frame}[fragile]
-\frametitle{More Advanced Example Using \texttt{Length}}
-
-\begin{verbatim}
-int[] grades = new int[5];
-for ( int i = 0; i < grades.Length; i++ )
-{
-    do
-    {
-        Console.Write( "Enter Grade: ");
-        grades[i] = int.Parse( Console.ReadLine( ) );
-    }
-    while( (grades[i] < 0) || (grades[i] > 100) );
-}
-
-for ( int i = 0; i < grades.Length; i++ )
-{
-    Console.WriteLine( grades[i] );
-}
-\end{verbatim}
-
-\end{frame}
 
 \begin{frame}[fragile]
 \frametitle{Array of Enumerated Types}
@@ -413,7 +385,7 @@ Months[] courseMonths = new Months[4];
 
 \end{verbatim}
 
-To assign an entry: \texttt{courseMonths[0] = Months.September;}
+To assign an entry: \texttt{courseMonths[0] = September;}
 
 \end{frame}
 
@@ -425,9 +397,9 @@ It's also allowed to have an array of structures.
 \begin{verbatim}
 struct Date
 {
-    public int day;
-    public int month;
-    public int year;
+    int day;
+    int month;
+    int year;
 };
 
 
