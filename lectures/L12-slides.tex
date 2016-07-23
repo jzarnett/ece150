@@ -110,6 +110,41 @@ In other languages, the string is immutable; every time a string must be ``chang
 \end{frame}
 
 
+
+\begin{frame}
+\frametitle{Null Termination}
+
+So far, when we have used a string, it is either a literal, or taken from console input.
+
+We can also build our own strings programmatically.
+
+It is extremely important that when we do so, we remember to terminate the string correctly!
+
+A string does not have a fixed length in C++ and so we know that a string terminates only by finding the termination character.
+
+The termination character is null, or zero; escape sequence, \texttt{'\textbackslash0'}.
+
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{Null Termination}
+
+This was a design decision from the days of C where the creators thought it best not to limit the length of the string.
+
+Common error: forgetting to terminate the string with null!
+
+Unfortunately it has led to massive problems including crashes, data corruption, and security breaches.
+
+Thus, the correct way to write a string as a character array is:\\
+\quad \texttt{char hello[6] = {'H', 'e', 'l', 'l', 'o', '\textbackslash0'};}
+
+Always ensure that a string you create is correctly null terminated.
+
+\end{frame}
+
 \part{Multi-Dimensional Arrays}
 \begin{frame}\partpage\end{frame}
 

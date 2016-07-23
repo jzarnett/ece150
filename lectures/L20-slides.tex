@@ -75,7 +75,7 @@ Objects interact with other objects through their functions, and not by manipula
 
 Modelling the system as objects and their interactions is known as \alert{Object Oriented Programming}.
 
-C\# supports and encourages this programming paradigm as an approach to designing useful, modular, reusable software systems.
+C++ supports and encourages this programming paradigm as an approach to designing useful, modular, reusable software systems.
 
 Appropriate use of object oriented programming as a design technique will allow us to create and maintain complex software.
 
@@ -147,8 +147,6 @@ The \texttt{struct} can contain different variables of different types.
 
 The \texttt{class} is an expanded version of the \texttt{struct}: it contains functions in addition to variables.
 
-In C\#, a \texttt{struct} may also contain functions, but this is not true in all programming languages.
-
 The data and functions of an object are referred to as \alert{members}.
 
 Member functions are called \alert{methods}.\\
@@ -163,25 +161,26 @@ Member variables are called \alert{fields}.
 Let's draw up the blueprints for the voltage source:
 {\scriptsize
 \begin{verbatim}
-public class VoltageSource
+class voltage_source
 {
-  public int currentVoltage;
-  public int[] voltageLevels = {0, 6, 12, 18, 24};
+  public: 
+    int current_voltage;
+    int[] voltageLevels = {0, 6, 12, 18, 24};
 
-  public void IncreaseVoltage()
-  {
-    // ...
-  }
+    void increase_voltage()
+    {
+      // ...
+    }
   
-  public void DecreaseVoltage()
-  {
-    // ...
-  }
+    void decrease_voltage()
+    {
+      // ...
+    }
   
-  public void TurnOff()
-  {
-    // ...
-  }
+    void turn_off()
+    {
+      // ...
+    }
 }
 \end{verbatim}
 }
@@ -193,11 +192,11 @@ public class VoltageSource
 
 The previous slide gave the structure for the voltage source we wanted to model: it showed the member fields and methods.
 
-Given this definition, the system now knows how to make a \texttt{VoltageSource} object.
+Given this definition, the system now knows how to make a \texttt{voltage\_source} object.
 
 The implementations of the functions are not shown for space reasons, but in defining the class, we would normally fill them in.
 
-Of course, defining the structure of the object is the first step, but if we want to use a \texttt{VoltageSource}, we will need to create one.
+Of course, defining the structure of the object is the first step, but if we want to use a \texttt{voltage\_source}, we will need to create one.
 
 \end{frame}
 
@@ -213,37 +212,22 @@ Classes are programmer-defined \textbf{types}, so this is no surprise.\\
 
 The process of creating an instance of a class is called \alert{instantiation}.
 
-Now we can see an overview of terminology of structures and classes:
-
-\begin{center}
-\begin{tabular}{l|l|l}
-      & \textbf{Structure Term} & \textbf{Object Term} \\ \hline
-	Variable & Field & Field \\ \hline
-	Function & Method (if allowed) & Method \\ \hline
-	Instance & Record & Object \\
-\end{tabular}
-\end{center}
-
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Classes are Reference Types}
-Like arrays, classes are reference types. \\
-\quad This means the \texttt{new} keyword is needed to create an instance.
+\frametitle{Classes are Like Structs}
+Classes are like structures, so we can use them as types
 
-The declaration\\
-\quad \texttt{VoltageSource source;}\\
- is the same as\\
-\quad  \texttt{VoltageSource source = null;}
+The declaration
+\quad \texttt{voltage\_source source;}\\
 
   
-It creates a reference to  an instance of \texttt{VoltageSource}.\\
-\quad ... but does not allocate memory or create the instance.
+creates an instance of \texttt{voltage\_source}.
 
-Instantiation: \texttt{VoltageSource source = new VoltageSource( );}
+We can then access fields of this instance with the dot operator.
 
-When creating an instance, the name of the class is followed by brackets, like a function call. We'll see why soon.
+\texttt{source.current\_voltage = 0;}
 
 \end{frame}
 
@@ -252,7 +236,7 @@ When creating an instance, the name of the class is followed by brackets, like a
 
 Let's look at another object example: a car.\\
 \quad Data: make, model, year,...\\
-\quad Functions: \texttt{HonkHorn(), FlashLights()}...
+\quad Functions: \texttt{honk\_horn(), flash\_lights()}...
 
 
 Given a \texttt{class Car}, you can make several instances:\\
@@ -270,17 +254,18 @@ Here's a basic version of the \texttt{Car} class, that looks much like a \texttt
 \begin{verbatim}
 public class Car
 {
-    public string make;
-    public string model;
-    public int year;
+    public:
+      string make;
+      string model;
+      int year;
     
-    public void HonkHorn() {
+      void honk_horn() {
         // ...
-    }
-    public void FlashLights() {
+      }
+      void flash_lights() {
         // ...
-    }
-    // Other methods not shown for space reasons
+      }
+      // Other methods not shown for space reasons
 }
 \end{verbatim}
 }
@@ -294,7 +279,7 @@ As we learn more about OOP, we will improve this definition to be more useful an
 
 Just like the \texttt{struct}, variables of an instance are accessed using the Dot Operator (\texttt{.}).
 
-\texttt{Car prius = new Car( );}\\
+\texttt{Car prius;}\\
 \quad Declares and instantiates a \texttt{Car} object.
 
 After creation with \texttt{new}, we may access the variables of the instance:\\
@@ -302,34 +287,17 @@ After creation with \texttt{new}, we may access the variables of the instance:\\
 \quad \texttt{prius.model = "Prius";}\\
 \quad \texttt{prius.year  = 2010;}
 
-Trying to use the dot operator if the instance is \texttt{null} will result in a \texttt{NullReferenceException}.
-
 \end{frame}
 
-
-\begin{frame}
-\frametitle{Classes are Reference Types, II}
-Let's keep using this instance: \texttt{Car prius = new Car( );}
-
-Note that the declaration \texttt{Car prius2 = prius;} creates a second reference to the same memory location of \texttt{prius}.
-
-Thus, the statement \texttt{prius2.year = 2011;} has the same effect as \texttt{prius.year = 2011;}
-
-Recall from arrays: a reference is directions to a memory location.\\
-\quad References \texttt{prius} and \texttt{prius2} are directions to the same spot.\\
-\quad \texttt{prius.year} and \texttt{prius2.year} are at the same place in memory.
-
-\end{frame}
 
 
 \begin{frame}
 \frametitle{Making a Copy of an Instance}
 
-If we have an instance of an object like a \texttt{struct}, we created a copy with the assignment operator (\texttt{point2 = point1;}).
+If we want a copy, just using the assignment operator will not do what we want.
 
-This won't work; we must allocate and create another instance.\\
-\quad To create another instance of \texttt{Car}, use the \texttt{new} keyword again.\\
-\quad \texttt{Car prius2 = new Car( );}
+We must allocate and create another instance.\\
+\quad \texttt{Car prius2;}
 
 To make a copy, create a new instance, and copy the data from the original object to the new instance, one variable at a time.
 
@@ -357,15 +325,17 @@ When a sales associate wants to find a car to show a customer, they make the lig
 Suppose the parking lot has 42 spaces.
 
 \begin{verbatim}
-public class CarDealership
+class Dealership
 {
-    public Car[] availableCars = new Car[42];
+    public:
+      int capacity = 42;
+      Car[] available_cars[capacity];
 
-    public void ParkCar( Car newCar, int position )
-    {
-        availableCars[position] = newCar;
-    }
-    // Other methods and variables not shown
+      void park( Car new_car, int position )
+      {
+          available_cars[position] = new_car;
+      }
+      // Other methods and variables not shown
 }
 \end{verbatim}
 
@@ -379,22 +349,25 @@ Of course, this example ignores what happens if someone tries to park a car in a
 
 Now let's write a method to find a specific car in the lot when we know the make, model, and year.
 
+{\small
 \begin{verbatim}
-public void FindCar( String make, String model, int year )
+void find_car( string make, string model, int year )
 {
-    for ( int i = 0; i < availableCars.Length; i++ )
+    for ( int i = 0; i < capacity; i++ )
     {
-        if ( availableCars[i] != null &&
-             availableCars[i].make == make &&
-             availableCars[i].model == model &&
-             availableCars[i].year == year)
+        if ( available_cars[i].make == make &&
+             available_cars[i].model == model &&
+             available_cars[i].year == year)
              {
-                 availableCars[i].HonkHorn();
-                 availableCars[i].FlashLights();
+                 available_cars[i].honk_horn();
+                 available_cars[i].flash_lights();
              }
     }
 }
 \end{verbatim}
+}
+
+But this function will behave badly if the array of available cars is not initialized!
 
 \end{frame}
 
@@ -403,17 +376,16 @@ public void FindCar( String make, String model, int year )
 \begin{frame}
 \frametitle{Use of Methods and Variables}
 A common mistake when working with classes is a method call like:\\
-\quad \texttt{Car.HonkHorn();}
+\quad \texttt{Car.honk\_horn();}
 
 The compiler identifies this as an error. 
 
-To call the \texttt{HonkHorn()} method, an instance of the class is needed.\\
+To call the \texttt{honk\_horn()} method, an instance of the class is needed.\\
 \quad Which instance of \texttt{Car} do we mean? The Prius? The Jetta?\\
-\quad Correct usage: \texttt{prius.HonkHorn();}
+\quad Correct usage: \texttt{prius.honk\_horn();}
 
 Why? These are \alert{instance methods}: they belong to an instance. 
 
-You may have noticed that \texttt{HonkHorn()} doesn't have the \texttt{static} keyword in front of them like methods we have written so far.
 
 \end{frame}
 
@@ -425,10 +397,11 @@ The keyword \texttt{static} may apply to a field or method.
 
 Consider this very simple class definition:
 \begin{verbatim}
-public class ExampleClass
+class ExampleClass
 {
-    public int value;
-    public static int count;
+    public:
+      int value;
+      static int count;
 }
 \end{verbatim}
 
@@ -461,10 +434,10 @@ e2.value = -8;
 
 e1.count = 2;
 
-Console.WriteLine( "e1 value: " + e1.value );
-Console.WriteLine( "e2 value: " + e1.value );
-Console.WriteLine( "e1 count: " + e1.count );
-Console.WriteLine( "e2 count: " + e2.count );
+cout << "e1 value: " << e1.value << endl;
+cout << "e2 value: " << e1.value << endl;
+cout << "e1 count: " << e1.count << endl;
+cout << "e2 count: " << e2.count << endl;
 \end{verbatim}
 
 \end{frame}
@@ -488,8 +461,6 @@ A \texttt{static} method can make use of static variables and call other static 
 
 Why? Inside the static method, there is no instance to reference.
 
-This is why, to use a function we have defined from within \texttt{static void Main( )} we must declare that function \texttt{static} as well.
-
 An instance method can make use of \underline{both} instance and static variables and can call both static and instance methods.
 
 Why? Static methods and variables are always available, as they belong to the type itself.
@@ -499,12 +470,12 @@ Why? Static methods and variables are always available, as they belong to the ty
 \begin{frame}
 \frametitle{Static Members}
 
-In the \texttt{VoltageSource} class is an array of the different voltage levels:\\
-\quad \texttt{public int[] voltageLevels = \{0, 6, 12, 18, 24\};}
+In the \texttt{voltage\_source} class is an array of the different voltage levels:\\
+\quad \texttt{int[] voltageLevels = \{0, 6, 12, 18, 24\};}
 
 This is a good candidate to be declared \texttt{static} since the voltage levels will be the same in all of the instances of the class.
 
-\texttt{public static int[] voltageLevels = \{0, 6, 12, 18, 24\};}
+\texttt{static int[] voltageLevels = \{0, 6, 12, 18, 24\};}
 
 In general, any constant is likely to be a good candidate to be declared \texttt{static}.
 

@@ -23,30 +23,18 @@
 
 An exception is an instance of a detected run-time error.
 
-Exceptions can be generated ``automatically'' or thrown ``manually''.
+Exceptions can be thrown by a line of code that indicates it.
 
-A ``manually'' generated exception is when the keyword \texttt{throw} appears in the code. A programmer has explicitly \texttt{throw}n an exception.
+This is when the keyword \texttt{throw} appears in the code. A programmer has explicitly \texttt{throw}n an exception.
 
-An ``automatically'' generated exception appears without the appearance of the \texttt{throw} keyword. An example is a division by zero.
+There are also errors that occur without the appearance of the \texttt{throw} keyword. An example is a division by zero.
 
 The line of code is\\
 \quad \texttt{double result = input / divisor; }\\
- but an exception will occur here if divisor is zero.
+ but an error, not an exception, will occur here if divisor is zero.
 
 \end{frame}
 
-
-\begin{frame}
-\frametitle{Exceptions are Thrown}
-
-
-In reality, exceptions are always thrown... 
-
-Some exceptions are thrown by the system libraries and built-in code, so they appear to be ``automatically'' generated.
-
-Regardless of the source, handling is the same.
-
-\end{frame}
 
 
 \begin{frame}
@@ -68,15 +56,16 @@ Exceptions can be handled or unhandled:
 Here is an example of an unhandled exception:
 
 \begin{verbatim}
-static void Main( )
+int main( )
 {
-    int i = 0;		
-    Console.Write( "100 / 0 = " );
-    Console.WriteLine ( 100 / i );
+    cout << "Beginning program..." << endl;
+    throw "An unhandled exception has occurred.";
+    cout << "This code is unreachable." << endl;
+    return 0;
+    
 }
 \end{verbatim}
 
-The C\# compiler is clever enough to detect an error if we explicitly write (100 / 0) as an expression, so we have to put 0 in a variable \texttt{i}.
 
 \end{frame}
 
@@ -102,7 +91,7 @@ try
 {
     // Statement Block
 }
-catch( ExceptionType e )
+catch( const char* e )
 {
     // Exception Handling Block
 }    
@@ -118,33 +107,34 @@ The \texttt{catch} applies to the statements inside the \texttt{try} block.\\
 \begin{frame}
 \frametitle{ExceptionType}
 
-In the syntax for \texttt{catch} there is: \texttt{ExceptionType e}.
+In the syntax for \texttt{catch} there is: \texttt{const char* e}.
 
-\texttt{Exception} is the general form. There are more specific exception types, to allow us to tell different sorts of errors apart.
+This is the general form, if we use just a simple text message to indicate what is wrong.
+
+There are more specific exception types, to allow us to tell different sorts of errors apart.
 
 In addition to saying where we are looking for an exception to be thrown, we also specify what kind of exception we want to \texttt{catch}.
 
-\texttt{Exception} is general and if we just write \texttt{catch ( Exception e )} we will catch most types of exception.
+Example: we could try to catch \texttt{runtime\_error}.
 
 \end{frame}
 
 \begin{frame}
-\frametitle{C\# Important Exception Types}
+\frametitle{C++ Important Exception Types}
 
-Some common Exception Types in C\#:
+Some common Exception Types in C++:
 
 {\scriptsize
 \begin{center}
 \begin{tabular}{l|l}
 \textbf{Exception Name} & \textbf{Description} \\ \hline
-\texttt{Exception} & General exception \\ \hline
-\texttt{ArgumentException} & Error in an argument passed to a function \\ \hline
-\texttt{ArithmeticException} & Some type of arithmetic (mathematical) error \\ \hline
-\texttt{DivideByZeroException} & Division by zero arithmetic error \\ \hline
-\texttt{ArrayTypeMismatchException} & Type of an array does not match with the type required \\ \hline
-\texttt{FormatException} & Problem with the formatting of input \\ \hline
-\texttt{IndexOutOfRangeException} & An array index beyond the bounds of an array \\ \hline
-\texttt{NullReferenceException} & Use of a null reference \\
+\texttt{exception} & General exception \\ \hline
+\texttt{bad\_alloc} & Error in allocating memory \\ \hline
+\texttt{bad\_cast} & Casting one type to another failed \\ \hline
+\texttt{overflow\_error} & A mathematical overflow occurred \\ \hline
+\texttt{underflow\_error} & A mathematical underflow occurred \\ \hline
+\texttt{invalid\_argument} & An argument to a function is invalid \\ \hline
+\texttt{runtime\_error} & Some other run-time error \\
 \end{tabular}
 \end{center}
 }
@@ -160,17 +150,38 @@ Don't memorize this list, but you may use it for reference.
 Let's fill in the try-catch example from before.
 
 \begin{verbatim}
-try
-{
-  double result = input / divisor;
-  Console.Write( "Result: ");
-  Console.WriteLine( result );
+int main() {
+    try {
+        int f = factorial( -1 );
+        cout << f << endl;
+    } catch ( const char* e ) {
+        cout << e << endl;
+    }
+    cout << "Program Completed." << endl;
 }
-catch( DivideByZeroException e )
-{
-  Console.WriteLine( "Division By Zero Error Detected!" );
-}    
 \end{verbatim}
+
+Assume that Factorial throws the exception string we used earlier.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Try-Catch Example Alternative}
+
+An alternative: we use the \texttt{invalid\_argument} exception.
+
+\begin{verbatim}
+int main() {
+    try {
+        int f = factorial( -1 );
+        cout << f << endl;
+    } catch ( invalid_argument e ) {
+        cout << e << endl;
+    }
+    cout << "Program Completed." << endl;
+}
+\end{verbatim}
+
 
 \end{frame}
 
@@ -178,7 +189,7 @@ catch( DivideByZeroException e )
 \frametitle{Try-Catch Execution}
 
 The only output was the error message.\\
-\quad The statements to output ``Result: '' and the number did not occur.
+\quad The statements to output \texttt{f} did not occur.
 
 Like \texttt{return} or \texttt{break}, when an exception is encountered, execution of the current block is stopped at the point of the exception.
 
@@ -196,21 +207,7 @@ In the example above, there is a matching \texttt{catch} block.\\
 
 The system will continue looking by going up a level to the function that called the function where the exception was encountered.
 
-\begin{verbatim}
-static void Main ( )
-{
-    try
-    {
-      divideNumbers( 100, 0 );
-    }
-    catch ( DivideByZeroException e )
-    {
-      Console.WriteLine( "Division By Zero Detected" );
-    }
-}
-\end{verbatim}
-
-In the above example, an exception happened in \texttt{divideNumbers()} but the \texttt{catch} block is found in \texttt{Main}.
+In the above example, an exception happened in \texttt{factorial()} but the \texttt{catch} block is found in \texttt{main}.
 
 \end{frame}
 
@@ -228,22 +225,7 @@ In both of the preceding examples, we found a \texttt{catch} block matching the 
 
 \begin{frame}[fragile]
 \frametitle{Try-Catch Example}
-{\small
-\begin{verbatim}
-try
-{
-    double result = input / divisor;
-    Console.Write( "Result: ");
-    Console.WriteLine( result );
-}
-catch( DivideByZeroException e )
-{
-  Console.WriteLine( "Division By Zero Error Detected!" );
-}    
-\end{verbatim}
-}
-
-So after the exception occurs, control goes to the \texttt{catch} block and the statement there executes.
+eption occurs, control goes to the \texttt{catch} block and the statement there executes.
 
 Then the next statement executed is after the end of the \texttt{catch} block.\\
 \quad Not the console writes.
@@ -255,11 +237,11 @@ Then the next statement executed is after the end of the \texttt{catch} block.\\
 
 Note that our usual rules of variable scope apply in a \texttt{try-catch}.
 
-In the previous example \texttt{double result} is only in scope within the \texttt{try} block and not after the \texttt{try-catch} is done.
+In the previous example \texttt{int f} is only in scope within the \texttt{try} block and not after the \texttt{try-catch} is done.
 
-Like a function parameter, \texttt{DivideByZeroException e} is a parameter available in the \texttt{catch} block.
+Like a function parameter, \texttt{invalid\_argument e} is a parameter available in the \texttt{catch} block.
 
-Right now, we won't make use of \texttt{e}, but if you are feeling ambitious you can play around with what it contains.
+Right now, we won't make much use of \texttt{e}, but if you are feeling ambitious you can play around with what it contains.
 
 \end{frame}
 
@@ -284,19 +266,19 @@ Only one of the \texttt{catch} blocks will execute (mutual exclusivity).
 \begin{verbatim}
 try
 {
-   complicatedFunction( );
+   complicated_function( );
 }
-catch( DivideByZeroException e )
+catch( invalid_argument e )
 {
-  Console.WriteLine( "Division By Zero Error Detected!" );
+  cout << "Invalid Argument Detected!" << endl;
 }
-catch ( ArithmeticException e2 )
+catch ( bad_cast e2 )
 {
-  Console.WriteLine( "Arithmetic Error Detected!" );
+  cout << "Bad Cast Detected!" << endl;
 }
-catch ( IndexOutOfRangeException e3 )
+catch ( runtime_error e3 )
 {
-  Console.WriteLine( "Index out of range!" );
+  cout << "Run time error detected!" << endl;
 }
 \end{verbatim}
 
@@ -306,108 +288,23 @@ catch ( IndexOutOfRangeException e3 )
 \begin{frame}[fragile]
 \frametitle{Handling All Exceptions}
 
-It's possible to catch most exceptions using \texttt{catch ( Exception e )}
-
-However, there are a few exceptions that will not be caught by this.
-
-To be sure to \texttt{catch} \underline{all} exceptions, use the \texttt{catch} statement without the brackets and exception type:
+It's possible to catch all exceptions using \texttt{catch (... )}
 
 \begin{verbatim}
 try
 {
     // Try block
 }
-catch
+catch( ... )
 {
     // All exceptions caught
 }
 \end{verbatim}
 
-\end{frame}
-
-\begin{frame}
-\frametitle{\texttt{finally}}
-
-The \texttt{finally} statement provides a mechanism for executing code immediately after the (partial) execution of a try block.
-
-It may be desirable to save the state of the program prior to exiting, regardless of whether an exception has been handled or not.
-
-The \texttt{finally} statement enables a program to exit gracefully, even in the presence of exceptions.
-
-The \texttt{finally} block comes after the \texttt{catch} blocks, if any.
-
-The \texttt{finally} block executes regardless of whether or not an exception is thrown.
+This is sometimes referred to as ``Pok\'emon Exception Handling'' (``Gotta Catch 'Em All!'').
 
 \end{frame}
 
-
-\begin{frame}[fragile]
-\frametitle{\texttt{finally} Syntax}
-
-Here is the syntax for the \texttt{try-catch-finally} statement:
-
-\begin{verbatim}
-try
-{
-    // Statement Block
-}
-catch( ExceptionType e )
-{
-    // Exception Handling Block
-}
-finally
-{
-    // Finally Block
-}
-\end{verbatim}
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{\texttt{finally} Syntax}
-
-Here is an example of the \texttt{try-catch-finally} statement:
-
-\begin{verbatim}
-try
-{
-    Console.WriteLine( "Attempting Division..." );
-    divideNumbers(100, 0);
-    Console.WriteLine( "Division Succeeded." );
-}
-catch( ExceptionType e )
-{
-    Console.WriteLine( "Division by zero detected." );
-}
-finally
-{
-    Console.WriteLine( "Operation Complete." );
-}
-\end{verbatim}
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{\texttt{finally} Syntax}
-
-What if we don't have \texttt{catch}?
-
-\begin{verbatim}
-try
-{
-    Console.WriteLine( "Attempting Division..." );
-    divideNumbers(100, 0);
-    Console.WriteLine( "Division Succeeded." );
-}
-finally
-{
-    Console.WriteLine( "Operation Complete." );
-}
-\end{verbatim}
-
-The \texttt{finally} block runs before the exception terminates the program.
-
-\end{frame}
 
 
 
