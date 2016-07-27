@@ -1,6 +1,6 @@
 \input{configuration}
 
-\title{Lecture 27 --- More About Pointers}
+\title{Lecture 22 --- ToString, Equality, Namespaces}
 
 \author{J. Zarnett\\
 \texttt{jzarnett@uwaterloo.ca}}
@@ -14,404 +14,331 @@
   \titlepage
   
   \begin{center}
-  \small{Acknowledgments: D.W. Harder, W.D. Bishop}
+  \small{Acknowledgments: W.D. Bishop}
   \end{center}
 \end{frame}
 
+\part{ToString}
+\begin{frame}\partpage\end{frame}
+
 
 \begin{frame}
-\frametitle{Pointers \& Memory Allocation}
-First, we examined memory-mapped I/O in which we had agreed upon an address in advance.
+\frametitle{Printing Objects}
 
-When we used a pointer related to a variable, we've just taken the address of an already existing variable (e.g., \texttt{int* ptr = \&y;})
+What happens if we try writing  an object to the console with \texttt{Console.WriteLine( )}?
 
-This seems kind of redundant, because we could just use that variable's name, \texttt{y}, instead of using the pointer.
+The class name is just printed to the console. That's not very helpful.
 
-We often want to use pointers to allocate new variables at run-time.\\
-\quad Like an object or array, the keyword for that is \texttt{new}.
+The system tries to convert the class to a console-printable form and that's the default behaviour. 
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Run-Time Memory Allocation}
-\texttt{int* ptr = new int( 256 );}\\
-\quad This allocates memory for a new int and puts the value 256 in it.
+\frametitle{The \texttt{ToString} Method}
+A \texttt{ToString( )} method automatically exists for every C\# type.
 
-Two separate memory locations have been allocated:\\
-\quad The integer variable, containing 256; and\\
-\quad The pointer \texttt{ptr}, containing the address of the integer.
+The \texttt{ToString( )} method converts the value of an object to a string format in a (hopefully) meaningful way.
 
-\begin{center}
-\includegraphics[width=0.75\textwidth]{images/new01.png}\\
-{\tiny Image Source: D. W. Harder}
-\end{center}
-
+This method applies to both simple types and structured types.
 \end{frame}
 
 \begin{frame}
-\frametitle{Run-Time Memory Allocation}
+\frametitle{The \texttt{override} Keyword}
+To replace the default behaviour of an existing method, like \texttt{ToString}, we need to make use of the \alert{\texttt{override}} keyword.
 
-When the \texttt{new} keyword was used, the system searched for a block of free memory the size of an integer, and allocated it to our program.
+This is our way of indicating that we want to replace the default behaviour provided for all objects in the system.
 
-The address of the memory allocated is then stored in \texttt{ptr}.
-
-\texttt{int* ptr = new int( 42 );}\\
-A simplified image to picture this statement is:
-
-\begin{center}
-\includegraphics[width=0.2\textwidth]{images/new02.png}\\
-{\tiny Image Source: D. W. Harder}
-\end{center}
-
-Notice that unlike the usual situation when we allocate an \texttt{int}, there's no variable name associated with the integer variable.
+Now we are ready to write an implementation for \texttt{Coordinates}.
 
 \end{frame}
 
 
-\begin{frame}
-\frametitle{Memory Leaks}
 
-We have already discussed the concept of memory leaks: an area of memory remains allocated even though it is no longer needed.
+\begin{frame}[fragile]
+\frametitle{Implementing \texttt{ToString} for \texttt{Coordinates}}
 
-This happens if we allocate memory with \texttt{new} but forget to tell the system we are done with it when we are finished.
-
-Here is some code that demonstrates how this might happen:\\
-\texttt{
-\quad int* ptr = new int( 42 );\\
-\quad ~ptr = new int ( 1024 );
+\begin{verbatim}
+public override string ToString( )
+{
+    return "(" + x + ", " + y + ", " + z + ")";
 }
+\end{verbatim}
+
+After this, whenever an object of type \texttt{Coordinates} is to be printed to the screen, it will be formatted as \texttt{(x, y, z)}. E.g., (1, 7, -5).
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Implementing \texttt{ToString} for \texttt{Coordinates}}
+
+The code below:
+
+\begin{verbatim}
+Coordinates c4 = new Coordinates( 1, 7, -5 );
+Console.WriteLine( c4 );
+\end{verbatim}
+
+will produce as output:
+\texttt{(1, 7, -5)}
 
 \end{frame}
 
 
 \begin{frame}
-\frametitle{Memory Leaks}
-What happened to the memory allocated by the first call to \texttt{new}?\\
-\quad It's still there, still contains 42... but we have no way to access it.
+\frametitle{Beyond Console Printing}
 
-We have lost the address of the variable that contains 42 and there's no way to find it again.
+The examples thus far have used \texttt{Console.WriteLine} but there are other scenarios where we might convert an object to a \texttt{string}.
 
-\begin{center}
-\includegraphics{images/new05.png}\\
-{\tiny Image Source: D. W. Harder}
-\end{center}
+\texttt{Console.WriteLine} has called \texttt{ToString} for us, but in other situations we are responsible for doing so.
 
-Leaking an integer variable doesn't seem like a big deal given the size of computer memory, but leaks build up over time.
+The \texttt{ToString} method can be explicitly called any time we wish to convert an object to a \texttt{string}.
+
+Example:\\
+ \texttt{string positionText = "Your position:~"~+~c4.ToString();}
 
 \end{frame}
 
+\part{Object Equality}
+\begin{frame}\partpage\end{frame}
 
 \begin{frame}
-\frametitle{Memory De-Allocation}
+\frametitle{Equality}
 
-Even if we don't reassign \texttt{ptr} and lose the location of a variable, it's still necessary to free up memory when we're finished with it.
 
-The keyword for freeing up that memory is \texttt{delete}.\\
-\quad Syntax: \texttt{delete ptr;}
+When using equality operators, \texttt{==} and \texttt{!=}, we have thus far used them on simple types like \texttt{int}; \texttt{7 == 0} evaluates to \texttt{false}.
 
-Important: anywhere that \texttt{new} is used on a pointer requires a matching \texttt{delete}, otherwise we leak memory.
+When it comes to reference types, however, things don't always behave as we would expect.
 
-After use of \texttt{delete} on a pointer, remember to set that pointer to zero:\\
-\quad \texttt{ ptr = 0; }
-
-\begin{center}
-\includegraphics[width=0.5\textwidth]{images/ptr03.png}\\
-{\tiny Image Source: D. W. Harder}
-\end{center}
-
+What does it mean for two \texttt{Coordinates} objects to be equal?
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Proper Use of Pointers}
-Why set pointers to 0 when \texttt{delete} has been called?
+\frametitle{Use of the \texttt{==} Operator on Objects}
+Our first instinct is to use the \texttt{==} operator.\\
+\quad This results in a test of \alert{reference equality}.
 
-If you dereference a pointer containing the address 0, the operating system terminates the program with an error:\\
-\quad In UNIX/Mac OS: ``Segmentation Fault (Core Dumped)'';\\
-\quad In Windows: You get the ``report problem to Microsoft'' dialog.
+This means that two objects will be considered equal if they are referring to the same object in memory.
 
-Thus, an attempt to dereference the pointer after it's been deleted will result in an error and you will know immediately what went wrong.
+\texttt{Coordinates c1 = new Coordinates( );}\\
+\texttt{Coordinates c2 = c1; }\\
+\texttt{Coordinates c3 = new Coordinates( );}
 
-
+A test of \texttt{c2 == c1} will evaluate to true.\\
+A test of \texttt{c1 == c3} will evaluate to false.
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Forgetting to Set the Pointer to 0}
-If you don't set the pointer to 0, it still contains the old address.
+\frametitle{Use of the \texttt{==} Operator on Objects}
+Both \texttt{c1} and \texttt{c3} are initialized as (0, 0, 0).
 
-You have called \texttt{delete} so the memory is considered ``free'' and could potentially be allocated for some other purpose.
+Does this make intuitive sense when we look at this scenario?
 
-If you dereference this pointer, several things could happen:
+\texttt{Coordinates c1 = new Coordinates( 1.5, -2.0, 10 );}\\
+\texttt{Coordinates c2 = c1; }\\
+\texttt{Coordinates c3 = new Coordinates( 1.5, -2.0, 10 );}
+
+Even though they're both (1.5, -2.0, 10), \texttt{c1} and \texttt{c3} will not be considered equal by the \texttt{==} operator.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Comparing Objects}
+Our first approach to solving this might be to have the following statement to check if \texttt{c1} and \texttt{c3} are equal\\
+\quad \texttt{c1.X == c3.X \&\& c1.Y == c3.Y \&\& c1.Z == c3.Z}
+
+This is tedious and error-prone every time it's needed in the code (and impractical if the objects have many fields).
+
+Apply a previous solution to this problem: make it a function!
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Comparing Objects}
+You might find it logical to implement a function \texttt{Equals} for this.\\
+\quad It turns out, so did the designers of C\#.
+
+Like \texttt{ToString( )}, every object in C\# automatically has an \texttt{Equals} method that you can use to compare two objects.
+
+Also like the default \texttt{ToString( )}, the default implementation of \texttt{Equals} is not very useful. It does the same as \texttt{==}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Implementing \texttt{Equals}}
+We can write our own implementation for \texttt{Equals}, but must follow these rules:
+
 \begin{itemize}
-	\item The memory is still there and you can still access it
-	\item The memory may be re-allocated to another variable (so two pointers are pointing to the same thing, unexpectedly)
-	\item The memory might be allocated to another program; an attempt to access it results in the OS terminating the program.
+\item \texttt{x.Equals(x)} returns true
+\item \texttt{x.Equals(y)} returns the same value as \texttt{y.Equals(x)}
+\item \texttt{if (x.Equals(y) \&\& y.Equals(z))} returns true, then \texttt{x.Equals(z)} returns true
+\item Successive invocations of \texttt{x.Equals(y)} return the same value as long as the objects referenced by \texttt{x} and \texttt{y} are not modified
+\item \texttt{x.Equals(null)} returns false
 \end{itemize}
 
+Following these rules will prevent unexpected (surprising) behaviour.
+
 \end{frame}
 
-
 \begin{frame}
-\frametitle{Forgetting to Set the Pointer to 0}
-Which of those three outcomes happens is totally random.
+\frametitle{Implementing \texttt{Equals}}
+The method signature for \texttt{Equals} is:\\
+\quad \texttt{public override bool Equals( object obj )}
 
-Murphy's Law says that the first one will happen in testing; one of the other two will take place when you release the software.
+The signature compares against a general \texttt{object} and not the same class where this method is being implemented.
 
-An error that happens only some of the time is much harder to identify and fix than a consistently-occurring error.
+Recall from earlier the concept of explicit type casting: we tell the system explicitly to treat one type as another.
 
-If the pointer is set to 0 after \texttt{delete} has been called, the outcome is consistent and we will be able to identify the error straight away.
+In this example, we need to explicitly cast \texttt{object} to \texttt{Coordinates}.
 
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Double \texttt{delete}}
-
-What if we did this?
+\frametitle{Implementing \texttt{Equals}}
+Add the following to the \texttt{Coordinates} class:
 
 \begin{verbatim}
-int * ptr = new int( 42 );
-delete ptr;
-delete ptr;
-\end{verbatim}
-
-This has the potential to very seriously confuse the system since we marked the memory as free twice.
-
-The system keeps track of what memory is allocated and what is free;\\
-\quad Deleting the same location twice corrupts this bookkeeping data.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Double \texttt{delete}}
-What happens if we have corrupted the bookkeeping data about what memory is allocated and what is free?
-
-The real answer is ``undefined behaviour'': \\
-\quad We cannot predict what will happen.
-
-If you are extremely fortunate it will have no impact.
-
-If you are ``lucky'' the program will crash immediately and you will find the error quickly and correct it before any more damage is done.
-
-More likely, you get negative consequences like silent data corruption.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{The Power of Pointers}
-Because pointers give developers direct access to memory, they are very powerful tools.
-
-Given a pointer to something on the program stack, it is possible to search for something nearby on the program stack.
-
-The stack is, after all, just a designated area of memory.\\
-\quad Given an address in there, we could use pointers to look around.
-
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Stack Hack Example}
-{\scriptsize
-\begin{verbatim}
-using System;
-
-class StackHack
+public override bool Equals( object obj )
 {
-    unsafe static int EnterNumber( )
+    if ( obj == null )
     {
-        int result;
-
-        Console.Write( "Enter a number: " );
-               result = int.Parse( Console.ReadLine( ) );
-        Console.WriteLine( "\nAddress of result on stack: " + (int) &result );
-        HackIt( );
-
-        return( result );
+        return false;
     }
-
-    static void Main( )
-    {
-        int i = EnterNumber( );
-
-        Console.WriteLine( "HackIt( ) already knew you entered " + i );
-    }
-\end{verbatim}
+    Coordinates other = (Coordinates) obj;
+    
+    return ( x == other.x ) 
+        && ( y == other.y ) 
+        && ( z == other.z );
 }
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Problem with the Previous Implementation}
+
+There is a problem with the implementation of \texttt{Equals} on the previous slide.
+
+What if we called \texttt{Equals} with an actual parameter that is \underline{not} an instance of \texttt{Coordinates}?
+
+An error at this statement:\\
+\quad \texttt{Coordinates other = (Coordinates) obj;}
+
+There is, however, a way to prevent this error: the \alert{\texttt{is}} keyword.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{is} Keyword}
+
+The \texttt{is} keyword gives us the ability to check if an object is an instance of a given type.
+
+It is a binary operator that takes an object (on the left hand side) and a type name (on the right hand side), and evaluates to true or false.\\
+\quad Example: \texttt{obj is Coordinates}
+
+Apply this keyword to prevent an error in the \texttt{Equals} method.
 
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Stack Hack Example}
+\frametitle{Implementing \texttt{Equals} with \texttt{is}}
+Add the following to the \texttt{Coordinates} class:
+
 {\scriptsize
 \begin{verbatim}
-    unsafe static void HackIt( )
+public override bool Equals( object obj )
+{
+    if ( obj == null )
     {
-        int x = 0;
-        int* a = &x;
-
-        Console.WriteLine( "Address of x on stack: " + (int)&x );
+        return false;
+    }
+    if ( obj is Coordinates )
+    {
+        Coordinates other = (Coordinates) obj;
         
-        for( int i = 0; i < 6; i++ )
-        {
-            Console.WriteLine( a[i] );	
-        }
-        Console.WriteLine( "\nYou entered " + a[3] );
+        return ( x == other.x ) 
+            && ( y == other.y ) 
+            && ( z == other.z );
     }
-\end{verbatim}
-}
-
-\texttt{HackIt( )} looks around the stack and knows where to find the number entered.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Comments on the Stack Hack Example}
-
-This example illustrates clearly why passwords stored as plaintext are vulnerable.
-
-If several users were logged in at one time, it might be possible for one user to read confidential data of another.
-
-References do not solve all security issues; the level of abstraction between references and pointers provides another layer of protection.
-
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Pointers \& Managed Data Structures}
-In C\#, managed data structures (classes/objects) add another level of complexity when working with pointers.
-
-How do you pass a pointer to a member field within a class?
-
-If the data structure moves, the member field moves and the pointer will point to the wrong memory address!
-
-Clearly, you either need to copy the member field to another variable or fix the location of the object in memory.
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Without Fixing the Location}
-{\scriptsize
-\begin{verbatim}
-class Point
-{
-    public int x;
-    public int y;
-    public Point( int a, int b )
+    else
     {
-        x = a;
-        y = b;
+        return false;
     }
 }
-unsafe class FixedTest
-{
-    static void Main( )
-    {
-        Point myPoint = new Point( 2, 4 );
-        int* ptr = &(myPoint.x);
-        Console.WriteLine( "x = " + *ptr );
-    }
-}	
 \end{verbatim}
 }
 \end{frame}
 
 \begin{frame}
-\frametitle{Without Fixing the Location}
+\frametitle{After Implementing \texttt{Equals}}
 
-This is a compile-time error in C\#.
+After implementing the \texttt{Equals} method, what happens here?
 
-The compiler says we can only take the address of an unfixed expression inside of a fixed statement initializer.
+Recall this from earlier:\\
+\texttt{Coordinates c1 = new Coordinates( 1.5, -2.0, 10 );}\\
+\texttt{Coordinates c2 = c1; }\\
+\texttt{Coordinates c3 = new Coordinates( 1.5, -2.0, 10 );}
 
-Conclusion: we need to fix the location of the object in memory.
+Still \texttt{c1 == c3} will return false, because the \texttt{==} operator is still reference equality.
 
-\end{frame}
+But \texttt{c1.Equals( c3 )} will return true.
 
-
-\begin{frame}[fragile]
-\frametitle{Pinning Managed Data Structures}
-C\# allows developers to use a technique called \alert{pinning} to fix the location of a reference type in memory.
-
-The \texttt{fixed} keyword is used to temporarily pin a data structure in memory so that the data structure will not be relocated.
-
-The \texttt{fixed} statement prevents relocation of a variable by the garbage collector.
-
-The \texttt{fixed} statement takes the following form:
-\begin{verbatim}
-fixed( type* ptr = expr )
-{
-    // Statement block
-}
-\end{verbatim}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Fixing the Location}
-{\scriptsize
-\begin{verbatim}
-class Point
-{
-    public int x;
-    public int y;
-    public Point( int a, int b )
-    {
-        x = a;
-        y = b;
-    }
-}
-unsafe class FixedTest
-{
-    static void Main( )
-    {
-        Point myPoint = new Point( 2, 4 );     
-        fixed( int* ptr = &(myPoint.x) )
-        {
-            Console.WriteLine( "x = " + *ptr );
-            Console.WriteLine( "y = " + *(ptr + 1) );
-        }
-        Console.WriteLine( "x = " + *ptr );
-    }
-}	
-\end{verbatim}
-}
 \end{frame}
 
 \begin{frame}
-\frametitle{Pointer Arithmetic}
+\frametitle{Another Problem with the \texttt{Equals}}
+You may have noticed we are doing an \texttt{==} comparison on \texttt{double}s.\\
+\quad We've previously said we should have a tolerance; not equality.
 
-In the example, we did something tricky called \alert{pointer arithmetic}.\\
-\quad \texttt{"y = " + *(ptr + 1)}
-
-Pointer arithmetic using arithmetic expressions involving pointers.\\
-\quad \texttt{(ptr + 1)} adjusts the address stored in the pointer.
-
-Pointer arithmetic works based on the size of the pointer.
-
-If an integer takes up 4 bytes in memory, then {(ptr + 1)} increments the address by 4 (because 4 is the size of an integer pointer).
+For \texttt{Coordinates}, there's another motivation to use a tolerance.
 
 
+Example: if two points are close enough when drawn on the screen we may choose to consider them to be the same.
 
 \end{frame}
 
+
+\part{Namespaces}
+\begin{frame}\partpage\end{frame}
 
 \begin{frame}
-\frametitle{When to Use Pointers}
-Obviously, if writing code in C or C++, there is no choice: use pointers.\\
-\quad But when should we use them in C\#?
+\frametitle{Namespaces}
+A \alert{namespace} is a collection of associated types.
 
-Generally speaking, use of pointers makes sense for:
-\begin{itemize}
-	\item Legacy data structures
-	\item Legacy library functions such as those provided by Windows
-	\item Interoperating with other software (not C\# programs you control)
-	\item Performance critical code
-\end{itemize}
+Namespaces often correspond with packages, libraries, or application programming interfaces (APIs).
 
+Namespaces permit code reuse by ensuring that types defined in one library do not conflict with those defined in another library.
+
+Thus we could define two distinct classes called \texttt{Coordinates} and differentiate between them by putting them in different namespaces:
+
+\texttt{Real.Coordinates} may represent $(x,y)$-coordinates;\\
+\texttt{Polar.Coordinates} may represent polar $(r,\theta)$-coordinates.
 
 
 \end{frame}
 
+\begin{frame}
+\frametitle{The \texttt{using} Keyword}
 
+The \texttt{using} keyword can be used to eliminate the need for specifying the full name of a type or a function.
 
+For example, the statement \texttt{using System;} allows a C\# program to use \texttt{System.Console.WriteLine( )} as \texttt{Console.WriteLine( )}
+
+The scope of a \texttt{using} directive is limited to the file in which it appears; each file needs to specify its own \texttt{using} namespaces.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{C\# Type Overview}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{images/ooterms.png}\\
+{\tiny Source: J. Bishop and N. Horspool, C\# Concisely, Pearson Education Canada, 2004.}
+\end{center}
+
+\end{frame}
 
 \end{document}
 
