@@ -299,7 +299,7 @@ Pointer arithmetic is arithmetic expressions involving pointers.\\
 
 Pointer arithmetic works based on the size of the pointer.
 
-If an integer takes up 4 bytes in memory, then {(iterator + 1)} increments the address by 4 (because 4 is the size of an integer pointer).
+If an integer takes up 4 bytes in memory, then {(iterator + 1)} increments the address by 4 (because 4 is the size of an integer).
 
 It allows us to walk through the array without use of the index operator \texttt{[]}.
 
@@ -325,7 +325,7 @@ This function takes one parameter: the size of memory requested.
 \begin{frame}
 \frametitle{Use of \texttt{malloc}}
 
-If we know that an integer is 4 bytes, we may simple call \texttt{malloc()} with the parameter 4.
+If we know that an integer is 4 bytes, we may simply call \texttt{malloc()} with the parameter 4.
 
 This is, however, bad practice. For compatibility and portability reasons, there is an additional operator to find the size of the type.
 
