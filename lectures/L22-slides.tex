@@ -227,6 +227,7 @@ int main( )
 {
     int i = enter_number( );
     cout << "hack_it( ) already knew you entered << + i << endl;
+    return 0;
 }
 \end{verbatim}
 }
@@ -248,7 +249,7 @@ void hack_it( )
         cout << a[i] << endl;	
     }
     cout << "You entered " << a[3] << endl;
-    }
+}    
 \end{verbatim}
 }
 
@@ -292,14 +293,14 @@ for( int i = 0; i < 10; ++i) {
 \frametitle{Pointer Arithmetic}
 
 There is did something tricky called \alert{pointer arithmetic}.\\
-\quad \texttt{iterator++}
+\quad Syntax: \texttt{iterator++}
 
 Pointer arithmetic is arithmetic expressions involving pointers.\\
-\quad \texttt{(ptr + 1)} adjusts the address stored in the pointer.
+\quad \texttt{(ptr++)} adjusts the address stored in the pointer.
 
 Pointer arithmetic works based on the size of the pointer.
 
-If an integer takes up 4 bytes in memory, then {(iterator + 1)} increments the address by 4 (because 4 is the size of an integer).
+If an integer takes up 4 bytes in memory, then \texttt{iterator++} increments the address by 4 (because 4 is the size of an integer).
 
 It allows us to walk through the array without use of the index operator \texttt{[]}.
 

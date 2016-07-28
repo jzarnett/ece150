@@ -1,6 +1,6 @@
 \input{configuration}
 
-\title{Lecture 26 --- Encapsulation \& Constructors}
+\title{Lecture 26 --- Sorting }
 
 \author{J. Zarnett\\
 \texttt{jzarnett@uwaterloo.ca}}
@@ -18,314 +18,334 @@
   \end{center}
 \end{frame}
 
-\part{Encapsulation}
-\begin{frame}\partpage\end{frame}
+\begin{frame}
+\frametitle{The Sorting Problem}
+We saw in the discussion about searching that sorting is worthwhile because it dramatically improves the speed of searching.
+
+Sorted sequences of objects can often be manipulated quickly.\\
+\quad Example: the binary search algorithm.
+
+We might have an intuitive idea about what it means for data to be sorted, but let's agree on a formal definition.
+
+\end{frame}
+%Algorithms Book
 
 \begin{frame}
-\frametitle{Encapsulation}
-\alert{Encapsulation} is another principle of OOP: making the fields (variables) of a class inaccessible from outside the class.
+\frametitle{The Sorting Problem}
 
-Then access to the data is granted through the use of externally accessible methods.
+The sorting problem, formally:\\
+\quad \textbf{Input}: A sequence of $n$ numbers $\{a_{1}, a_{2}, ...,  a_{n}\}$\\
+\quad \textbf{Output}: A reordering $\{a_{1}', a_{2}', ... a_{n}'\}$ of the input sequence \\
+\quad \quad \quad such that $a_{1}' \leq a_{2}' \leq ... \leq a_{n}'$
 
-Encapsulation can also mean bundling the data with methods that operate on that data.
+In less formal terms, a solution to the sorting problem:\\
+\quad takes a sequence of $n$ numbers as input; and \\
+\quad returns those numbers in non-decreasing order.
 
-To provide access to just the data, we use \alert{getter}s and \alert{setter}s.
+For input of $\{31, 41, 59, 26, 41\}$, the output is $\{26, 31, 41, 41, 59 \}$
+
+The step-by-step process by which we reorder these values is the \alert{sorting algorithm}.
+
+
+
+\end{frame}
+%Algorithms Book
+
+\begin{frame}
+\frametitle{More General Sorting}
+
+Of course, it's possible to sort things other than numbers (e.g., names) and it might be desirable to sort in another order (e.g., descending).
+
+Thus, a more general definition of a sorting algorithm:\\
+ A sorting algorithm places a sequence of values in a predefined order.
+
+To keep things simple while learning about sorting, we'll use:
+\begin{itemize}
+	\item numbers; and
+	\item non-descending order
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Sorting Algorithm Discussion}
+Many algorithms exist for sorting data:
+
+\begin{itemize}
+	\item Bogo sort
+	\item Insertion sort
+	\item Selection sort
+	\item Shellsort
+	\item Heapsort
+	\item Quicksort
+	\item Bubblesort
+	\item Merge sort
+\end{itemize}
+
+... and more.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Sorting Algorithm Discussion}
+
+Ultimately, which algorithm is best for a given application may depend on a number of factors.
+
+The above algorithms all have different characteristics:
+
+\begin{itemize}
+	\item Algorithm complexity
+	\item Space complexity (storage needed to sort data)
+	\item Performance (how long it takes)
+	\item Data structure (what types it can be used on)
+\end{itemize}
+
+A sorting algorithm is correct if, for every input, it halts with the correct output.
+
+An incorrect algorithm might not halt at all for some input sequences (infinite loop) or might return the output not sorted as expected.
+
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Simple Sorting Techniques}
+
+In this course, we examine only a few of the sorting techniques:
+\begin{enumerate}
+	\item Bogo sort
+	\item Selection sort
+	\item Insertion sort
+%	\item Shell sort
+\end{enumerate}
+
+The algorithms are (relatively) easy to understand.
+
+The algorithms can be applied to arrays and linked lists.
+
+More complex algorithms are introduced \& analyzed in ECE~250.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Bogo Sort}
+The Bogo sort can be summarized as follows:
+
+While the array is unsorted, randomly order the entries.
+
+Through random chance, we'll eventually end up with a sorted array.\\
+\quad But how long will it take...?
+
+This isn't a serious sorting algorithm. It's just used as a baseline to contrast with more realistic algorithms.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Selection Sort}
+Imagine that you have been taking notes for a course on loose-leaf paper and have been numbering the pages.
+
+You accidentally knock over the pile of pages and they scatter and fly everywhere in your room, landing all over.
+
+You gather them up, but they're out of order \& you want to sort them.
+
+A strategy you may choose: selection sort.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Selection Sort}
+Selection Sort is based on searching: find the minimum value.
+
+You have an unsorted pile and a (currently-empty) sorted pile.
+
+Search the unsorted pile until you find page 1.\\
+\quad Add it to the sorted pile.
+
+Then look for page 2; add it to the sorted pile after page 1.
+
+Repeat this procedure until all the pages are sorted again.
 
 \end{frame}
 
 
 \begin{frame}
-\frametitle{Getter and Setter}
+\frametitle{Selection Sort Algorithm}
 
-These provide a public mechanism for accessing and manipulating the private data members of a class.
 
-They have an identifier that normally matches the name of the private data member to be accessed / manipulated.
+Given an array of $n$ entries:
 
-They are a convenient mechanism for implementing object-oriented methods for accessors and mutators.
+For $index$ from 0 to $(n - 1)$\\
+	\begin{enumerate}
+		\item Find the index of the minimum value ($minIndex$) in the subset of the array from $index$ to $(n-1)$.
+		\item Swap the value at $minIndex$ with the value at $index$
+\end{enumerate}
 
-\alert{Accessors} (getters) read the value of a private data member.\\
-\alert{Mutators} (setters) write the value of a private data member.
+To find the minimum index, we must use a linear search (because the binary search requires sorted data and we're trying to sort...).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Selection Sort Illustration}
+Consider sorting $\{12, 36, 20, -1\}$ using the selection sort.
+
+After iteration $x$, the first $x$ values have been sorted.\\
+Progress is shown by the red highlighting.
+
+Iteration 1: Array Contents = $\{12, 36, 20, -1\}$\\
+\quad Find minimum value between index 0 and (length - 1)\\
+\quad Minimum value is -1, at index 3\\
+\quad Swap minimum value of -1 with value of 12 in index 0.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Selection Sort Illustration}
+Iteration 2: Array Contents = $\{\alert{-1}, 36, 20, 12\}$\\
+\quad Find minimum value between index 1 and (length - 1)\\
+\quad Minimum value is 12, at index 3\\
+\quad Swap minimum value of 12 with value of 36 in index 1
+		
+Iteration 3: Array Contents = $\{\alert{-1}, \alert{12}, 20, 36\}$\\
+\quad Find minimum value between index 2 and (length - 1)\\
+\quad Minimum value is 20, at index 2\\
+\quad Swap minimum value of 20 with value of 20 in index 2
+
+The array, after sorting, contains: $\{-1, 12, 20, 36\}$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Larger Array Example}
+
+Consider sorting \{12, 36, 42, -1, 99, 20, 10, 19, 70\}.
+
+	\{12, 36, 42, -1, 99, 20, 10, 19, 70\} 	// Initial array values\\
+	\{\alert{-1}, 36, 42, 12, 99, 20, 10, 19, 70\}	// After iteration 1\\
+	\{\alert{-1, 10}, 42, 12, 99, 20, 36, 19, 70\}	// After iteration 2\\
+	\{\alert{-1, 10, 12}, 42, 99, 20, 36, 19, 70\}	// After iteration 3\\
+	\{\alert{-1, 10, 12, 19}, 99, 20, 36, 42, 70\}	// After iteration 4\\
+	\{\alert{-1, 10, 12, 19, 20}, 99, 36, 42, 70\}	// After iteration 5\\
+	\{\alert{-1, 10, 12, 19, 20, 36}, 99, 42, 70\}	// After iteration 6\\
+	\{\alert{-1, 10, 12, 19, 20, 36, 42}, 99, 70\}	// After iteration 7\\
+	\{\alert{-1, 10, 12, 19, 20, 36, 42, 70, 99}\}	// After iteration 8
+
+Note that a total of 8 iterations are required to sort 9 values.
+
+In general, selection sort requires $n-1$ iterations to sort $n$ values.
+
 
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Get-and-Set Methods}
+\frametitle{Selection Sort Code}
+
+Here is a simple code implementation of selection sort:
 
 \begin{verbatim}
-private:
-  double price;
+void selection_sort( int[] data, int length )
+{
+    int minIndex;
 
-public:
-  double getPrice() {
-    return price;
-  }
-
-  void setPrice( double new_price ) {
-    price = new_price;
-  }
+    for( int index = 0; index < length - 1; index++ )
+    {
+        minIndex = min( data, length, index );
+        swap( data, minIndex, index );
+    }
+}
 \end{verbatim}
 
-\end{frame}
-
-
-
-
-\begin{frame}
-\frametitle{Encapsulation: \texttt{public} and \texttt{private}}
-
-With the \texttt{class} the keyword \texttt{public} appeared but we did not discuss what it means or why it is there.
-
-Then, in the last example, a new keyword appeared: \texttt{private}.
-
-These are two \alert{access modifiers} or \alert{visibility modifiers}.
-
-Access modifiers are a technique to restrict where a variable may be read/written from, or where a method can be called from.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Encapsulation: \texttt{public} and \texttt{private}}
-
-The two access modifiers we've seen so far are \texttt{public} and \texttt{private}.
-
-Marking a method or variable \texttt{public} makes it accessible from everywhere in the program. \\
-\quad Any function may call a \texttt{public} function, for example.
-
-Denoting a method or variable as \texttt{private} makes it accessible only from within that object type.
-
-It's a compile time error to try to read a \texttt{private} variable from outside its declaring class.
-
-As a rule of thumb, methods of a class tend to be \texttt{public} and the variables tend to be \texttt{private}.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Motivation for Encapsulation}
-It may seem silly to have private methods in the system - why bother?\\
-\quad Especially because we can easily change private into public.
-
-The real purpose of the public/private distinction is to encourage good programming practice and maintainability.
-
-In a large, complex system, any method or variable that is public will be relied upon by other classes.
-
-In the future, it will be expensive or impossible to change.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Motivation for Encapsulation}
-Consider Microsoft's problem: maintaining program compatibility.
-
-Any time they want to change something in Windows, they have to consider very carefully what the impact is on all the programs.
-
-Microsoft can change private things, but not those that are public.
-
-They know that people won't buy the new version of Windows if their old programs no longer function.
-
-For more on this, see \url{http://blogs.msdn.com/b/oldnewthing/archive/2003/12/24/45779.aspx}
-\end{frame}
-
-\begin{frame}
-\frametitle{Accessors and Mutators for All!}
-A very common implementation choice is to make all member variables private and create accessor and mutator methods for each.
-
-This provides some minor benefits over just making all variables public, but not all that much.
-
-Accessor and mutator methods should exist only where there is a reason to create them.
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Advantages of Encapsulation}
-Proper use of encapsulation results in better-designed software that:\\
-\quad Maximizes \alert{cohesion} -- related elements being kept together; and\\
-\quad Minimizes \alert{coupling} -- dependency of one part on another.
-
-Much like re-using the \texttt{Date struct} we saw earlier, objects can and should be re-used to build larger objects.
-
-If data is properly encapsulated, the implementation may be changed without having an impact on other parts of the program.
-
-Change is inevitable in software, so we should plan for it.
-
-\end{frame}
-
-\part{Constructors and Destructors}
-\begin{frame}\partpage\end{frame}
-
-\begin{frame}
-\frametitle{Constructors}
-
-A \alert{constructor} is a special kind of method that is used to instantiate and initialize objects.
-
-Every class has a default constructor that initializes each data member of a class to a default value. It has no parameters.
-
-The default constructor for a class is accessed using the class name followed by round brackets.
-
-For example, if you define a class named ABC, the default constructor for ABC is \texttt{ABC( )}.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Constructors}
-
-If you create a constructor, regardless of the number of parameters, for a class, the default constructor no longer exists.
-
-Thus, if you want to have a no-parameters constructor in addition to any number of others, you must explicitly define it.
-
-A constructor can have as many parameters as required.
-
-Multiple constructors for a class may exist.\\
-\quad This is an example of function overloading.
+Implementations of \texttt{min} and \texttt{swap} are shown on the next slide\\ \quad ...but we (should) already know how to implement those!
 
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Coordinates Constructor Example}
+\frametitle{Selection Sort Code}
 
 {\scriptsize
 \begin{verbatim}
-class Coordinates
+int min( int[] data, int length, int start )
 {
-    float x;
-    float y;
-    float z;
-
-    public Coordinates( )            // Constructor 1
+    int minIndex = start;
+		
+    for( int index = start + 1; index < length; index++ )
     {
-        x = 0.0f; 
-        y = 0.0f;
-        z = 0.0f;
+        if( data[index] < data[minIndex] )
+        {
+            minIndex = index;
+        }
     }
-
-    public Coordinates( float a, float b, float c )    // Constructor 2
-    {
-        x = a;
-        y = b;
-        z = c;
-    }    
+    return minIndex;
 }
-\end{verbatim}
-}
-\end{frame}
 
-\begin{frame}
-\frametitle{Coordinates Constructor Comments}
-
-In this example, an instance of a Coordinates object can be created using two different constructors:\\
-\quad \texttt{public Coordinates( )}\\
-\quad \texttt{public Coordinates( float a, float b, float c )}
-
-A constructor does not have an explicitly-specified return type and always has the same name as its class.
-
-The first constructor is used to create an instance of a Coordinates object that is initialized to (0, 0, 0).
-
-The second constructor is used to create an instance of a Coordinates object initialized to (a, b, c).
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Using Constructors}
-
-To utilize the class declaration on the previous slide, you need to create an object using the constructor.
-
-To declare a variable, c1, using the first constructor:\\
-\quad \texttt{Coordinates c1 = new Coordinates( );}
-
-This creates a reference type variable named \texttt{c1}.
-
-This variable refers to a new object of type Coordinates that has been initialized using the first constructor.
-
-Note the use of the \texttt{new} keyword to create a new object (like an array).
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Using Constructors}
-To declare a variable, c2, initialized to (10.0, -5.5, 7.5):\\
-\texttt{Coordinates c2 = new Coordinates( 10.0f, -5.5f, 7.5f );}
-
-This creates a reference named \texttt{c2} that refers to a new object of type Coordinates that has been initialized using the second constructor.
-
-When the object is created, the coordinates x, y, and z are set to values of 10.0, -5.5, and 7.5 respectively.
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Copy Coordinates}
-Suppose we want to make a copy of the \texttt{Coordinates c2} object.
-
-Recall that objects are reference types. \\
-\quad \texttt{Coordinates c3 = c2;} is not correct; \\
-\quad That statement will create another reference to the same instance.
-
-Correct solution:\\
-\quad \texttt{Coordinates c3 = new Coordinates( c2.X, c2.Y, c2.Z );}
-
-
-Or by manually assigning each variable:
-\begin{verbatim}
-Coordinates c3 = new Coordinates( );
-c3.X = c2.X;
-c3.Y = c2.Y;
-c3.Z = c2.Z;
-\end{verbatim}
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Copy Constructors}
-We can make creation of a copy easier by adding a \alert{copy constructor}.
-
-\begin{verbatim}
-public Coordinates( Coordinates toCopy )
+void swap( int[] data, int index1, int index2 )
 {
-    x = toCopy.x;
-    y = toCopy.y;
-    z = toCopy.z;
+    int tmp = data[index1];
+    data[index1] = data[index2];
+    data[index2] = tmp;
 }
 \end{verbatim}
-
-This makes the syntax of creating a copy much simpler:\\
-\quad \texttt{Coordinates c3 = new Coordinates( c2 );}
-
-Use of a copy constructor also allows better encapsulation; no need to know the internals of the class to make a correct copy.
-
+}
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Copy Constructor Alternative}
-Another strategy for making a copy of an object is a static method.
+\frametitle{Alternative Implementation}
+The previous code example is written in such a way as to separate out the different parts, such as finding the minimum and the swap.
 
+Consider a more compact implementation of selection sort:
+\vspace{-1em}
+{\scriptsize
 \begin{verbatim}
-public static Coordinates MakeCopy( Coordinates toCopy )
+void selection_sort( int[] data, int length )
 {
-    Coordinates result = new Coordinates( );
-    result.X = toCopy.X;
-    result.Y = toCopy.Y;
-    result.Z = toCopy.Z;
-
-    return result;
+  int minIndex;
+  int temp;
+  for (int i = 0; i < length; i++) {
+    for (int j = i, minIndex = i; j < length; j++) {
+        if (data[j] < data[minIndex])
+        {
+            minIndex = j;
+        }
+    }
+    temp = data[i];
+    data[i] = data[minIndex];
+    data[minIndex] = temp;
+  }
 }
 \end{verbatim}
+}
+
+\end{frame}
 
 
-Then, to make a copy of \texttt{Coordinates c1}, call:\\
-\quad \texttt{Coordinates c2 = Coordinates.MakeCopy( c1 );}
+\begin{frame}
+\frametitle{In-Place Sorting}
+
+The implementation of selection sort we have examined is an example of an \alert{in-place} sort: no additional memory is allocated.
+
+In-place means we don't have to allocate a new array for output.\\
+\quad There is only one array and we re-order the values within that.
+
+As an alternative strategy that takes more memory: 
+
+For an input array of capacity $n$, allocate an output array of capacity $n$.\\
+Then, for each entry of the input array: 
+\begin{enumerate}
+\item Find the minimum value in the input array
+\item Remove it from the input array
+\item Put it in the output array
+\end{enumerate}
 
 \end{frame}
 
 \begin{frame}
-\frametitle{About Destructors}
+\frametitle{In-Place Sorting}
 
-\alert{Destructors} are unnecessary in C\#; C\# uses \alert{garbage collection}.\\
-\quad We will learn about this subject soon.
+Why would we choose the alternative that uses more memory?
 
-In a system with garbage collection, old objects that are no longer needed are automatically cleaned up.
-
-In other languages, a destructor does the opposite of the constructor: it frees up resources that the object has accumulated over its lifetime.
-
-This is needed in languages with manual memory management (such as C++) and the definition is included here only for completeness.
+There are very often space-time tradeoffs.\\
+\quad An algorithm that takes more memory may run faster; \\
+\quad An algorithm that doesn't use as much memory may run slower.
 
 \end{frame}
 

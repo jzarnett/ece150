@@ -1,6 +1,6 @@
 \input{configuration}
 
-\title{Lecture 24 --- Files \& Streams }
+\title{Lecture 24 --- Searching }
 
 \author{J. Zarnett\\
 \texttt{jzarnett@uwaterloo.ca}}
@@ -18,118 +18,99 @@
   \end{center}
 \end{frame}
 
+
 \begin{frame}
-\frametitle{Files and File Systems}
+\frametitle{Why is Searching Important?}
 
-Files permanently store large amounts of data.
+Computers are designed to store \& manipulate massive amounts of data, but data is only useful if it can be found quickly.
 
-Operating systems implement a filesystem to manage files stored on a hard disk (or other types of storage media).
+Consider World Wide Web (WWW) search engines:\\
+\quad Would you use Google if it required 1 hour to answer a query?
 
-Filesystems typically support the following:
-\begin{itemize}
-\item Creating new files
-\item Reading from a file
-\item Writing to a file
-\item Appending to existing files
-\item Renaming existing files
-\item Deleting existing files
-\item Checking for the existence of a file
-\end{itemize}
-
+How much data does Google search?\\
+\quad They say there are over 60 trillion web pages.\\
+\quad Its index of results is over 100 million gigabytes.\\
+\quad And they try to get results in 1/8 of a second. 
 \end{frame}
 
 \begin{frame}
-\frametitle{Streams}
+\frametitle{Searching Principles}
+To talk about searching, we need to establish the basis of a scenario.
 
-File I/O and console I/O are very similar.
+We have an array of some type and something we are looking for.
 
-It is possible to define I/O methods such as \texttt{ReadLine( )} and \texttt{WriteLine( )} that work with both file I/O and console I/O.
+There must be a way to tell if the entry being examined is equal to what we are searching for.
 
-\alert{Stream}s are an abstraction for data flow that can be applied to both file I/O and console I/O.
+If we find an entry in the array that matches what we are searching for, we return the index of that entry.
 
-A stream denotes the flow of data from a source to a destination.
-
-In this course, we have already used streams:\\
-\quad \texttt{Console.Out} is the stream for console output.\\
-\quad \texttt{Console.In} is the stream for console input.
-
+If no matching entry is found in the array, we return the index -1.
 
 \end{frame}
+
 
 \begin{frame}
-\frametitle{File I/O Fundamentals}
+\frametitle{Linear Search Algorithm}
 
-The file I/O classes are defined in the \texttt{System.IO} namespace.
+First idea: linear search.
 
-Output streams are created using the \texttt{StreamWriter} class.
+The algorithm to do a linear search is fairly simple.
 
-Input streams are created using the \texttt{StreamReader} class.
-
-The \texttt{StreamWriter} and \texttt{StreamReader} classes provide sequential access to text files: each line must be written or read in sequence.
-
-Files are assumed to store text data.
+\begin{enumerate}
+\item Start at index 0 (set the current index to 0)
+\item Check if the value at the current index is the desired value:\\
+	\quad If yes, return the current index\\
+	\quad If no, increment the current index
+\item Check if the current index exceeds the array capacity:\\
+	\quad If yes, return -1\\
+	\quad If no, go to step 2.
+\end{enumerate}
 
 \end{frame}
-
 
 \begin{frame}[fragile]
-\frametitle{File Output Example}
+\frametitle{Linear Search Implementation}
 
-This code outputs the text ``Hello World'' to a file named ``output.txt''.
+Take this algorithm and implement to to search for integers:
 
 {\scriptsize
 \begin{verbatim}
-StreamWriter outStream = null;
-string filename = "output.txt";
-           
-try
+int linear_search( int[] array, int array_length, int searchValue )
 {
-    outStream = new StreamWriter( filename );
-    outStream.WriteLine( "Hello World" );
-    outStream.Close( );
-    Console.WriteLine( "File successfully created" );
-}
-catch( Exception e )
-{
-    Console.Write( "Unable to create file! Reason: " );
-    Console.WriteLine( e );
-    return;
-}
-\end{verbatim}
-}
-
-If output.txt didn't exist before, it creates that file.
-
-\end{frame}
-
-
-
-\begin{frame}[fragile]
-\frametitle{File Input Example}
-
-{\scriptsize
-\begin{verbatim}
-StreamReader inStream = null;
-string filename = "input.txt";
-string line;
-           
-try
-{
-    inStream = new StreamReader( filename );
-    do
+    for( int index = 0; index < array_length; index++ )
     {
-        line = inStream.ReadLine( );
-        Console.WriteLine( line );
+        if( array[index] == searchValue )
+        {
+            return index;
+        }
     }
-    while( line != null );
-    inStream.Close( );
-    Console.WriteLine( "File successfully read" );
+    return -1;
 }
-catch( Exception e )
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Testing the Linear Search}
+
+{\scriptsize
+\begin{verbatim}
+int main( )
 {
-    Console.Write( "Unable to read file! Reason: " );
-    Console.WriteLine( e );
-    return;
+    int[] data = {1, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 20, 36};
+
+    cout << "The index of 1 is: " << linear_search( data, 14,  1 ) << endl;
+    
+    cout << "The index of 3 is: " << linear_search( data, 14,  3 ) << endl;
+    
+    cout << "The index of 10 is: " << linear_search( data, 14,  10 ) << endl;
+    
+    cout << "The index of 11 is: " << linear_search( data, 14,  11 ) << endl;
+    
+    cout << "The index of 36 is: " << linear_search( data, 14,  36 ) << endl;
+    
+    cout << "The index of 99 is: " << linear_search( data, 14,  99 ) << endl;
+    
+    return 0;
 }
 \end{verbatim}
 }
@@ -137,338 +118,301 @@ catch( Exception e )
 \end{frame}
 
 \begin{frame}
-\frametitle{File Input Example}
-The file input example code reads a specified file (input.txt) into memory (variable \texttt{line}), one line at a time.
+\frametitle{Linear Search Algorithm Analysis}
 
-That line of text is then printed out to the console.
+The linear search algorithm for arrays is very simple:\\
+\quad Easy to write; easy to understand.
 
-Note in both input and output examples the use of \texttt{try-catch} blocks.\\
-\quad File-related operations may frequently result in Exceptions.
+As seen in the Google search example, how quickly we find a piece of data is important. We are often interested in the worst case scenario.
 
+The worst case scenario occurs if the desired value is at the end of the array or not in the array at all.
 
+In the worst case, the linear search algorithm checks all $n$ values where $n$ is the capacity of the array.
 
 \end{frame}
 
 
 \begin{frame}
-\frametitle{Inputting Formatted Data}
-The \texttt{ReadLine( )} method reads complete lines of data.
+\frametitle{Improving on Linear Search}
+The linear search is an exhaustive search: we check every single entry until we find the answer we want, or reach the end.
 
-However, some applications use numeric input data or other formatted data fields stored as text.
+Improvement idea: if the list is sorted and we find an entry larger than the one we're searching for, we can stop immediately and return -1.
 
-If the input data consists of non-string data types represented as text, the lines of input must be split into individual strings and parsed.
+If we search for 2 in this sorted array and find 3, we can already conclude the answer is -1:  \texttt{int[] data = \{1, 3, 4, 5, 8, 13\};}
 
-There are a couple of things to consider:
-\begin{itemize}
-    \item How will the data be used, stored, manipulated, etc.?
-    \item What errors should be detected, corrected, ignored, etc.?
-\end{itemize}
+The worst case (e.g., searching for 99) is still checking $n$ entries.\\
+\quad What we need is a better algorithm, not a minor improvement.
 
 \end{frame}
 
-
 \begin{frame}[fragile]
-\frametitle{Reading Data Example}
+\frametitle{Linear Search Improvement}
 
-Given the following class declaration:
+This improvement works only if the list is sorted ascending.
 
+{\scriptsize
 \begin{verbatim}
-public class Employee
+int linear_search( int[] array, int array_length, int searchValue )
 {
-    ulong identifier;
-    string surname;
-    string givenName;
-    double salary;
+    for( int index = 0; index < array_length; index++ )
+    {
+        if( array[index] == searchValue )
+        {
+            return index;
+        }
+        else if( array[index] > searchValue )
+        {
+            return -1;
+        }
+    }
+    return -1;
 }
 \end{verbatim}
-
-How would you build a program to read this data from a file and display the data on the console?
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Step 1: File Format}
-Before coding anything, consider the format of the input file.
-
-Let's assume a valid input file resembles the following:
-
-\begin{verbatim}
-3 Phaneuf Dion 6500000
-81 Kessel Phil 6000000
-12 Connolly Tim 5500000
-8 Komisarek Mike 5500000
-24 Liles John-Michael 4550000
-\end{verbatim}
-
-This is an easy file to parse since we can use the \texttt{Split( )} method of the \texttt{string} class to split lines into arrays of strings.
-
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Step 2A: Updating \texttt{Employee}}
-Next step: to make importing of data efficient, we should add a constructor to \texttt{Employee}.
-
-\begin{verbatim}
-public Employee( ulong id, string sname, 
-                 string gname, double s )
-{
-    identifier = id;
-    surname = sname;
-    givenName = gname;
-    salary = s;
 }
-\end{verbatim}
+\end{frame}
+
+\begin{frame}
+\frametitle{A Better Search Algorithm}
+
+Suppose I tell you I am thinking of a number between 1 and 1000.\\
+\quad You guess numbers, and I'll tell you ``higher'', ``lower'', or ``correct''.
+
+Linear search is like guessing 1, then 2, then 3...
+
+Better strategy: if you guess 500, there are three possible outcomes:
+\begin{enumerate}
+	\item The number is exactly 500. I say ``correct'' and the game is over.
+	\item The number is greater than 500. I say ``higher'', and you know that the answer must be somewhere between 501 and 1000.
+	\item The number is less than 500. I say ``lower'', and you know that the answer must be somewhere between 1 and 499.
+\end{enumerate}
+
+Assuming the answer wasn't exactly 500, we have reduced the range where the value could be in half!
+
+\end{frame}
+
+\begin{frame}
+\frametitle{A Better Search Algorithm}
+
+If I said the number is greater than 500, you won't waste any time guessing numbers between 1 and 500 and can focus on 501 and up.
+
+Then you should repeat the strategy: guess 750.\\
+\quad I'll then tell you if it's in the range 501-749 or 751-1000.
+
+With just two guesses, you have narrowed the values to guess from 1000 possibilities to 250 possibilities.
+
+At each stage, we are dividing the area to search in half.\\
+\quad This is called a \alert{binary search}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Binary Search of Arrays}
+
+Let's take this strategy and apply it to a sorted array.
+
+Given an array of length $n$, examine the middle entry. If the middle entry is the one we need, we are done. Otherwise, continue.
+
+As the array is sorted, we can determine in which half the desired value would be in, if it exists in the array at all.
+
+Then repeat the procedure on the half of the array where the desired value could be and do not waste any effort checking the other half.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Formal Binary Search Algorithm}
+
+Important reminder: unlike the linear search, the binary search algorithm will only work if the array is sorted.
+
+\begin{enumerate}
+\item Set top to index 0 and bottom to index (capacity - 1).
+\item While top is less than or equal to bottom:
+	\begin{enumerate}[a)]
+		\item Set middle to (top + bottom) / 2
+		\item Check if value at middle equals the desired value:\\
+			  \quad If yes, return middle\\
+			  \quad If no, check if value at middle is greater than the desired value:\\
+				\quad\quad If yes, set bottom to middle - 1\\
+				\quad\quad If no, set top to middle + 1
+		\item Loop
+	\end{enumerate}
+\item Return -1 if the loop terminates
+\end{enumerate}
 
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Step 2B: Updating \texttt{Employee}}
-Next step: to make output human readable, implement \texttt{toString}.
-
-\begin{verbatim}
-public override ToString( )
-{
-    string name = surname + ", " + givenName;
-    return( string.Format( "{0,-4}: {1,-30} {2,12:C}",
-            identifier, name, salary ) );
-}
-\end{verbatim}
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Step 3: Write the \texttt{Main} Method}
+\frametitle{Binary Search Implementation}
 {\tiny
 \begin{verbatim}
-static void Main( )
+int binary_search( int[] array, int array_length, int searchValue )
 {
-    StreamReader inStream = null;    // This is the filehandle for the input file
-    string filename = "input.dat";   // This is the filename for the input file
-    string line = null;              // This is a variable to refer to a single line of input
-    string[] fields = null;          // This is an array of strings to store the individual fields
-    int counter = 0;                 // This is a counter to keep track of the number of records read
-    Employee emp = null;             // This is a variable to refer to an employee record
+    int top = 0; 
+    int bottom = array_length - 1;
+    int middle;
 
-    Console.WriteLine( "\nDatabase File Reader\n" );
-    inStream = new StreamReader( filename );
-    do                    // Reads lines of input
-    {        
-        line = inStream.ReadLine( );
-        if( line == null )
+    while( top <= bottom )
+    {
+        middle = (top + bottom) / 2;
+        if( array[middle] == searchValue )
         {
-            break;
+            return middle;
         }
-        counter++;
-        Console.WriteLine( "Record [{0}]:", counter );
+        else
+        {
+            if( array[middle] > searchValue )
+            {
+                bottom = middle - 1;
+            }
+            else
+            {
+                top = middle + 1;
+            }
+        }
     }
-    while( true );
-    inStream.Close( );
-    Console.WriteLine( "\nSuccessfully read {0} records", counter );
+    return -1;
 }
 \end{verbatim}
 }
 \end{frame}
+
 
 \begin{frame}[fragile]
-\frametitle{Step 4: Modify the Program to Parse Data}
-Replace the content of the \texttt{do-while} loop with:
+\frametitle{Testing the Binary Search}
+
 {\scriptsize
 \begin{verbatim}
-line = inStream.ReadLine( );
-if( line == null )
+int main( )
 {
-    break;
+    int[] data = {1, 3, 4, 5, 6, 7, 8, 10, 11, 13, 14, 15, 20, 36};
+
+    cout << "The index of 1 is: " << binary_search( data, 14, 1 ) << endl;
+    
+    cout << "The index of 3 is: " << binary_search( data, 14, 3 ) << endl;
+    
+    cout << "The index of 10 is: " << binary_search( data, 14, 10 ) << endl;
+    
+    cout << "The index of 11 is: " << binary_search( data, 14, 11 ) << endl;
+    
+    cout << "The index of 36 is: " << binary_search( data, 14, 36 ) << endl;
+    
+    cout << "The index of 99 is: " << binary_search( data, 14, 99 ) << endl;
+    
+    return 0;
+        
 }
-counter++;
-fields = line.Split( );
-emp = new Employee(
-                   UInt64.Parse( fields[0] ),
-                   fields[1],
-                   fields[2],
-                   double.Parse( fields[3] ) 
-                   );
-Console.WriteLine( "Record [{0}]:", counter );
-Console.WriteLine( "\t{0}", emp );
 \end{verbatim}
 }
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Step 5: Add Error Checking}
+\frametitle{Binary Search Output}
 
-To add error detection, simply enclose the file I/O in a \texttt{try} statement and add a corresponding \texttt{catch} statement.
+The output of the binary search test program is identical to the linear search test program.
 
-Adding the error checking code is left as an exercise.
+Will this always be true?
+
+No. If duplicate values exist in the array, the binary search may return a different index position than a linear search.
+
+Imagine this is the array: \{1, 19, 177, 285, 285, 385, 712, 714\}
+
+A linear search for 285 will return index 3.\\
+A binary search for 285 will return index 4. 
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Binary Search Algorithm Analysis}
+
+The binary search algorithm relies on sorting to reduce the number of elements of an array to search.
+
+In the worst case, the binary search algorithm searches $\lceil \log_{2}n\rceil$ values where n is the length of the array.
+
+Note that $\lceil \log_{2}n\rceil$ denotes the ceiling (round up) of $\log_{2}n$.
+
+For an array of size 3, it may be necessary to search 2 values (the middle plus one end of the array).\\
+\quad   $\lceil \log_{2}3\rceil$ = 2
+
+The worst case scenario of the binary search algorithm requires fewer iterations than the worst case scenario of the linear search algorithm.
+
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Questions to Ponder}
-How would you deal with input data that includes spaces?
+\frametitle{Binary Search: Divide And Conquer}
 
-You could use commas or another special character to delimit fields.\\
-\quad ...but how would this change your parsing...?
+The binary search is an example of the divide-and-conquer strategy.
 
-What would you do if you needed to read a file containing a fixed number of records into an array of records?
+Turn the search problem into a smaller version of the same problem: \\
+\quad ``find a value in an array'' becomes ``find a value in a smaller array''.
+
+This suggests that the binary search algorithm is a good candidate for a recursive implementation.
+
+The binary search algorithm presented in the lecture notes is iterative (uses a loop), but as an exercise, try rewriting it in a recursive manner.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Search Algorithm Comparison}
+
+\textbf{Linear Search:}
 \begin{itemize}
-    \item Read the file twice: once to determine the number of records and once to store them?
-    \item Store the number of records at the top of the input file?
-    \item Set a maximum number of entries?
-    \item Re-size the array when necessary?
-    \item Use a collection?
+	\item Works on arrays and linked lists
+	\item Does not require sorted data
+	\item Finds values in small arrays quickly
+	\item Performs poorly on large arrays
+\end{itemize}
+
+
+\textbf{Binary Search:}
+\begin{itemize}
+	\item Works on arrays
+	\item Requires sorted data
+	\item Finds values in most positions quickly
+	\item Requires fewer iterations on average (faster)
+	\item Searches large arrays quickly
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Field Delimiters}
+\frametitle{Search Algorithm Performance}
+Is the time required to sort data justified to improve searching?
 
-The \texttt{Split( )} method provides the ability to specify one or more delimiters.
+\alert{Yes}. 
 
-When the \texttt{Split( )} method is called, a character array containing a set of delimiters can be passed to the method.
+If you will search data multiple times, the sorting time is easily offset by the time saved during searching.
 
-The easiest way to create an array of delimiters is to create a string of the delimiters and then convert the string to a character array.
+To illustrate this point, consider the following example using a large array of random integers (100,000 elements).
 
-A string s can be converted to a character array using the ToCharArray( ) method:\\
-\quad \texttt{",.\&".ToCharArray( )}
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Field Delimiter Example}
-
-What happens when we try to split \texttt{line} below?
-
-\begin{verbatim}
-string line = "A,B;C D;E,F";
-char[] delimiters = new char[] { ' ' };
-string[] fields;
-
-Console.WriteLine("\nSplitTest1\n");
-
-fields = line.Split( delimiters );
-\end{verbatim}
-
-We get two strings as output:\\
-\quad "A,B;C"\\
-\quad "D;E,F"
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Field Delimiter Example 2}
-
-What happens when we try to split \texttt{line} below?
-
-\begin{verbatim}
-string line = "A,B;C D;E,F";
-char[] delimiters = new char[] { ',' };
-string[] fields;
-
-Console.WriteLine("\nSplitTest1\n");
-
-fields = line.Split( delimiters );
-\end{verbatim}
-
-We get three strings as output:\\
-\quad "A"\\
-\quad "B;C D;E"\\
-\quad "F"
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Field Delimiter Example 3}
-
-What happens when we try to split \texttt{line} below?
-
-\begin{verbatim}
-string line = "A,B;C D;E,F";
-char[] delimiters = new char[] { ';' };
-string[] fields;
-
-Console.WriteLine("\nSplitTest1\n");
-
-fields = line.Split( delimiters );
-\end{verbatim}
-
-We get three strings as output:\\
-\quad "A,B"\\
-\quad "C D"\\
-\quad "E,F"
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Field Delimiter Example 4}
-
-What happens when we try to split \texttt{line} below?
-
-\begin{verbatim}
-string line = "A,B;C D;E,F";
-char[] delimiters = new char[] { ' ', ',', ';'  };
-string[] fields;
-
-Console.WriteLine("\nSplitTest1\n");
-
-fields = line.Split( delimiters );
-\end{verbatim}
-
-We get six strings as output:\\
-\quad "A"\\
-\quad "B"\\
-\quad "C"\\
-\quad "D"\\
-\quad "E"\\
-\quad "F"
+For the example scenario, and a computer running Windows XP, we produced the following results (with clock resolution of about 10 ms):
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Terminology Review}
+\frametitle{Search Comparison Results}
 
-In our discussion of file I/O, we have introduced a number of important database terms:
-\begin{enumerate}
-\item A \alert{file} is form of long-term, persistent data storage
-\item A \alert{database file} is a collection of records
-\item A \alert{record} is a collection of fields separated by delimiters
-\item A \alert{field} is a group of bits (or characters)
-\item A \alert{delimiter} is a special character used to separate fields
-\end{enumerate}
+Overall result: the binary search outperforms the linear search, even if the time required sorting is considered:
+\begin{itemize}
+	\item Sorting requires approximately 100 ms
+	\item 100 000 linear searches of 100 000 elements require 22.12 s
+	\item 100 000 binary searches of 100 000 elements require 20 ms
+\end{itemize}
 
-A detailed discussion of databases is beyond the scope of this course.
+The binary search is over 1000$\times$ faster than the linear search.
 
+We sorted once and searched many times, making sorting worthwhile.
+
+The performance figures presented depend upon:
+\begin{itemize}
+	\item The pattern of memory accesses
+	\item The number of elements in the array
+	\item The search values
+\end{itemize}
 \end{frame}
 
-\begin{frame}
-\frametitle{Comments on C\# File Security}
-Some practical information if you are trying to work with files in C\#.
-
-By default, a C\# program does not have permission to create or modify a file if the program resides on a network drive.
-
-For example, all of the file I/O example programs provided in the lecture notes will NOT run on a remote (network) drive.
-
-There are two ways to compile and test programs that use file I/O:
-\begin{enumerate}
-\item Copy the executable program to a local directory (i.e., C:\textbackslash TEMP) and execute it there.
-
-\item Include attributes / code fragments to modify the default file I/O permissions or to modify the security policy
-\end{enumerate}
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Files and Directories}
-C\# also provides a couple of classes with static methods to let you work with files and directories.
-
-They are called \texttt{File} and \texttt{Directory}, respectively.
-
-For those who like a challenge, write a program to display the entire directory structure of a filesystem.
-
-
-\end{frame}
 
 \end{document}
 

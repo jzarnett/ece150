@@ -1,6 +1,6 @@
 \input{configuration}
 
-\title{Lecture 30 --- The Linked List}
+\title{Lecture 30 --- Files \& Streams }
 
 \author{J. Zarnett\\
 \texttt{jzarnett@uwaterloo.ca}}
@@ -19,417 +19,454 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{Arrays and Collections}
-We've established that we would like to have a dynamic collection that does not rely on an array.
+\frametitle{Files and File Systems}
 
-When using an array, we have a reference to the array.\\
-\quad The reference tells us where the start of the array is in memory.\\
-\quad The index tells us which entry of the array to access.
+Files permanently store large amounts of data.
 
-In a collection, the array serves the purpose of keeping the elements next to one another so that we can move from one to the next.\\
-\quad To find the next object in an array, we increment the index by 1.
+Operating systems implement a filesystem to manage files stored on a hard disk (or other types of storage media).
 
-\end{frame}
-
-\begin{frame}
-\frametitle{Linking Collection Elements}
-If the elements are not stored in an array, given that we know where the first object is, how might we get to the next object?
-
-Idea: use a reference to link the objects together.
-
-In the simplest case, each object has a reference to the next object.\\
-\quad A null reference indicates there is no next object.
-
-Analogy: pirate treasure map.\\
-\quad Follow the map's directions; it leads to treasure and another map.\\
-\quad The 2$^{nd}$ map says how to find another treasure and a third map.\\
-\quad ... and repeat until we get to the final treasure (that has no map).
-
-\end{frame}
-
-\begin{frame}
-\frametitle{The Linked List}
-
-Linked lists are similar in function to arrays but are more flexible:
+Filesystems typically support the following:
 \begin{itemize}
-    \item The size of a linked list is not fixed
-    \item Objects may be easily inserted or deleted from a linked list
-    \item Objects may be sorted (if desired)
-\end{itemize}
-
-Linked lists are formed using self-referential classes:\\
-\quad A class that has a reference to an object of the same type.
-
-For example, a class \texttt{ListEntry} can contain one or more data fields as well as a reference to another object of type \texttt{ListEntry}.
-
-\end{frame}
-
-
-\begin{frame}[fragile]
-\frametitle{Self-Referential Classes}
-
-Wait a minute, we previously said this is a compile-time error:
-
-\begin{verbatim}
-struct Invoice
-{
-    public int number;
-    public Date date;
-    public bool paid;
-    public Invoice previousInvoice;
-};
-\end{verbatim}
-
-The difference is \texttt{struct} is a value type and \texttt{class} is a reference type.
-
-A reference variable may be null; a structure variable may not.
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Linking Objects}
-
-Let's write a very simple \texttt{ListEntry} class.
-
-\begin{verbatim}
-public class ListEntry
-{
-    public int data;
-    public ListEntry next;
-}
-\end{verbatim}
-
-This works because \texttt{next} can be null. 
-
-The compiler can figure out how much memory \texttt{ListEntry} needs because it knows the size of an \texttt{int} and the size of a reference (\texttt{next}).
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Creating a List of Integers}
-
-Using the class previously defined, it is possible to create a collection of records known as a singly linked list.
-
-For example, it is possible to define a list containing a set of integers \{3,1,6\} as follows:
-
-\begin{center}
-    \includegraphics[width=\textwidth]{images/list316.png}
-\end{center}
-
-When a reference is null, it is sometimes drawn as if it's an electrical connection to ground.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Accessing the Linked List}
-The linked list on the previous slide has no references pointing to it...
-
-Developers often keep a reference to the head and the tail of the list:
-
-\begin{center}
-    \includegraphics[width=\textwidth]{images/listheadtail.png}
-\end{center}
-
-A tail reference is not strictly needed; it's a perfectly functional linked list with only a head reference. A tail reference can be convenient.
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Less Minimal \texttt{ListEntry}}
-{\scriptsize
-\begin{verbatim}
-class ListEntry
-{
-    int data;
-    ListEntry next;
-    public ListEntry( int d )
-    {
-        data = d;
-        next = null;
-    }
-    public int Data
-    {
-        get{ return data; }
-        set{ data = value; }
-    }
-    public ListEntry Next
-    {
-        get{ return next; }
-        set{ next = value; }
-    }
-    public override string ToString( )
-    {
-        return( data.ToString( ) );
-    }
-}
-\end{verbatim}
-}
-\end{frame}
-
-
-\begin{frame}
-\frametitle{The \texttt{List} Class}
-
-Next, a class to store a reference to the head and tail of the linked list.
-
-For the purpose of this example, this class is named \texttt{List}.
-
-This class often provides the following features:
-\begin{itemize}
-    \item Member fields to refer to the head and the tail of the list
-    \item A constructor
-    \item A \texttt{ToString( )} method
-    \item A \texttt{Clear( )} method
-    \item An \texttt{Append( )} method
-    \item A \texttt{DeleteFirst( )} method
-    \item A \texttt{Prepend( )} method
-    \item Properties for accessing the private fields
+\item Creating new files
+\item Reading from a file
+\item Writing to a file
+\item Appending to existing files
+\item Renaming existing files
+\item Deleting existing files
+\item Checking for the existence of a file
 \end{itemize}
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Streams}
+
+File I/O and console I/O are very similar.
+
+It is possible to define I/O methods such as \texttt{ReadLine( )} and \texttt{WriteLine( )} that work with both file I/O and console I/O.
+
+\alert{Stream}s are an abstraction for data flow that can be applied to both file I/O and console I/O.
+
+A stream denotes the flow of data from a source to a destination.
+
+In this course, we have already used streams:\\
+\quad \texttt{Console.Out} is the stream for console output.\\
+\quad \texttt{Console.In} is the stream for console input.
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{File I/O Fundamentals}
+
+The file I/O classes are defined in the \texttt{System.IO} namespace.
+
+Output streams are created using the \texttt{StreamWriter} class.
+
+Input streams are created using the \texttt{StreamReader} class.
+
+The \texttt{StreamWriter} and \texttt{StreamReader} classes provide sequential access to text files: each line must be written or read in sequence.
+
+Files are assumed to store text data.
+
+\end{frame}
+
+
 \begin{frame}[fragile]
-\frametitle{The \texttt{List} Class}
-The \texttt{List} class is too large to fit on a single slide, but let's show the different parts.
+\frametitle{File Output Example}
+
+This code outputs the text ``Hello World'' to a file named ``output.txt''.
 
 {\scriptsize
 \begin{verbatim}
-class List
+StreamWriter outStream = null;
+string filename = "output.txt";
+           
+try
 {
-  private class ListEntry
-  {
-      // It is legal to have ListEntry nested inside List
-      // In fact, if ListEntry makes no sense outside of
-      // a List, this is good practice.
-      // Not shown for space reasons
-  }
-  
-  // Private member variables
-    private ListEntry head;
-    private ListEntry tail;
-
-    // Constructor
-    public List( )
-    {
-        head = null;
-        tail = null;
-    }
-
+    outStream = new StreamWriter( filename );
+    outStream.WriteLine( "Hello World" );
+    outStream.Close( );
+    Console.WriteLine( "File successfully created" );
+}
+catch( Exception e )
+{
+    Console.Write( "Unable to create file! Reason: " );
+    Console.WriteLine( e );
+    return;
+}
 \end{verbatim}
 }
+
+If output.txt didn't exist before, it creates that file.
+
 \end{frame}
 
+
+
 \begin{frame}[fragile]
-\frametitle{The \texttt{List} Class : Properties}
+\frametitle{File Input Example}
 
 {\scriptsize
 \begin{verbatim}
-    // Properties
-    public int Head
+StreamReader inStream = null;
+string filename = "input.txt";
+string line;
+           
+try
+{
+    inStream = new StreamReader( filename );
+    do
     {
-        get{ return head.Data; }
+        line = inStream.ReadLine( );
+        Console.WriteLine( line );
     }
-
-    public int Tail
-    {
-        get{ return tail.Data; }
-    }
-
-    public bool IsEmpty
-    {
-        get{ return( head == null ); } 
-    }
+    while( line != null );
+    inStream.Close( );
+    Console.WriteLine( "File successfully read" );
+}
+catch( Exception e )
+{
+    Console.Write( "Unable to read file! Reason: " );
+    Console.WriteLine( e );
+    return;
+}
 \end{verbatim}
 }
+
 \end{frame}
 
-\begin{frame}[fragile]
-\frametitle{The \texttt{List} Class : ToString}
+\begin{frame}
+\frametitle{File Input Example}
+The file input example code reads a specified file (input.txt) into memory (variable \texttt{line}), one line at a time.
 
-{\scriptsize
+That line of text is then printed out to the console.
+
+Note in both input and output examples the use of \texttt{try-catch} blocks.\\
+\quad File-related operations may frequently result in Exceptions.
+
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Inputting Formatted Data}
+The \texttt{ReadLine( )} method reads complete lines of data.
+
+However, some applications use numeric input data or other formatted data fields stored as text.
+
+If the input data consists of non-string data types represented as text, the lines of input must be split into individual strings and parsed.
+
+There are a couple of things to consider:
+\begin{itemize}
+    \item How will the data be used, stored, manipulated, etc.?
+    \item What errors should be detected, corrected, ignored, etc.?
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Reading Data Example}
+
+Given the following class declaration:
+
 \begin{verbatim}
-    // Traverse the list starting at the head
-    // Stop traversing when a null reference is found
-    public override string ToString( )
-    {
-        string tmp = "Head -> ";
-
-        ListEntry current = head;
-        if( current == null )
-        {
-            tmp = "null";
-        }
-        while( current != null )
-        {
-            tmp += current + " -> ";
-            current = current.Next;
-        }
-        return( tmp );
-    }
-\end{verbatim}
+public class Employee
+{
+    ulong identifier;
+    string surname;
+    string givenName;
+    double salary;
 }
+\end{verbatim}
+
+How would you build a program to read this data from a file and display the data on the console?
 
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{The \texttt{List} Class : Clear}
-{\scriptsize
+\frametitle{Step 1: File Format}
+Before coding anything, consider the format of the input file.
+
+Let's assume a valid input file resembles the following:
+
 \begin{verbatim}
-    // The implementation here is trivial.
-    // By setting head and tail to null, any list entries
-    // will be garbage and subject to garbage collection.
-    public void Clear( )
-    {
-        head = null;
-        tail = null;
-    }
+3 Phaneuf Dion 6500000
+81 Kessel Phil 6000000
+12 Connolly Tim 5500000
+8 Komisarek Mike 5500000
+24 Liles John-Michael 4550000
 \end{verbatim}
-}
+
+This is an easy file to parse since we can use the \texttt{Split( )} method of the \texttt{string} class to split lines into arrays of strings.
+
+
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{The \texttt{List} Class : Append}
+\frametitle{Step 2A: Updating \texttt{Employee}}
+Next step: to make importing of data efficient, we should add a constructor to \texttt{Employee}.
 
-{\scriptsize
 \begin{verbatim}
-    // Add entry to the end of the list
-    // Special case: list is empty
-    public void Append( int i )
-    {
-        ListEntry tmp = new ListEntry( i );
-        
-        // Done by default, but here for clarity
-        tmp.Next = null;
-
-        if( head == null )
-        {
-            head = tmp;
-        }
-        else
-        {
-            tail.Next = tmp;
-        }
-        tail = tmp;
-    }
-\end{verbatim}
+public Employee( ulong id, string sname, 
+                 string gname, double s )
+{
+    identifier = id;
+    surname = sname;
+    givenName = gname;
+    salary = s;
 }
+\end{verbatim}
 
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{The \texttt{List} Class : Prepend}
+\frametitle{Step 2B: Updating \texttt{Employee}}
+Next step: to make output human readable, implement \texttt{toString}.
 
-{\scriptsize
 \begin{verbatim}
-    // Add entry to the start of the list
-    // Special case: list is empty
-    public void Prepend( int i )
-    {
-        ListEntry tmp = new ListEntry( i );
-
-        tmp.Next = head;
-
-        if( head == null )
-        {
-            tail = tmp;
-        }
-        head = tmp;
-    }
-\end{verbatim}
+public override ToString( )
+{
+    string name = surname + ", " + givenName;
+    return( string.Format( "{0,-4}: {1,-30} {2,12:C}",
+            identifier, name, salary ) );
 }
+\end{verbatim}
+
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{The \texttt{List} Class : Delete First}
-
+\frametitle{Step 3: Write the \texttt{Main} Method}
 {\tiny
 \begin{verbatim}
-   // Delete the first entry where the data is equal to i
-    public void DeleteFirst( int i )
-    {
-        ListEntry current = head;
-        ListEntry previous = null;
+static void Main( )
+{
+    StreamReader inStream = null;    // This is the filehandle for the input file
+    string filename = "input.dat";   // This is the filename for the input file
+    string line = null;              // This is a variable to refer to a single line of input
+    string[] fields = null;          // This is an array of strings to store the individual fields
+    int counter = 0;                 // This is a counter to keep track of the number of records read
+    Employee emp = null;             // This is a variable to refer to an employee record
 
-        while( current != null && current.Data != i )
+    Console.WriteLine( "\nDatabase File Reader\n" );
+    inStream = new StreamReader( filename );
+    do                    // Reads lines of input
+    {        
+        line = inStream.ReadLine( );
+        if( line == null )
         {
-            previous = current;
-            current = current.Next;
+            break;
         }
-        if( current == null )
-        {
-            throw new ArgumentException( "List entry not found" );
-        }
-        if( current == head ) // Special case: deleting first entry
-        {
-            head = current.Next;
-        }
-        else
-        {
-            previous.Next = current.Next;
-        }
-        if( current == tail ) // Special case: deleting last entry
-        {
-            tail = previous;
-        }
+        counter++;
+        Console.WriteLine( "Record [{0}]:", counter );
     }
-} // End of List class
+    while( true );
+    inStream.Close( );
+    Console.WriteLine( "\nSuccessfully read {0} records", counter );
+}
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Step 4: Modify the Program to Parse Data}
+Replace the content of the \texttt{do-while} loop with:
+{\scriptsize
+\begin{verbatim}
+line = inStream.ReadLine( );
+if( line == null )
+{
+    break;
+}
+counter++;
+fields = line.Split( );
+emp = new Employee(
+                   UInt64.Parse( fields[0] ),
+                   fields[1],
+                   fields[2],
+                   double.Parse( fields[3] ) 
+                   );
+Console.WriteLine( "Record [{0}]:", counter );
+Console.WriteLine( "\t{0}", emp );
 \end{verbatim}
 }
 
 \end{frame}
 
 \begin{frame}
-\frametitle{List Creation Demonstration}
+\frametitle{Step 5: Add Error Checking}
 
-Let's work with this code and represent visually what the following series of statements would look like when executed.
+To add error detection, simply enclose the file I/O in a \texttt{try} statement and add a corresponding \texttt{catch} statement.
 
-\texttt{
-\begin{enumerate}
-	\item List list = new List();
-	\item list.Append( 3 );
-	\item list.Append( 1 );
-	\item list.Append( 6 );
-	\item list.Prepend( 4 );
-	\item list.Prepend( 5 );
-	\item list.DeleteFirst( 4 );
-	\item list.Prepend( 2 );
-	\item list.Clear( );
-\end{enumerate}
-}
-
-[Demo done on the board to facilitate understanding.]
+Adding the error checking code is left as an exercise.
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Other Methods of \texttt{List}}
+\frametitle{Questions to Ponder}
+How would you deal with input data that includes spaces?
 
-It may be desirable to add methods for searching, sorting and inserting new items:
+You could use commas or another special character to delimit fields.\\
+\quad ...but how would this change your parsing...?
+
+What would you do if you needed to read a file containing a fixed number of records into an array of records?
 \begin{itemize}
-	\item \texttt{void Sort( )}
-	\item \texttt{ListEntry FindFirst( )}
-	\item \texttt{ListEntry FindNext( )}
-	\item \texttt{void InsertBefore( )}
-	\item \texttt{void InsertAfter( )}
-	\item \texttt{bool Contains( )}
+    \item Read the file twice: once to determine the number of records and once to store them?
+    \item Store the number of records at the top of the input file?
+    \item Set a maximum number of entries?
+    \item Re-size the array when necessary?
+    \item Use a collection?
 \end{itemize}
-It should be noted that many of these methods are similar in complexity to the \texttt{DeleteFirst( )} method.
-
-Also, it should be noted that more error checking could be added to the methods that have been presented.
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Expanding on the Simple Linked List}
+\frametitle{Field Delimiters}
 
-A second reference in each \texttt{ListEntry} that refers to the previous element can simplify deletion and other complex operations.\\
-\quad This is known as a doubly-linked list.
+The \texttt{Split( )} method provides the ability to specify one or more delimiters.
 
-The use of dummy items (i.e., dummy head or dummy tail) can simplify some the termination conditions for some loops.
+When the \texttt{Split( )} method is called, a character array containing a set of delimiters can be passed to the method.
 
-A dummy item is a \texttt{ListEntry} that has a valid reference but never any valid data. It is constructed when the list is constructed.
+The easiest way to create an array of delimiters is to create a string of the delimiters and then convert the string to a character array.
 
-A length member field can be added to keep track of the length of the list as items are added and removed.
+A string s can be converted to a character array using the ToCharArray( ) method:\\
+\quad \texttt{",.\&".ToCharArray( )}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Field Delimiter Example}
+
+What happens when we try to split \texttt{line} below?
+
+\begin{verbatim}
+string line = "A,B;C D;E,F";
+char[] delimiters = new char[] { ' ' };
+string[] fields;
+
+Console.WriteLine("\nSplitTest1\n");
+
+fields = line.Split( delimiters );
+\end{verbatim}
+
+We get two strings as output:\\
+\quad "A,B;C"\\
+\quad "D;E,F"
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Field Delimiter Example 2}
+
+What happens when we try to split \texttt{line} below?
+
+\begin{verbatim}
+string line = "A,B;C D;E,F";
+char[] delimiters = new char[] { ',' };
+string[] fields;
+
+Console.WriteLine("\nSplitTest1\n");
+
+fields = line.Split( delimiters );
+\end{verbatim}
+
+We get three strings as output:\\
+\quad "A"\\
+\quad "B;C D;E"\\
+\quad "F"
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Field Delimiter Example 3}
+
+What happens when we try to split \texttt{line} below?
+
+\begin{verbatim}
+string line = "A,B;C D;E,F";
+char[] delimiters = new char[] { ';' };
+string[] fields;
+
+Console.WriteLine("\nSplitTest1\n");
+
+fields = line.Split( delimiters );
+\end{verbatim}
+
+We get three strings as output:\\
+\quad "A,B"\\
+\quad "C D"\\
+\quad "E,F"
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Field Delimiter Example 4}
+
+What happens when we try to split \texttt{line} below?
+
+\begin{verbatim}
+string line = "A,B;C D;E,F";
+char[] delimiters = new char[] { ' ', ',', ';'  };
+string[] fields;
+
+Console.WriteLine("\nSplitTest1\n");
+
+fields = line.Split( delimiters );
+\end{verbatim}
+
+We get six strings as output:\\
+\quad "A"\\
+\quad "B"\\
+\quad "C"\\
+\quad "D"\\
+\quad "E"\\
+\quad "F"
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Terminology Review}
+
+In our discussion of file I/O, we have introduced a number of important database terms:
+\begin{enumerate}
+\item A \alert{file} is form of long-term, persistent data storage
+\item A \alert{database file} is a collection of records
+\item A \alert{record} is a collection of fields separated by delimiters
+\item A \alert{field} is a group of bits (or characters)
+\item A \alert{delimiter} is a special character used to separate fields
+\end{enumerate}
+
+A detailed discussion of databases is beyond the scope of this course.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Comments on C\# File Security}
+Some practical information if you are trying to work with files in C\#.
+
+By default, a C\# program does not have permission to create or modify a file if the program resides on a network drive.
+
+For example, all of the file I/O example programs provided in the lecture notes will NOT run on a remote (network) drive.
+
+There are two ways to compile and test programs that use file I/O:
+\begin{enumerate}
+\item Copy the executable program to a local directory (i.e., C:\textbackslash TEMP) and execute it there.
+
+\item Include attributes / code fragments to modify the default file I/O permissions or to modify the security policy
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Files and Directories}
+C\# also provides a couple of classes with static methods to let you work with files and directories.
+
+They are called \texttt{File} and \texttt{Directory}, respectively.
+
+For those who like a challenge, write a program to display the entire directory structure of a filesystem.
+
 
 \end{frame}
 

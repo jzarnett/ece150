@@ -41,20 +41,25 @@ Consider an array of Student entries where each \texttt{Student} object has a na
 
 {\scriptsize
 \begin{verbatim}
-struct student[5] list;	// Declare an array of references to student structs
+struct Student[5] list;	// Declare an array of references to student structs
 	
 // At this point, list[0], list[1], list[2], 
 // list[3], and list[4] are null references
 
-list[0] = new Student( "Bill", 18 );
-list[1] = new Student( "Bonnie", 21 );
-list[2] = new Student( "Dave", 20 );
-list[3] = new Student( "Austin", 19 );
-list[4] = new Student( "Kris", 20 );
+list[0].name = "Bill";
+list[0].age = 18;
+list[1].name = "Bonnie";
+list[1].age = 21;
+list[2].name = "Dave";
+list[2].age = 20;
+list[3].name = "Austin";
+list[3].age = 19;
+list[4].name = "Kris";
+list[4].age = 20;
 \end{verbatim}
 }
 Notice that creating the array was not enough.\\
-\quad We also had to create the \texttt{Student} objects using \texttt{new}.
+\quad We also had to populate the structures.
 
 \end{frame}
 
@@ -78,14 +83,14 @@ Note that there are six references defined in total.
 Remember earlier in the term our examination of arrays included multidimensional arrays.
 
 \texttt{int[][] jag;}\\
-\quad Declares a jagged array.
+\quad Declares this in a single array.
 
 \end{frame}
 
 
 
 \begin{frame}
-\frametitle{Rectangular Array Storage}
+\frametitle{Array Storage}
 Internally, C++ stores arrays using row-major order.
 
 Suppose we ask for an integer array of 3$\times$3: \texttt{int[3][3]}.
@@ -99,8 +104,8 @@ A 3$\times$3 array of integers  stored in contiguous memory locations:
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Jagged Array Storage}
-Let's contrast that against a jagged array declared as follows:\\
+\frametitle{Less Contiguous Array Storage}
+Let's contrast that against an array declared as follows:\\
 
 \begin{verbatim}
 int n = 5;
@@ -223,7 +228,7 @@ void increase_capacity( int* array, int current_size )
     }
     
     array = largerArray;
-    delete old_array;
+    delete [] old_array;
 }
 \end{verbatim}
 
@@ -249,7 +254,7 @@ void increase_capacity( int* array, int current_size )
     }
     
     array = largerArray;
-    delete old_array;
+    delete [] old_array;
 }
 \end{verbatim}
 
@@ -269,6 +274,19 @@ Yet, doubling the capacity when enlarging may result in wasting a lot of memory,
 It would be nice to have a \alert{collection} of arbitrary capacity...\\
 \quad And can accommodate however many objects we want to add.
 
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{About the \texttt{delete} Syntax}
+
+In the previous examples, we saw \texttt{delete [] old\_array;}.
+
+The \texttt{delete} statement had the additional index brackets.\\
+\quad This is necessary whenever an array has been allocated with \texttt{new}.
+
+If you forget the \texttt{[]} you get undefined behaviour: it is not clear what will happen in a given situation.
 
 
 \end{frame}
