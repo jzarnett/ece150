@@ -132,7 +132,7 @@ Now, how about some functions to manipulate it:
 	\item initialize
 	\item append
 	\item prepend
-	\item delete\_first
+	\item remove\_first
 	\item clear
 \end{itemize}
 }
@@ -143,9 +143,9 @@ Now, how about some functions to manipulate it:
 \frametitle{Initialize}
 
 \begin{verbatim}
-void initialize( linked_list list ) {
-    list.head = 0;
-    list.tail = 0;
+void initialize( linked_list* list ) {
+    list->head = 0;
+    list->tail = 0;
 }
 \end{verbatim}
 
@@ -155,25 +155,76 @@ void initialize( linked_list list ) {
 \frametitle{Append}
 
 \begin{verbatim}
-void append( linked_list list, int data ) {
+void append( linked_list* list, int data ) {
     if (tail == 0) {
-        list.head = new list_entry;
-        list.tail = head;
-        list.tail.data = data;
-        list.tail.next = 0;
+        list->head = new list_entry;
+        list->tail = head;
+        list->tail->data = data;
+        list->tail->next = 0;
     } else { 
         list_entry* entry = new list_entry;
-        entry.data = data;
-        entry.text = 0;
-        list.tail.next = entry;
-        list.tail = tail.next;
+        entry->data = data;
+        entry->next = 0;
+        list->tail.next = entry;
+        list->tail = tail->next;
     }
 }
 \end{verbatim}
 
 \end{frame}
 
+\begin{frame}[fragile]
+\frametitle{Prepend}
 
+\begin{verbatim}
+void prepend( linked_list* list, int data ) {
+   list_entry* tmp = new list_entry;
+   tmp->data = data;
+   tmp->next = list->head;
+   
+   list->head = tmp;
+   if (list->tail == 0) {
+       list->tail = list->head;
+   }
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Remove First}
+
+\begin{verbatim}
+list_entry* remove_first( linked_list* list ) {
+    list_entry* result = list->head;
+    if (list->head != 0) {
+        list->head = list->head->next;
+    }
+    if (list->head == 0) {
+        list->tail = 0;
+    }
+    return result;
+}
+\end{verbatim}
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Clear}
+
+\begin{verbatim}
+void clear( linked_list* list ) {
+   while( list-> head != 0 ) {
+       list_entry* current = list->head;
+       list->head = list->head->next;
+       delete current;	
+   }
+   list->tail = 0;
+}
+\end{verbatim}
+
+\end{frame}
 
 
 \begin{frame}
@@ -189,7 +240,7 @@ Let's work with this code and represent visually what the following series of st
 	\item append( list,  6 );
 	\item prepend( list,  4 );
 	\item prepend( list,  5 );
-	\item delete\_first( list, 4 );
+	\item remove\_first( list );
 	\item prepend( list,  2 );
 	\item clear( list );
 \end{enumerate}

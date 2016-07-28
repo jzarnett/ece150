@@ -308,6 +308,51 @@ It allows us to walk through the array without use of the index operator \texttt
 
 
 
+
+\begin{frame}[fragile]
+\frametitle{Programmer Defined Types}
+
+As mentioned, we can allocate programmer-defined types (structs). 
+
+\begin{verbatim}
+struct coordinates {
+    int x;
+    int y;
+}
+\end{verbatim}
+
+Consider the initialization: \texttt{coordinates* c1 = new coordinates;}
+
+
+To set the coordinates:\\
+\quad \texttt{(*c1).x = 5;\\
+\quad (*c1).y = 9;}
+
+This syntax prevents confusion between the precedence of the dereference operator (\texttt{*}) and the dot operator (\texttt{.}) in the statement.
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{The ``cache miss operator''}
+
+This syntax is ugly, unfortunately.\\
+\quad But don't worry -- there is an alternative form: the arrow operator.
+
+The arrow operator takes the form \texttt{->}.
+
+It combines the dereference and the dot operator, in the right order.
+
+To set the coordinates:\\
+\quad \texttt{c1->x = 5;\\
+\quad c1->y = 9;}
+
+There's no reason you must use the arrow operator; the alternative syntax is equally valid (but easier to make a mistake).
+
+\end{frame}
+
+
 \begin{frame}
 \frametitle{A Note About C}
 

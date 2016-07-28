@@ -1,6 +1,6 @@
 \input{configuration}
 
-\title{Lecture 29 --- Collections}
+\title{Lecture 29 --- Object-Oriented Programming }
 
 \author{J. Zarnett\\
 \texttt{jzarnett@uwaterloo.ca}}
@@ -14,387 +14,473 @@
   \titlepage
   
   \begin{center}
-  \small{Acknowledgments: D.W. Harder, W.D. Bishop}
+  \small{Acknowledgments: W.D. Bishop}
   \end{center}
 \end{frame}
 
+
+
 \begin{frame}
-\frametitle{Collections}
+\frametitle{Structuring a Program}
 
-Collections are groupings of some variable number of data elements.
+Up to this point we have organized our program using procedural programming: the use of functions to give us program structure.
 
-Each collection type implements a data structure and the algorithms associated with the data structure.
+We can break down a larger problem into smaller problems, each of which we can accomplish in a re-usable sequence of steps (function).
 
-We're going to examine the following collections:
+The painful reality is that most software projects fail.\\
+\quad They are often late, unreliable, and/or expensive.
 
-\begin{itemize}
-	\item List
-	\item Stack
-	\item Queue
-\end{itemize}
-
-Each of these collections may contain an arbitrary number of items.\\
-\quad Although in practice, computer memory is not infinite.
+This is because software is extremely complex.\\
+\quad We need to manage this complexity if a project is to succeed.\\
+\quad Procedural programming is not adequate to the task.
 
 \end{frame}
 
 \begin{frame}
-\frametitle{List}
+\frametitle{Re-usable Components}
 
-We are all certainly familiar with the concept of a list.\\
-\quad The ``to-do list'' of tasks to complete is a very common example:
-\begin{itemize}
-	\item Wash dishes
-	\item Pick up dry cleaning
-	\item Study for the final exam
-\end{itemize}
+Idea: if an electrical engineer needs a transistor, she does not need to build one from scratch; just go to the bin and use an existing one.
 
-The list may contain an arbitrary number of items and there is some concept of ordering: ``wash dishes'' is the first item in this list.
+Now take the idea of re-usable components and apply it to software.\\
+\quad We've already had re-usable functions, so why not components?
 
-We can look at or access any item in the list.\\
-\quad There's no rule that mandates washing the dishes before studying.
+What we'd like is to package up data and functions that manipulate that data into single, self-contained, re-usable unit.
 
-We can insert items anywhere in the list.\\
-\quad Though the usual case is to add them at the end of the list.
+\alert{Objects} are the way of packaging \& managing our data and functions.\\
+\quad They are the building blocks of an object-oriented program.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Objects}
+
+
+
+An object models a tangible item or some abstract concept:\\
+\quad What properties does an object have? What can the object do?
+
+The world is full of ``things'' (objects). Imagine a dog.\\
+\quad A dog has characteristics like colour, weight, age...\\
+\quad A dog also has behaviours like bark, move, sleep...
+
+To represent a dog in software, create an object that possesses both characteristics (\textbf{data variables}) and behaviours (\textbf{functions}) of a dog.
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Object Oriented Programming}
+
+Objects interact with other objects through their functions, and not by manipulating another object's data directly.
+
+Modelling the system as objects and their interactions is known as \alert{Object Oriented Programming}.
+
+C++ supports and encourages this programming paradigm as an approach to designing useful, modular, reusable software systems.
+
+Appropriate use of object oriented programming as a design technique will allow us to create and maintain complex software.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Example: Variable Voltage}
+Suppose we want to model a variable voltage source: an electric component that provides several different voltage output levels. 
+
+Let's say it has a selector to choose one of the following levels:\\
+\quad Off, 6V, 12V, 18V, and 24V.
+
+What variables will we need to model this?\\
+\quad Some constants to hold the possible settings.\\
+\quad A variable to represent the current setting.
+
+We also have some functions to represent voltage source behaviour:\\
+\quad Increase the voltage by one level.\\
+\quad Decrease the voltage by one level.\\
+\quad Shut it off.\\
+
 
 \end{frame}
 
 
 \begin{frame}
-\frametitle{List}
+\frametitle{The Blueprints}
+We have an idea now about how to model the variable voltage source.\\
+\quad Now, to represent that in the program.
 
-The \alert{list} is a finite, ordered collection of values, in which repeated values are permitted. A list of integers, for example: \{4, 19, 756, 4, 18\}
+Analogy: building ``blueprints'' (architectural plan).
 
-The first object in the list is at the \textit{front} of the list; the last element is at the \textit{back} of the list.
+Before a building is built, architects and civil engineers draft a document that describes in detail the structure of the building.
 
-A list supports several conceptual operations:
-\begin{itemize}
-	\item Access the $k^{th}$ element of the list
-	\item Given a reference to an element of the list:
-	\begin{itemize}
-	\item Access the next or previous element
-	\item Modify the current element
-	\item Remove the current element
-	\item Insert an element immediately before or after the current element
-	\end{itemize}
-\end{itemize}
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Working with the List}
-On a list of integers \{4, 19, 756, 4, 18\}, let's perform some operations.
-
-Add 42 to the end of the list: \\ \{4, 19, 756, 4, 18, 42\}
-
-Remove 19 from the list: \\ \{4, 756, 4, 18, 42\}
-
-Insert 99 before 756: \\ \{4, 99, 756, 4, 18, 42\}
+The construction team uses the document when building a structure.\\
+\quad It tells them what to do (though not generally how to do it).
 
 \end{frame}
 
 \begin{frame}
-\frametitle{The Stack and Queue}
-The \alert{stack} and \alert{queue} are also collections like a list, but with restrictions on how elements may be accessed, added, or removed.
+\frametitle{Building Blueprints Example}
 
-A stack has a last-in, first-out policy: the only element that may be removed from the collection is the one most recently added.
-
-A queue has first-in, first-out behaviour: the only element that may be removed is the one that has been in the queue the longest.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{The Stack and Queue}
-
-\vspace{3em}
-
-\begin{columns}
-\begin{column}{.48\textwidth}
 \begin{center}
-\underline{\textbf{Stack}}
-\includegraphics[width=\textwidth]{images/data_stack.png}\\
-{\tiny Image source: Shrimp/Wikipedia\\
- \url{http://upload.wikimedia.org/wikipedia/commons/2/29/Data_stack.svg}}
+	\includegraphics[width=0.85\textwidth]{images/putnamhouse.jpg}
 \end{center}
-\end{column}
-
-\begin{column}{.48\textwidth}
-\begin{center}
-\underline{\textbf{Queue}}
-\includegraphics[width=\textwidth]{images/data_queue.png}\\
-{\tiny Image source: Vegpuff/Wikipedia\\
- \url{http://upload.wikimedia.org/wikipedia/commons/5/52/Data_Queue.svg}}
-
-\end{center}
-\end{column}
-\end{columns}
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Stack}
-We have already introduced the stack when discussing memory.\\
-Recall: the stack as a series of boxes piled one on top of another.
-
-Let's continue that stacked boxes example:\\
-\quad The box at the top is the only one you can use.\\
-\quad When finished with a box, you take it off the top of the pile.\\
-\quad Any new box to be added goes on top of the pile.\\
-\quad It's not possible to take a box out of the middle.
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Stack}
-
-The stack conceptually supports 3 operations: \alert{push}, \alert{peek}, and \alert{pop}.
-
-Push adds an element to the top of the stack.\\
-Peek examines the element at the top of the stack.\\
-Pop removes and returns the element at the top of the stack.
-
-Note that peek does not remove the element at the top of the stack.
-
-If we attempt to pop when there are no items on the stack, the result is an error called \textit{stack underflow}.
-
-If we attempt to push an item when there is no more space in the underlying representation, the result is a \textit{stack overflow} error.
-
 \end{frame}
 
 \begin{frame}
-\frametitle{Working with the Stack}
-On the board, let's visualize how the stack works conceptually for the following sequence of operations. We start with an empty stack.
+\frametitle{Class Definition}
+To tell the system how to build an object, we need to provide it the blueprints for that object.
 
-\begin{enumerate}
-	\item Push 74
-	\item Peek
-	\item Push 867
-	\item Push 97
-	\item Peek
-	\item Pop
-	\item Push 44
-	\item Peek
-	\item Pop
-	\item Pop
-	\item Pop
-	\item Pop
-\end{enumerate}
+The blueprints for an object is a \alert{\texttt{class}} definition.\\
+\quad This code tells the system how to create an object of that type.
 
+The \texttt{class} definition specifies the variables and methods.
+
+Classes are therefore programmer-defined types.
 
 \end{frame}
+
 
 
 \begin{frame}
-\frametitle{Queue}
+\frametitle{The Structure}
 
-You've surely spent plenty of time in queues over the years.\\
-\quad In common speech, we typically use the word ``line''.\\
-\quad When you have to wait in a line for your turn, you are in a queue.
+We've already seen programmer-defined types: the \texttt{struct}.
 
+The \texttt{struct} can contain different variables of different types.
 
-Example: waiting to order at a fast food restaurant.\\
+The \texttt{class} is an expanded version of the \texttt{struct}: it contains functions in addition to variables.
 
-\quad The customer at the front of the line is the next one served.\\
-\quad Then the line moves up and someone else is at the front of the line.\\
-\quad When a new customer arrives, s/he goes to the back of the line.\\
-\quad Cutting in line (going out of turn) is not permitted.
+The data and functions of an object are referred to as \alert{members}.
 
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Queue}
-
-The queue also supports 3 operations: \alert{enqueue}, \alert{peek}, and \alert{dequeue}.
-
-Enqueue adds an element to the end of the queue.\\
-Peek examines the element at the front of the queue.\\
-Dequeue removes and returns the element at the front of the queue.
-
-Peek does not remove the element at the front of the queue.
-
-If we attempt to dequeue when there are no items on the stack, the result is an error called \textit{queue underflow}.
-
-If we attempt to enqueue an item when there is no more space in the underlying representation, the result is a \textit{queue overflow} error.
+Member functions are called \alert{methods}.\\
+Member variables are called \alert{fields}.
 
 \end{frame}
 
-\begin{frame}
-\frametitle{Working with the Queue}
-On the board, let's visualize the same sequence but for a queue. Again, starting with an empty queue.
-
-\begin{enumerate}
-	\item Enqueue 74
-	\item Peek
-	\item Enqueue 867
-	\item Enqueue 97
-	\item Peek
-	\item Dequeue
-	\item Enqueue 44
-	\item Peek
-	\item Dequeue
-	\item Dequeue
-	\item Dequeue
-	\item Dequeue
-\end{enumerate}
-
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{List and Array}
-An array is very much like a list, although it is of fixed length. It has an ordering (the index), allows random access, insertion etc.
-
-Arrays can be used to implement a list (although we will have to do resizing if the array gets full).
-
-An array can also be used to implement a stack or queue.\\
-\quad You will get a chance to implement this in ECE~250.
-
-For now, we won't write our own implementations of the collections.
-
-Now that you are familiar with how they work conceptually, let us examine one of the built-in collections.
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{The \texttt{ArrayList}}
-
-The C\# collection we will examine is the: \texttt{ArrayList}.
-
-The \texttt{ArrayList} class models a list and behaves like an array:\\
-\quad The index operators may be used to access array elements; but \\
-\quad Elements are added using an \texttt{Add( )} method provided by the class.
-
-It is important to note that the type of objects added to the ArrayList class is not specified directly. Any type can be put in the collection.
-\end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Using \texttt{ArrayList}}
+\frametitle{Voltage Source Blueprints}
+
+Let's draw up the blueprints for the voltage source:
 {\scriptsize
 \begin{verbatim}
-ArrayList people = new ArrayList(3);
-		
-people.Add( "Bill" );
-people.Add( "George" );
-people.Add( "Dave" );
-
-foreach( string s in people )
+class voltage_source
 {
-    Console.WriteLine( s );
-}
-Console.Write( "\n" );
+  public: 
+    int current_voltage;
+    int[] voltageLevels = {0, 6, 12, 18, 24};
 
-people.Add( "Faye" );
-people.Add( "Jason" );
-people.Add( "David" );
-people.Add( "Matt" );
-people.Add( "Zac" );
-
-foreach( string s in people )
-{
-    Console.WriteLine( s );
+    void increase_voltage()
+    {
+      // ...
+    }
+  
+    void decrease_voltage()
+    {
+      // ...
+    }
+  
+    void turn_off()
+    {
+      // ...
+    }
 }
-Console.Write( "\n" );
 \end{verbatim}
 }
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Using \texttt{ArrayList}}
-
-Every time we call \texttt{Add( )}, we put the new element in the list, after the last already-present element.
-
-Even though we initialized the \texttt{ArrayList} with a capacity of 3, we were able to add 5 more elements to the list.
-
-The collection increases its own capacity dynamically when items are added beyond its current capacity.
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Methods Provided by \texttt{ArrayList}}
-Don't attempt to memorize this, but the following table outlines the built-in methods of the \texttt{ArrayList} class that you may find useful:
+\frametitle{Voltage Source Blueprints Comments}
+
+The previous slide gave the structure for the voltage source we wanted to model: it showed the member fields and methods.
+
+Given this definition, the system now knows how to make a \texttt{voltage\_source} object.
+
+The implementations of the functions are not shown for space reasons, but in defining the class, we would normally fill them in.
+
+Of course, defining the structure of the object is the first step, but if we want to use a \texttt{voltage\_source}, we will need to create one.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Instances}
+
+A specific realization of a class is called an \alert{instance}.\\
+\quad A program may create many distinct instances of the same class.
+
+Classes are programmer-defined \textbf{types}, so this is no surprise.\\
+\quad We can have many distinct \texttt{double}s in the program.
+
+The process of creating an instance of a class is called \alert{instantiation}.
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Classes are Like Structs}
+Classes are like structures, so we can use them as types
+
+The declaration
+\quad \texttt{voltage\_source source;}\\
+
+  
+creates an instance of \texttt{voltage\_source}.
+
+We can then access fields of this instance with the dot operator.
+
+\texttt{source.current\_voltage = 0;}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Car Example}
+
+Let's look at another object example: a car.\\
+\quad Data: make, model, year,...\\
+\quad Functions: \texttt{honk\_horn(), flash\_lights()}...
+
+
+Given a \texttt{class Car}, you can make several instances:\\
+\quad Toyota Corolla, Chevrolet Corvette, BMW 335i, Volkswagen Jetta...
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Car Class}
+
+Here's a basic version of the \texttt{Car} class, that looks much like a \texttt{struct}:
 
 {\scriptsize
-\begin{center}
-\begin{tabular}{p{4.4cm}|p{6.25cm}}
-	\textbf{Method} & \textbf{Description} \\ \hline
-	int Add( Object v ) & Adds v to an instance of the ArrayList class and returns the index of the object position in the ArrayList\\ \hline
-void AddRange( ICollection c ) & Adds a collection of objects named c to an instance of the ArrayList class\\ \hline
-int BinarySearch(Object v )& Searches an instance of an ArrayList class for v and returns the index of the object position in the ArrayList\\ \hline
-void Clear( ) & Clears an instance of an ArrayList class but maintains its maximum capacity\\ \hline
-int IndexOf( Object v ) & Returns the first index of v in an instance of an ArrayList class\\ \hline
-void Insert( int i, Object v ) & Inserts v at index i to an instance of the ArrayList class\\ \hline
-void InsertRange( int i, {ICollection} c ) & Inserts a collection of objects named c at index i to an instance of the ArrayList class\\ \hline
-int LastIndexOf(Object v ) & Returns the last index of an object v in array a\\ \hline
-void Sort( ) & Sorts an array named a\\ \hline
-object[] ToArray( ) & Converts an instance of an ArrayList class to an array
-\end{tabular}
-\end{center}
+\begin{verbatim}
+public class Car
+{
+    public:
+      string make;
+      string model;
+      int year;
+    
+      void honk_horn() {
+        // ...
+      }
+      void flash_lights() {
+        // ...
+      }
+      // Other methods not shown for space reasons
 }
+\end{verbatim}
+}
+
+As we learn more about OOP, we will improve this definition to be more useful and consistent with good programming practices.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Using the Dot Operator}
+
+Just like the \texttt{struct}, variables of an instance are accessed using the Dot Operator (\texttt{.}).
+
+\texttt{Car prius;}\\
+\quad Declares and instantiates a \texttt{Car} object.
+
+After creation with \texttt{new}, we may access the variables of the instance:\\
+\quad \texttt{prius.make  = "Toyota";}\\
+\quad \texttt{prius.model = "Prius";}\\
+\quad \texttt{prius.year  = 2010;}
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Making a Copy of an Instance}
+
+If we want a copy, just using the assignment operator will not do what we want.
+
+We must allocate and create another instance.\\
+\quad \texttt{Car prius2;}
+
+To make a copy, create a new instance, and copy the data from the original object to the new instance, one variable at a time.
+
+(In the next lecture, we'll learn a better way to do this.)
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Building on the Car Example}
+
+Let's build on the example of the \texttt{Car} class and look at a dealership.
+
+A car dealership has zero or more cars on its parking lot.\\
+\quad A good way to implement this might be an array of \texttt{Car} objects.
+
+Just like the \texttt{struct} we can have an array of objects.
+
+When a sales associate wants to find a car to show a customer, they make the lights flash and the horn honk to find the car in the lot.
 
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Concatenation with \texttt{ArrayList}}
-{\scriptsize
+\frametitle{The Car Dealership}
+
+Suppose the parking lot has 42 spaces.
+
 \begin{verbatim}
-ArrayList people = new ArrayList(3);
-people.Add( "Bill" );
-people.Add( "George" );
-people.Add( "Dave" );
-
-ArrayList people2 = new ArrayList(5);
-people2.Add( "Faye" );
-people2.Add( "Jason" );
-people2.Add( "David" );
-people2.Add( "Matt" );
-people2.Add( "Zac" );
-
-people.AddRange( people2 );
-
-foreach( string s in people )
+class Dealership
 {
-    Console.WriteLine( s );
+    public:
+      int capacity = 42;
+      Car[] available_cars[capacity];
+
+      void park( Car new_car, int position )
+      {
+          available_cars[position] = new_car;
+      }
+      // Other methods and variables not shown
 }
-Console.Write( "\n" );
+\end{verbatim}
+
+Of course, this example ignores what happens if someone tries to park a car in a position that is already occupied.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Finding a Specific Car}
+
+Now let's write a method to find a specific car in the lot when we know the make, model, and year.
+
+{\small
+\begin{verbatim}
+void find_car( string make, string model, int year )
+{
+    for ( int i = 0; i < capacity; i++ )
+    {
+        if ( available_cars[i].make == make &&
+             available_cars[i].model == model &&
+             available_cars[i].year == year)
+             {
+                 available_cars[i].honk_horn();
+                 available_cars[i].flash_lights();
+             }
+    }
+}
 \end{verbatim}
 }
+
+But this function will behave badly if the array of available cars is not initialized!
+
 \end{frame}
 
 
 
 \begin{frame}
-\frametitle{Internals of the \texttt{ArrayList}}
+\frametitle{Use of Methods and Variables}
+A common mistake when working with classes is a method call like:\\
+\quad \texttt{Car.honk\_horn();}
 
-The internal structure of the \texttt{ArrayList} class is not documented, and could therefore change in any update of the C\# framework.
+The compiler identifies this as an error. 
 
-However, the following information is known about the \texttt{ArrayList}:
-\begin{itemize}
-\item Instances of \texttt{ArrayList} have a fixed capacity set at the time of object construction
-\item The capacity defaults to 16 objects
-\item The capacity of the \texttt{ArrayList} may be modified using the Capacity property
-\item The capacity of the \texttt{ArrayList} is automatically doubled whenever object(s) are inserted and the existing capacity is insufficient
-\end{itemize}
+To call the \texttt{honk\_horn()} method, an instance of the class is needed.\\
+\quad Which instance of \texttt{Car} do we mean? The Prius? The Jetta?\\
+\quad Correct usage: \texttt{prius.honk\_horn();}
+
+Why? These are \alert{instance methods}: they belong to an instance. 
+
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{static} Keyword}
+What does the \texttt{static} keyword mean? The member applies to the type, not an instance.
+
+The keyword \texttt{static} may apply to a field or method.
+
+Consider this very simple class definition:
+\begin{verbatim}
+class ExampleClass
+{
+    public:
+      int value;
+      static int count;
+}
+\end{verbatim}
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Behind the Scenes of \texttt{ArrayList}}
-As the name says, the \texttt{ArrayList} is a list implemented as an array.
+\frametitle{Static vs. Instance Members}
 
-It will resize itself as necessary, but because it is based on an array, the resizing will involve copying the elements to a bigger array.
+In this class, \texttt{value} is an instance member: a new \texttt{int} variable is created whenever a new instance of \texttt{ExampleClass} is created.
 
-So it is built-in implementation of the array resizing technique we saw previously, with the exact details hidden from us.
+But \texttt{count} is a static member: there is only one \texttt{int} variable created, regardless of how many instances of \texttt{ExampleClass} there are.\\
+\quad This variable is shared between all instances.\\
+\quad It can even be accessed without an instance.
 
-Next time, we'll look at building our own dynamic collection that truly has no arrays in it: the \alert{linked list}.
+Invalid: \texttt{ExampleClass.value = 1;}\\
+Valid: \texttt{ExampleClass.count = 1;}
 
 \end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Static vs. Instance Members}
+Consider this code:
+
+\begin{verbatim}
+ExampleClass e1 = new ExampleClass( );
+ExampleClass e2 = new ExampleClass( );
+
+e1.value = 7;
+e2.value = -8;
+
+e1.count = 2;
+
+cout << "e1 value: " << e1.value << endl;
+cout << "e2 value: " << e1.value << endl;
+cout << "e1 count: " << e1.count << endl;
+cout << "e2 count: " << e2.count << endl;
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Static vs. Instance Members}
+In the previous slide, we used an instance, \texttt{e1}, to assign the variable \texttt{count}, even though \texttt{count} is \texttt{static}.
+
+This practice is discouraged; if a variable is \texttt{static}, it should be accessed using the \texttt{class} name, not an instance reference.\\
+\quad \texttt{ExampleClass.count = 2;}
+
+The compiler may identify this as a warning.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Static vs. Instance Members}
+
+A \texttt{static} method can make use of static variables and call other static methods, but cannot use instance variables/methods.
+
+Why? Inside the static method, there is no instance to reference.
+
+An instance method can make use of \underline{both} instance and static variables and can call both static and instance methods.
+
+Why? Static methods and variables are always available, as they belong to the type itself.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Static Members}
+
+In the \texttt{voltage\_source} class is an array of the different voltage levels:\\
+\quad \texttt{int[] voltageLevels = \{0, 6, 12, 18, 24\};}
+
+This is a good candidate to be declared \texttt{static} since the voltage levels will be the same in all of the instances of the class.
+
+\texttt{static int[] voltageLevels = \{0, 6, 12, 18, 24\};}
+
+In general, any constant is likely to be a good candidate to be declared \texttt{static}.
+
+\end{frame}
+
 
 \end{document}
 

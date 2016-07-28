@@ -228,61 +228,35 @@ The difficulty: removing the minimum element from the unsorted list.
 \frametitle{Linked List Selection Sort}
 {\scriptsize
 \begin{verbatim}
-public void SelectionSort( )
+void selection_sort( linked_list* original )
 {
-    List sortedList = new List( );
+    linked_list* sorted = new linked_list;
+    initialize( sorted );
 
-    Element tmp = DeleteMin( );
-    while( tmp != null )	
+    list_entry* tmp = find_min( original );
+    while( tmp != 0 )	
     {
-        sortedList.Append( tmp );
-        tmp = DeleteMin( );
+        append( sorted, tmp->data );
+        delete tmp;
+        tmp = find_min( original );
     }
-
-    head = sortedList.head;
-    tail = sortedList.tail;
+    
+    delete original;
+    original = sorted;
 }
 \end{verbatim}
 }
-
-The \texttt{SelectionSort} method uses a private implementation of an \texttt{Append} method that has access to the \texttt{Element} class.  
-
-A public version of the \texttt{Append} method might also exist that uses an integer to construct a new \texttt{Element} and append it to a list.
 
 \end{frame}
 
 
 \begin{frame}[fragile]
-\frametitle{The \texttt{DeleteMin} Method}
-The \texttt{DeleteMin} method is too big to put on the slides.
+\frametitle{The \texttt{find\_min} function}
+The \texttt{find\_min} function is too big to put on the slides.
 
 There are a number of special case handling blocks, such as when the list is empty or contains only one element...
 
-[In class demo: the code for this method]
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Testing Selection Sort}
-
-\begin{verbatim}
-List myList = new List( );
-myList.Append( 12 );
-myList.Append( 36 );
-myList.Append( 42 );
-myList.Append( -1 );
-myList.Append( 99 );
-myList.Append( 20 );
-myList.Append( 10 );
-myList.Append( 19 );
-myList.Append( 70 );
-
-Console.WriteLine( "\nArray before sorting" );
-Console.WriteLine( myList );
-myList.SelectionSort( );
-Console.WriteLine( "Array after sorting" );
-Console.WriteLine( myList );
-\end{verbatim}
+[In class demo: the code for this function]
 
 \end{frame}
 
@@ -306,19 +280,21 @@ The difficulty: adding the element to the sorted list.
 \frametitle{Linked List Insertion Sort}
 
 \begin{verbatim}
-public void InsertionSort( )
+void insertion_sort( linked_list* original )
 {
-    List sortedList = new List( );
+    linked_list* sorted = new linked_list;
+    initialize( sorted );
 
-    Element tmp = DeleteHead( );
+    list_entry* tmp = remove_first( original );
     while( tmp != null )
     {
-        sortedList.InsertInOrder( tmp );
-        tmp = DeleteHead( );
+        insert_in_order( sorted, tmp->data );
+        delete tmp;
+        tmp = tmp = remove_first( original );
     }
-
-    head = sortedList.head;
-    tail = sortedList.tail;
+  
+    delete original;
+    original = sorted;
 }
 \end{verbatim}
 
@@ -326,39 +302,14 @@ public void InsertionSort( )
 
 
 \begin{frame}[fragile]
-\frametitle{The \texttt{InsertInOrder} Method}
-The \texttt{InsertInOrder} method is also too big to put on the slides.
+\frametitle{The \texttt{insert\_in\_order} function}
+The \texttt{insert\_in\_order} function is also too big to put on the slides.
 
-Like \texttt{DeleteMin}, there are a number of special case handling blocks, such as when the list is empty or contains only one element...
+Like \texttt{find\_min}, there are a number of special case handling blocks, such as when the list is empty or contains only one element...
 
-[In class demo: the code for this method]
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Testing Selection Sort}
-
-\begin{verbatim}
-List myList = new List( );
-myList.Append( 12 );
-myList.Append( 36 );
-myList.Append( 42 );
-myList.Append( -1 );
-myList.Append( 99 );
-myList.Append( 20 );
-myList.Append( 10 );
-myList.Append( 19 );
-myList.Append( 70 );
-
-Console.WriteLine( "\nArray before sorting" );
-Console.WriteLine( myList );
-myList.InsertionSort( );
-Console.WriteLine( "Array after sorting" );
-Console.WriteLine( myList );
-\end{verbatim}
+[In class demo: the code for this function]
 
 \end{frame}
-
 
 \begin{frame}
 \frametitle{Planning Ahead}
@@ -369,7 +320,7 @@ Insertion takes more time, but then sorting is not required.
 
 This minimizes the number of traversals of the linked list.
 
-Given the existence of an \texttt{InsertInOrder} method, simply use that every time an element is added.
+Given the existence of an \texttt{insert\_in\_order} function, simply use that every time an element is added.
 
 As a general rule, you should always build sorted data structures if you plan to search them.
 
@@ -411,9 +362,9 @@ Sorted list creation time	& 1:10.12\\
 \frametitle{Sorting in Reality}
 Outside of an academic context, it is rare that you will implement your own search algorithm, but doing so is important for learning.
 
-In practice, when you use the built-in collection types of the language, they have \texttt{Sort} methods that will sort the data for you.
+In practice, when you use the built-in collection types of the language, they have \texttt{Sort} functions that will sort the data for you.
 
-For integers and other built-in types, you may use this \texttt{Sort} method and the system will be able to sort the data correctly.
+For integers and other built-in types, you may use this \texttt{Sort} function and the system will be able to sort the data correctly.
 
 But what about programmer-defined types like classes?
 
@@ -428,7 +379,7 @@ To sort programmer-defined types, we need to decide on a sort order.\\
 And we need to find a way to tell the system what we chose.\\
 The system can't know in advance what types we are going to define...
 
-Next time, we'll examine how to do that.
+Soon, we'll examine how to do that.
 \end{frame}
 
 

@@ -1,6 +1,6 @@
 \input{configuration}
 
-\title{Lecture 30 --- Files \& Streams }
+\title{Lecture 30 --- Encapsulation \& Constructors}
 
 \author{J. Zarnett\\
 \texttt{jzarnett@uwaterloo.ca}}
@@ -18,457 +18,332 @@
   \end{center}
 \end{frame}
 
+\part{Encapsulation}
+\begin{frame}\partpage\end{frame}
+
 \begin{frame}
-\frametitle{Files and File Systems}
+\frametitle{Encapsulation}
+\alert{Encapsulation} is another principle of OOP: making the fields (variables) of a class inaccessible from outside the class.
 
-Files permanently store large amounts of data.
+Then access to the data is granted through the use of externally accessible methods.
 
-Operating systems implement a filesystem to manage files stored on a hard disk (or other types of storage media).
+Encapsulation can also mean bundling the data with methods that operate on that data.
 
-Filesystems typically support the following:
-\begin{itemize}
-\item Creating new files
-\item Reading from a file
-\item Writing to a file
-\item Appending to existing files
-\item Renaming existing files
-\item Deleting existing files
-\item Checking for the existence of a file
-\end{itemize}
+To provide access to just the data, we use \alert{getter}s and \alert{setter}s.
 
 \end{frame}
 
-\begin{frame}
-\frametitle{Streams}
-
-File I/O and console I/O are very similar.
-
-It is possible to define I/O methods such as \texttt{ReadLine( )} and \texttt{WriteLine( )} that work with both file I/O and console I/O.
-
-\alert{Stream}s are an abstraction for data flow that can be applied to both file I/O and console I/O.
-
-A stream denotes the flow of data from a source to a destination.
-
-In this course, we have already used streams:\\
-\quad \texttt{Console.Out} is the stream for console output.\\
-\quad \texttt{Console.In} is the stream for console input.
-
-
-\end{frame}
 
 \begin{frame}
-\frametitle{File I/O Fundamentals}
+\frametitle{Getter and Setter}
 
-The file I/O classes are defined in the \texttt{System.IO} namespace.
+These provide a public mechanism for accessing and manipulating the private data members of a class.
 
-Output streams are created using the \texttt{StreamWriter} class.
+They have an identifier that normally matches the name of the private data member to be accessed / manipulated.
 
-Input streams are created using the \texttt{StreamReader} class.
+They are a convenient mechanism for implementing object-oriented methods for accessors and mutators.
 
-The \texttt{StreamWriter} and \texttt{StreamReader} classes provide sequential access to text files: each line must be written or read in sequence.
-
-Files are assumed to store text data.
+\alert{Accessors} (getters) read the value of a private data member.\\
+\alert{Mutators} (setters) write the value of a private data member.
 
 \end{frame}
-
 
 \begin{frame}[fragile]
-\frametitle{File Output Example}
+\frametitle{Get-and-Set Methods}
 
-This code outputs the text ``Hello World'' to a file named ``output.txt''.
-
-{\scriptsize
 \begin{verbatim}
-StreamWriter outStream = null;
-string filename = "output.txt";
-           
-try
-{
-    outStream = new StreamWriter( filename );
-    outStream.WriteLine( "Hello World" );
-    outStream.Close( );
-    Console.WriteLine( "File successfully created" );
-}
-catch( Exception e )
-{
-    Console.Write( "Unable to create file! Reason: " );
-    Console.WriteLine( e );
-    return;
-}
+private:
+  double price;
+
+public:
+  double getPrice() {
+    return price;
+  }
+
+  void setPrice( double new_price ) {
+    price = new_price;
+  }
 \end{verbatim}
-}
-
-If output.txt didn't exist before, it creates that file.
 
 \end{frame}
 
 
 
+
+\begin{frame}
+\frametitle{Encapsulation: \texttt{public} and \texttt{private}}
+
+With the \texttt{class} the keyword \texttt{public} appeared but we did not discuss what it means or why it is there.
+
+Then, in the last example, a new keyword appeared: \texttt{private}.
+
+These are two \alert{access modifiers} or \alert{visibility modifiers}.
+
+Access modifiers are a technique to restrict where a variable may be read/written from, or where a method can be called from.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Encapsulation: \texttt{public} and \texttt{private}}
+
+The two access modifiers we've seen so far are \texttt{public} and \texttt{private}.
+
+Marking a method or variable \texttt{public} makes it accessible from everywhere in the program. \\
+\quad Any function may call a \texttt{public} function, for example.
+
+Denoting a method or variable as \texttt{private} makes it accessible only from within that object type.
+
+It's a compile time error to try to read a \texttt{private} variable from outside its declaring class.
+
+As a rule of thumb, methods of a class tend to be \texttt{public} and the variables tend to be \texttt{private}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivation for Encapsulation}
+It may seem silly to have private methods in the system - why bother?\\
+\quad Especially because we can easily change private into public.
+
+The real purpose of the public/private distinction is to encourage good programming practice and maintainability.
+
+In a large, complex system, any method or variable that is public will be relied upon by other classes.
+
+In the future, it will be expensive or impossible to change.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivation for Encapsulation}
+Consider Microsoft's problem: maintaining program compatibility.
+
+Any time they want to change something in Windows, they have to consider very carefully what the impact is on all the programs.
+
+Microsoft can change private things, but not those that are public.
+
+They know that people won't buy the new version of Windows if their old programs no longer function.
+
+For more on this, see \url{http://blogs.msdn.com/b/oldnewthing/archive/2003/12/24/45779.aspx}
+\end{frame}
+
+\begin{frame}
+\frametitle{Accessors and Mutators for All!}
+A very common implementation choice is to make all member variables private and create accessor and mutator methods for each.
+
+This provides some minor benefits over just making all variables public, but not all that much.
+
+Accessor and mutator methods should exist only where there is a reason to create them.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Advantages of Encapsulation}
+Proper use of encapsulation results in better-designed software that:\\
+\quad Maximizes \alert{cohesion} -- related elements being kept together; and\\
+\quad Minimizes \alert{coupling} -- dependency of one part on another.
+
+Much like re-using the \texttt{Date struct} we saw earlier, objects can and should be re-used to build larger objects.
+
+If data is properly encapsulated, the implementation may be changed without having an impact on other parts of the program.
+
+Change is inevitable in software, so we should plan for it.
+
+\end{frame}
+
+\part{Constructors and Destructors}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}
+\frametitle{Constructors}
+
+A \alert{constructor} is a special kind of method that is used to instantiate and initialize objects.
+
+Every class has a default constructor that initializes each data member of a class to a default value. It has no parameters.
+
+The default constructor for a class is accessed using the class name followed by round brackets.
+
+For example, if you define a class named ABC, the default constructor for ABC is \texttt{ABC( )}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Constructors}
+
+If you create a constructor, regardless of the number of parameters, for a class, the default constructor no longer exists.
+
+Thus, if you want to have a no-parameters constructor in addition to any number of others, you must explicitly define it.
+
+A constructor can have as many parameters as required.
+
+Multiple constructors for a class may exist.\\
+\quad This is an example of function overloading.
+
+\end{frame}
+
 \begin{frame}[fragile]
-\frametitle{File Input Example}
+\frametitle{Coordinates Constructor Example}
 
 {\scriptsize
 \begin{verbatim}
-StreamReader inStream = null;
-string filename = "input.txt";
-string line;
-           
-try
+class Coordinates
 {
-    inStream = new StreamReader( filename );
-    do
+    float x;
+    float y;
+    float z;
+
+    public Coordinates( )            // Constructor 1
     {
-        line = inStream.ReadLine( );
-        Console.WriteLine( line );
+        x = 0.0f; 
+        y = 0.0f;
+        z = 0.0f;
     }
-    while( line != null );
-    inStream.Close( );
-    Console.WriteLine( "File successfully read" );
+
+    public Coordinates( float a, float b, float c )    // Constructor 2
+    {
+        x = a;
+        y = b;
+        z = c;
+    }    
 }
-catch( Exception e )
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{Coordinates Constructor Comments}
+
+In this example, an instance of a Coordinates object can be created using two different constructors:\\
+\quad \texttt{public Coordinates( )}\\
+\quad \texttt{public Coordinates( float a, float b, float c )}
+
+A constructor does not have an explicitly-specified return type and always has the same name as its class.
+
+The first constructor is used to create an instance of a Coordinates object that is initialized to (0, 0, 0).
+
+The second constructor is used to create an instance of a Coordinates object initialized to (a, b, c).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Using Constructors}
+
+To utilize the class declaration on the previous slide, you need to create an object using the constructor.
+
+To declare a variable, c1, using the first constructor:\\
+\quad \texttt{Coordinates* c1 = new Coordinates( );}
+
+This creates a reference type variable named \texttt{c1}.
+
+This variable refers to a new object of type Coordinates that has been initialized using the first constructor.
+
+Note the use of the \texttt{new} keyword to create a new object.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Using Constructors}
+To declare a variable, c2, initialized to (10.0, -5.5, 7.5):\\
+\texttt{Coordinates* c2 = new Coordinates( 10.0f, -5.5f, 7.5f );}
+
+This creates a reference named \texttt{c2} that refers to a new object of type Coordinates that has been initialized using the second constructor.
+
+When the object is created, the coordinates x, y, and z are set to values of 10.0, -5.5, and 7.5 respectively.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Copy Coordinates}
+Suppose we want to make a copy of the \texttt{Coordinates c2} object.
+
+Recall that objects are pointer types. \\
+\quad \texttt{Coordinates* c3 = c2;} is not correct; \\
+\quad That statement will create another reference to the same instance.
+
+Correct solution:\\
+\quad \texttt{Coordinates* c3 = new Coordinates( c2->getX(), c2->getY(), c2->getZ());}
+
+
+Or by manually assigning each variable:
+\begin{verbatim}
+Coordinates c3 = new Coordinates( );
+c3->setX( c2->getX() );
+c3->setY( c2->getY() );
+c3->setZ( c2->getZ() );
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Copy Constructors}
+We can make creation of a copy easier by adding a \alert{copy constructor}.
+
+\begin{verbatim}
+public Coordinates( Coordinates to_copy )
 {
-    Console.Write( "Unable to read file! Reason: " );
-    Console.WriteLine( e );
-    return;
+    x = to_copy->x;
+    y = to_copy->y;
+    z = to_copy->z;
 }
 \end{verbatim}
-}
+
+This makes the syntax of creating a copy much simpler:\\
+\quad \texttt{Coordinates* c3 = new Coordinates( c2 );}
+
+Use of a copy constructor also allows better encapsulation; no need to know the internals of the class to make a correct copy.
 
 \end{frame}
-
-\begin{frame}
-\frametitle{File Input Example}
-The file input example code reads a specified file (input.txt) into memory (variable \texttt{line}), one line at a time.
-
-That line of text is then printed out to the console.
-
-Note in both input and output examples the use of \texttt{try-catch} blocks.\\
-\quad File-related operations may frequently result in Exceptions.
-
-
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Inputting Formatted Data}
-The \texttt{ReadLine( )} method reads complete lines of data.
-
-However, some applications use numeric input data or other formatted data fields stored as text.
-
-If the input data consists of non-string data types represented as text, the lines of input must be split into individual strings and parsed.
-
-There are a couple of things to consider:
-\begin{itemize}
-    \item How will the data be used, stored, manipulated, etc.?
-    \item What errors should be detected, corrected, ignored, etc.?
-\end{itemize}
-
-\end{frame}
-
 
 \begin{frame}[fragile]
-\frametitle{Reading Data Example}
-
-Given the following class declaration:
+\frametitle{Copy Constructor Alternative}
+Another strategy for making a copy of an object is a static method.
 
 \begin{verbatim}
-public class Employee
+public static Coordinates MakeCopy( Coordinates to_copy )
 {
-    ulong identifier;
-    string surname;
-    string givenName;
-    double salary;
+    Coordinates result = new Coordinates( );
+    result->setX( to_copy->getX() );
+    result->setY( to_copy->getY() );
+    result->setZ( to_copy->getZ() );
+
+    return result;
 }
 \end{verbatim}
 
-How would you build a program to read this data from a file and display the data on the console?
 
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Step 1: File Format}
-Before coding anything, consider the format of the input file.
-
-Let's assume a valid input file resembles the following:
-
-\begin{verbatim}
-3 Phaneuf Dion 6500000
-81 Kessel Phil 6000000
-12 Connolly Tim 5500000
-8 Komisarek Mike 5500000
-24 Liles John-Michael 4550000
-\end{verbatim}
-
-This is an easy file to parse since we can use the \texttt{Split( )} method of the \texttt{string} class to split lines into arrays of strings.
-
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Step 2A: Updating \texttt{Employee}}
-Next step: to make importing of data efficient, we should add a constructor to \texttt{Employee}.
-
-\begin{verbatim}
-public Employee( ulong id, string sname, 
-                 string gname, double s )
-{
-    identifier = id;
-    surname = sname;
-    givenName = gname;
-    salary = s;
-}
-\end{verbatim}
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Step 2B: Updating \texttt{Employee}}
-Next step: to make output human readable, implement \texttt{toString}.
-
-\begin{verbatim}
-public override ToString( )
-{
-    string name = surname + ", " + givenName;
-    return( string.Format( "{0,-4}: {1,-30} {2,12:C}",
-            identifier, name, salary ) );
-}
-\end{verbatim}
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Step 3: Write the \texttt{Main} Method}
-{\tiny
-\begin{verbatim}
-static void Main( )
-{
-    StreamReader inStream = null;    // This is the filehandle for the input file
-    string filename = "input.dat";   // This is the filename for the input file
-    string line = null;              // This is a variable to refer to a single line of input
-    string[] fields = null;          // This is an array of strings to store the individual fields
-    int counter = 0;                 // This is a counter to keep track of the number of records read
-    Employee emp = null;             // This is a variable to refer to an employee record
-
-    Console.WriteLine( "\nDatabase File Reader\n" );
-    inStream = new StreamReader( filename );
-    do                    // Reads lines of input
-    {        
-        line = inStream.ReadLine( );
-        if( line == null )
-        {
-            break;
-        }
-        counter++;
-        Console.WriteLine( "Record [{0}]:", counter );
-    }
-    while( true );
-    inStream.Close( );
-    Console.WriteLine( "\nSuccessfully read {0} records", counter );
-}
-\end{verbatim}
-}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Step 4: Modify the Program to Parse Data}
-Replace the content of the \texttt{do-while} loop with:
-{\scriptsize
-\begin{verbatim}
-line = inStream.ReadLine( );
-if( line == null )
-{
-    break;
-}
-counter++;
-fields = line.Split( );
-emp = new Employee(
-                   UInt64.Parse( fields[0] ),
-                   fields[1],
-                   fields[2],
-                   double.Parse( fields[3] ) 
-                   );
-Console.WriteLine( "Record [{0}]:", counter );
-Console.WriteLine( "\t{0}", emp );
-\end{verbatim}
-}
+Then, to make a copy of \texttt{Coordinates c1}, call:\\
+\quad \texttt{Coordinates* c2 = Coordinates.MakeCopy( c1 );}
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Step 5: Add Error Checking}
+\frametitle{Destructors}
 
-To add error detection, simply enclose the file I/O in a \texttt{try} statement and add a corresponding \texttt{catch} statement.
 
-Adding the error checking code is left as an exercise.
+In a system with garbage collection, old objects that are no longer needed are automatically cleaned up.
+
+In other languages, a destructor does the opposite of the constructor: it frees up resources that the object has accumulated over its lifetime.
+
+The destructor always takes the name of a class, preceded with a tilde (\texttt{$\sim$}).
+
+Example: \texttt{$\sim$Coordinates()}.
 
 \end{frame}
+
+
 
 \begin{frame}
-\frametitle{Questions to Ponder}
-How would you deal with input data that includes spaces?
+\frametitle{Destructors}
 
-You could use commas or another special character to delimit fields.\\
-\quad ...but how would this change your parsing...?
+When the \texttt{new} keyword is used, the constructor of the class is called.\\
+\quad The destructor is a mirror: it is called when \texttt{delete} is used.
 
-What would you do if you needed to read a file containing a fixed number of records into an array of records?
-\begin{itemize}
-    \item Read the file twice: once to determine the number of records and once to store them?
-    \item Store the number of records at the top of the input file?
-    \item Set a maximum number of entries?
-    \item Re-size the array when necessary?
-    \item Use a collection?
-\end{itemize}
+The \texttt{Coordinates} class does not have anything that needs cleaning up, so the default destructor is adequate.
 
-\end{frame}
-
-\begin{frame}
-\frametitle{Field Delimiters}
-
-The \texttt{Split( )} method provides the ability to specify one or more delimiters.
-
-When the \texttt{Split( )} method is called, a character array containing a set of delimiters can be passed to the method.
-
-The easiest way to create an array of delimiters is to create a string of the delimiters and then convert the string to a character array.
-
-A string s can be converted to a character array using the ToCharArray( ) method:\\
-\quad \texttt{",.\&".ToCharArray( )}
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Field Delimiter Example}
-
-What happens when we try to split \texttt{line} below?
-
-\begin{verbatim}
-string line = "A,B;C D;E,F";
-char[] delimiters = new char[] { ' ' };
-string[] fields;
-
-Console.WriteLine("\nSplitTest1\n");
-
-fields = line.Split( delimiters );
-\end{verbatim}
-
-We get two strings as output:\\
-\quad "A,B;C"\\
-\quad "D;E,F"
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Field Delimiter Example 2}
-
-What happens when we try to split \texttt{line} below?
-
-\begin{verbatim}
-string line = "A,B;C D;E,F";
-char[] delimiters = new char[] { ',' };
-string[] fields;
-
-Console.WriteLine("\nSplitTest1\n");
-
-fields = line.Split( delimiters );
-\end{verbatim}
-
-We get three strings as output:\\
-\quad "A"\\
-\quad "B;C D;E"\\
-\quad "F"
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Field Delimiter Example 3}
-
-What happens when we try to split \texttt{line} below?
-
-\begin{verbatim}
-string line = "A,B;C D;E,F";
-char[] delimiters = new char[] { ';' };
-string[] fields;
-
-Console.WriteLine("\nSplitTest1\n");
-
-fields = line.Split( delimiters );
-\end{verbatim}
-
-We get three strings as output:\\
-\quad "A,B"\\
-\quad "C D"\\
-\quad "E,F"
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Field Delimiter Example 4}
-
-What happens when we try to split \texttt{line} below?
-
-\begin{verbatim}
-string line = "A,B;C D;E,F";
-char[] delimiters = new char[] { ' ', ',', ';'  };
-string[] fields;
-
-Console.WriteLine("\nSplitTest1\n");
-
-fields = line.Split( delimiters );
-\end{verbatim}
-
-We get six strings as output:\\
-\quad "A"\\
-\quad "B"\\
-\quad "C"\\
-\quad "D"\\
-\quad "E"\\
-\quad "F"
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Terminology Review}
-
-In our discussion of file I/O, we have introduced a number of important database terms:
-\begin{enumerate}
-\item A \alert{file} is form of long-term, persistent data storage
-\item A \alert{database file} is a collection of records
-\item A \alert{record} is a collection of fields separated by delimiters
-\item A \alert{field} is a group of bits (or characters)
-\item A \alert{delimiter} is a special character used to separate fields
-\end{enumerate}
-
-A detailed discussion of databases is beyond the scope of this course.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Comments on C\# File Security}
-Some practical information if you are trying to work with files in C\#.
-
-By default, a C\# program does not have permission to create or modify a file if the program resides on a network drive.
-
-For example, all of the file I/O example programs provided in the lecture notes will NOT run on a remote (network) drive.
-
-There are two ways to compile and test programs that use file I/O:
-\begin{enumerate}
-\item Copy the executable program to a local directory (i.e., C:\textbackslash TEMP) and execute it there.
-
-\item Include attributes / code fragments to modify the default file I/O permissions or to modify the security policy
-\end{enumerate}
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Files and Directories}
-C\# also provides a couple of classes with static methods to let you work with files and directories.
-
-They are called \texttt{File} and \texttt{Directory}, respectively.
-
-For those who like a challenge, write a program to display the entire directory structure of a filesystem.
+If the constructor of a class does allocate memory, then it should be deallocated in the destructor. 
 
 
 \end{frame}
+
 
 \end{document}
 

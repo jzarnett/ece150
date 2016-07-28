@@ -1,6 +1,6 @@
 \input{configuration}
 
-\title{Lecture 28 --- Library Functions }
+\title{Lecture 28 --- Collections}
 
 \author{J. Zarnett\\
 \texttt{jzarnett@uwaterloo.ca}}
@@ -14,417 +14,305 @@
   \titlepage
   
   \begin{center}
-  \small{Acknowledgments: W.D. Bishop}
+  \small{Acknowledgments: D.W. Harder, W.D. Bishop}
   \end{center}
 \end{frame}
 
-
 \begin{frame}
-\frametitle{Library Functions}
-The system provides a number of classes and types (in various namespaces, like \texttt{std}) for programmers' use.
+\frametitle{Collections}
 
-We often ask students, as exercises, to implement functions like absolute value or exponentiation.
+Collections are groupings of some variable number of data elements.
 
-In practical situations, these functions are already available to us as static methods of specific classes.
+Each collection type implements a data structure and the algorithms associated with the data structure.
 
-Many of the built-in classes are in the \texttt{std} namespace.
+We're going to examine the following collections:
 
-\end{frame}
-
-\begin{frame}
-\frametitle{\texttt{Math} Class}
-Example: the \texttt{System.Math} class contains a number of different mathematical operations, including, but not limited to:
-
-\begin{center}
-\begin{tabular}{l l}
-\textbf{Function} & \textbf{Returns}\\ \hline
-\texttt{Abs} & Absolute Value\\
-\texttt{Cos} & Cosine\\
-\texttt{Max} & The larger of two values\\
-\texttt{Round} & The closest integer\\
-\end{tabular}
-\end{center}
-
-The usage is straightforward:\\
-\quad \texttt{double z = Math.Pow( x, y );}
-
-The object is \texttt{Math}, and \texttt{Pow} is a static method. \\
-\quad There is no specific instance of \texttt{Math} created.
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Example: Using the \texttt{Math} Class}
-
-The following code:
-
-\begin{verbatim}
-double d = -3.14;
-Console.WriteLine( Math.Abs( d ) );
-Console.WriteLine( Math.Floor( d ) );
-Console.WriteLine( Math.Round( Math.Abs( d ) ) );
-\end{verbatim}
-
-... produces as output:\\
-\texttt{3.14\\
--4\\
-3}
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Static Classes}
-In fact, an instantiation like \texttt{new Math()} makes no sense.\\
-\quad The class \texttt{Math} is declared as \texttt{static}.\\
-\quad Therefore such an instantiation cannot take place.
-
-A \texttt{static} class may not be instantiated; there is only one copy of it.\\
-\quad Accordingly, no instance constructor may be created.
-
-As you would expect, a static class may contain only static members (variables as well as methods).
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Static Classes}
-
-Creating a static class is therefore basically the same as creating a class that contains only static members and a private constructor. 
-
-Recall: a private method cannot be called from outside the class.
-
-A private constructor prevents instantiation from outside the class. If the class contains no such instantiation, it will never be instantiated.
-
-The advantage of using a static class is that the compiler can check to make sure that no instance members are accidentally added. 
-
-The compiler ensures that instances of this class cannot be created.
-
-\end{frame}
-
-
-
-\begin{frame}
-\frametitle{Examining Value Types}
-
-It's not only the system-provided namespaces and classes that have functions available to use; even built-in types have some!
-
-You may have wondered how a built-in value type can parse input.
-
-In reality, the C\# built-in value types are aliases for structured types.
-
-For example, the \texttt{int} type is really a \texttt{struct} that defines:
 \begin{itemize}
-	\item Constants for MinValue and MaxValue
-	\item Methods for parsing, string conversion, comparison, and other operations common to all value types 
+	\item List
+	\item Stack
+	\item Queue
+\end{itemize}
+
+Each of these collections may contain an arbitrary number of items.\\
+\quad Although in practice, computer memory is not infinite.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{List}
+
+We are all certainly familiar with the concept of a list.\\
+\quad The ``to-do list'' of tasks to complete is a very common example:
+\begin{itemize}
+	\item Wash dishes
+	\item Pick up dry cleaning
+	\item Study for the final exam
+\end{itemize}
+
+The list may contain an arbitrary number of items and there is some concept of ordering: ``wash dishes'' is the first item in this list.
+
+We can look at or access any item in the list.\\
+\quad There's no rule that mandates washing the dishes before studying.
+
+We can insert items anywhere in the list.\\
+\quad Though the usual case is to add them at the end of the list.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{List}
+
+The \alert{list} is a finite, ordered collection of values, in which repeated values are permitted. A list of integers, for example: \{4, 19, 756, 4, 18\}
+
+The first object in the list is at the \textit{front} of the list; the last element is at the \textit{back} of the list.
+
+A list supports several conceptual operations:
+\begin{itemize}
+	\item Access the $k^{th}$ element of the list
+	\item Given a reference to an element of the list:
+	\begin{itemize}
+	\item Access the next or previous element
+	\item Modify the current element
+	\item Remove the current element
+	\item Insert an element immediately before or after the current element
+	\end{itemize}
 \end{itemize}
 
 \end{frame}
 
+
 \begin{frame}
-\frametitle{Simple Types}
-Simple types can be represented by the following diagram:
+\frametitle{Working with the List}
+On a list of integers \{4, 19, 756, 4, 18\}, let's perform some operations.
 
+Add 42 to the end of the list: \\ \{4, 19, 756, 4, 18, 42\}
+
+Remove 19 from the list: \\ \{4, 756, 4, 18, 42\}
+
+Insert 99 before 756: \\ \{4, 99, 756, 4, 18, 42\}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Stack and Queue}
+The \alert{stack} and \alert{queue} are also collections like a list, but with restrictions on how elements may be accessed, added, or removed.
+
+A stack has a last-in, first-out policy: the only element that may be removed from the collection is the one most recently added.
+
+A queue has first-in, first-out behaviour: the only element that may be removed is the one that has been in the queue the longest.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The Stack and Queue}
+
+\vspace{3em}
+
+\begin{columns}
+\begin{column}{.48\textwidth}
 \begin{center}
-	\includegraphics[width=\textwidth]{images/simpletype.png}
+\underline{\textbf{Stack}}
+\includegraphics[width=\textwidth]{images/data_stack.png}\\
+{\tiny Image source: Shrimp/Wikipedia\\
+ \url{http://upload.wikimedia.org/wikipedia/commons/2/29/Data_stack.svg}}
 \end{center}
+\end{column}
 
-Different types will have different methods associated with them.
+\begin{column}{.48\textwidth}
+\begin{center}
+\underline{\textbf{Queue}}
+\includegraphics[width=\textwidth]{images/data_queue.png}\\
+{\tiny Image source: Vegpuff/Wikipedia\\
+ \url{http://upload.wikimedia.org/wikipedia/commons/5/52/Data_Queue.svg}}
+
+\end{center}
+\end{column}
+\end{columns}
 
 \end{frame}
 
 
+\begin{frame}
+\frametitle{Stack}
+We have already introduced the stack when discussing memory.\\
+Recall: the stack as a series of boxes piled one on top of another.
+
+Let's continue that stacked boxes example:\\
+\quad The box at the top is the only one you can use.\\
+\quad When finished with a box, you take it off the top of the pile.\\
+\quad Any new box to be added goes on top of the pile.\\
+\quad It's not possible to take a box out of the middle.
+
+\end{frame}
+
 
 \begin{frame}
-\frametitle{The \texttt{char} Type Static Methods}
-The \texttt{char} type defines a built-in type, but in C\# it's also a \texttt{struct} called \texttt{System.char} that provides static methods to test characters:
+\frametitle{Stack}
 
-\begin{center}
-\begin{tabular}{l|l}
-	\textbf{Static Method} & \textbf{Checks if }\texttt{ch}\textbf{ is ...} \\ \hline
-	
-\texttt{IsDigit( char ch )} &  A digit\\ \hline
-\texttt{IsLetter( char ch )} &  A letter\\ \hline
-\texttt{IsLetterOrDigit( char ch )} &  A letter or a digit\\ \hline
-\texttt{IsLower( char ch )} &  A lowercase letter\\ \hline
-\texttt{IsUpper( char ch )} &  An uppercase letter\\ \hline
-\texttt{IsWhiteSpace( char ch )} &  A white space character\\ 
-	
-\end{tabular}
-\end{center}
+The stack conceptually supports 3 operations: \alert{push}, \alert{peek}, and \alert{pop}.
 
-(Don't attempt to memorize this table.)
+Push adds an element to the top of the stack.\\
+Peek examines the element at the top of the stack.\\
+Pop removes and returns the element at the top of the stack.
+
+Note that peek does not remove the element at the top of the stack.
+
+If we attempt to pop when there are no items on the stack, the result is an error called \textit{stack underflow}.
+
+If we attempt to push an item when there is no more space in the underlying representation, the result is a \textit{stack overflow} error.
+
 \end{frame}
 
 \begin{frame}
-\frametitle{Using \texttt{char} Type Static Methods}
+\frametitle{Working with the Stack}
+On the board, let's visualize how the stack works conceptually for the following sequence of operations. We start with an empty stack.
 
-When reading data in from the user with \texttt{Console.ReadLine()}, we have sometimes parsed it into a number type.
+\begin{enumerate}
+	\item Push 74
+	\item Peek
+	\item Push 867
+	\item Push 97
+	\item Peek
+	\item Pop
+	\item Push 44
+	\item Peek
+	\item Pop
+	\item Pop
+	\item Pop
+	\item Pop
+\end{enumerate}
 
-This has resulted in an Exception if the user entered some letters or other garbage data where a number was expected.
 
-Though we now know how to handle an Exception with the try-catch statement, we can now check the input before parsing.
+\end{frame}
 
-Because strings are just arrays of characters, we can use the \texttt{char} static methods on individual characters within a string.
 
+\begin{frame}
+\frametitle{Queue}
+
+You've surely spent plenty of time in queues over the years.\\
+\quad In common speech, we typically use the word ``line''.\\
+\quad When you have to wait in a line for your turn, you are in a queue.
+
+
+Example: waiting to order at a fast food restaurant.\\
+
+\quad The customer at the front of the line is the next one served.\\
+\quad Then the line moves up and someone else is at the front of the line.\\
+\quad When a new customer arrives, s/he goes to the back of the line.\\
+\quad Cutting in line (going out of turn) is not permitted.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Queue}
+
+The queue also supports 3 operations: \alert{enqueue}, \alert{peek}, and \alert{dequeue}.
+
+Enqueue adds an element to the end of the queue.\\
+Peek examines the element at the front of the queue.\\
+Dequeue removes and returns the element at the front of the queue.
+
+Peek does not remove the element at the front of the queue.
+
+If we attempt to dequeue when there are no items on the stack, the result is an error called \textit{queue underflow}.
+
+If we attempt to enqueue an item when there is no more space in the underlying representation, the result is a \textit{queue overflow} error.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Working with the Queue}
+On the board, let's visualize the same sequence but for a queue. Again, starting with an empty queue.
+
+\begin{enumerate}
+	\item Enqueue 74
+	\item Peek
+	\item Enqueue 867
+	\item Enqueue 97
+	\item Peek
+	\item Dequeue
+	\item Enqueue 44
+	\item Peek
+	\item Dequeue
+	\item Dequeue
+	\item Dequeue
+	\item Dequeue
+\end{enumerate}
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{List and Array}
+An array is very much like a list, although it is of fixed length. It has an ordering (the index), allows random access, insertion etc.
+
+Arrays can be used to implement a list (although we will have to do resizing if the array gets full).
+
+An array can also be used to implement a stack or queue.\\
+\quad You will get a chance to implement this in ECE~250.
+
+For now, we won't write our own implementations of the collections.
+
+Now that you are familiar with how they work conceptually, let us examine one of the built-in collections.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{The \texttt{vector}}
+
+The C++ collection we will examine is the: \texttt{vector}.
+
+The \texttt{vector}  models a list and behaves like an array:\\
+\quad The index operators may be used to access array elements; but \\
+\quad Elements are added using an \texttt{push\_back( )} function.
+
+It is important to note that the type of objects added to the vector is not specified directly. Any type can be put in the collection.
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Using \texttt{char} Type Static Methods}
-
+\frametitle{Using \texttt{vector}}
 \begin{verbatim}
-String input = Console.ReadLine( );
-bool validInput = false;
-while( !validInput )
-{
-    for ( char c in input )
-    {
-        if( !char.isDigit( c ) )
-        {
-            break;
-        }
-    }
-    validInput = true;
-}
-int parsedValue = int.Parse( input );
-\end{verbatim}
-
-But what if the input is empty...?
-
-\end{frame}
+vector<int> v = {1, 5, 7};
+		
+v.push_back( 55 );
+v.push_back( 99 );
 
 
-\begin{frame}
-\frametitle{The \texttt{string} Type Search Methods}
-The \texttt{string} type provides many methods to help you work with them:
-
-{\scriptsize
-\begin{center}
-\begin{tabular}{l|p{5cm}}
-	\textbf{Method} & \textbf{Returns} \\ \hline
-	
-\texttt{bool s1.StartsWith( string s2 )} & true if \texttt{s1} begins exactly with \texttt{s2}\\ \hline
-\texttt{bool s1.EndsWith( string s2 )} & true if \texttt{s1} ends exactly with \texttt{s2}\\ \hline
-\texttt{int s1.IndexOf( char ch )} & the first position of \texttt{ch} within \texttt{s1}\\ \hline
-\texttt{int s1.IndexOf( char ch, int pos )} & the first position of \texttt{ch} within \texttt{s1} after (pos~-~1)\\ \hline
-\texttt{int s1.IndexOf( string s2 )} & the first position of \texttt{s2} within \texttt{s1}\\ \hline
-\texttt{int s1.IndexOf( string s2, int pos )} & the first position of \texttt{s2} within \texttt{s1} after (pos~-~1)\\ \hline
-\texttt{string s1.Substring( int pos )} & a copy of the substring from \texttt{s1} starting at index pos and ending at the end of \texttt{s1}\\ \hline
-\texttt{string s1.Substring( int pos, int len )} & a copy of the substring from \texttt{s1} starting at index \texttt{pos} and ending \texttt{len} characters later\\ 
-\end{tabular}
-\end{center}
-}
-
-(Don't attempt to memorize this table, either.)
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Searching within Strings}
-Here are some examples of working with the built-in string functions.\\
-\quad The string we are working with is \texttt{String s = "Lecture23"}.
-
-\begin{center}
-\begin{tabular}{l|l}
-	\textbf{Method Call} & \textbf{Returns} \\ \hline
-	\texttt{s.StartsWith("L")} & true\\
-	\texttt{s.StartsWith("l")} & false\\
-	\texttt{s.StartsWith("Lect")} & true\\
-	\texttt{s.IndexOf("2")} & 7\\
-	\texttt{s.Substring(1)} & \texttt{"ecture23"}\\
-	\texttt{s.Substring(2, 1)} & \texttt{"c"}\\
-\end{tabular}
-\end{center}
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Formatting Methods of the \texttt{string} Class}
-
-The \texttt{string} class defines a number of interesting methods for formatting strings:
-
-\begin{center}
-\begin{tabular}{l|p{6cm}}
-	\textbf{Static Method} & \textbf{Returns} \\ \hline
-	
-\texttt{string s1.ToLower( )} & a copy of \texttt{s1} using lowercase letters \\ \hline
-\texttt{string s1.ToUpper( )} & a copy of \texttt{s1} using uppercase letters \\ \hline
-\texttt{string s1.Trim( )} & a copy of \texttt{s1} with leading and trailing white space characters removed \\ \hline
-\texttt{string s1.TrimStart( )} & a copy of \texttt{s1} with leading white space characters removed \\ \hline
-\texttt{string s1.TrimEnd( )} & a copy of \texttt{s1} with trailing white space characters removed \\ \hline
-\texttt{string[] s1.Split( )} & a \texttt{string[]} containing words found within \texttt{s1} \\
-	
-\end{tabular}
-\end{center}
-
-(Once again, don't try to memorize this.)
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Working with String Formatting}
-Here are some examples of working with the built-in string functions.\\
-\quad Let's now work with \texttt{String s = " Lecture23 "}.
-
-\begin{center}
-\begin{tabular}{l|l}
-	\textbf{Method Call} & \textbf{Returns} \\ \hline
-	\texttt{s.ToLower( )} & \texttt{" lecture23 "}\\
-    \texttt{s.ToUpper( )} & \texttt{" LECTURE23 "}\\
-    \texttt{s.Trim( )} & \texttt{"Lecture23"}\\
-    \texttt{s.TrimStart( )} & \texttt{"Lecture23 "}\\
-    \texttt{s.TrimEnd( )} & \texttt{" Lecture23"}
-\end{tabular}
-\end{center}
-
-Remember that strings are immutable, so we have to assign the result of any of these methods to a variable.\\
-\quad Example \texttt{string s2 = s.ToLower( );}
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Built-In Static Methods}
-The previous slides showed static methods for built-in types.
-
-Their purpose is to illustrate that the language provides methods that are useful so that you do not have to write your own implementation.
-
-If you want to perform a common operation, like convert a string to upper case, your first step: check for a method that does it for you.
-
-Take a look through the online documentation (e.g., Microsoft Developer Network [MSDN]), or use Google.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Formatting Console Output}
-We can send just about anything to the console, but the output may not be particularly human-readable, or may not make sense.
-
-The console output operation thus permits us to \alert{format} the data to a style of our choosing.
-
-Motivation: suppose we store a price like \$104.50 in a \texttt{double}.
-
-Printing this to the screen might look like \texttt{104.5}\\
-\quad What we'd like is \texttt{\$104.50}.
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Formatting Console Output}
-
-
-
-
-The specification of a C\# output format resembles the following:\\
-\quad\quad \texttt{\{N,M:s\}}
-
-Where:\\
-\quad \texttt{N} is the position of the item in the list of values;\\
-\quad \texttt{M} is the width of the region to contain the formatted output; and\\
-\quad \texttt{s} is the formatting code.
-
-Fortunately, the designers of C\# have created a bunch of useful format specifications for us.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{C\# Number Format Specifiers}
-
-In the following table, the symbol '\textvisiblespace' indicates a blank space.
-
-{\scriptsize
-\begin{center}
-\begin{tabular}{l|l|l|l|l|l}
-\textbf{Specifier} & \textbf{Letter} & \textbf{Supported Numbers} & \textbf{Example} & \textbf{Number} & \textbf{Sample Output} \\ \hline
-General & G & All & \{0,8:G\} & 1234.5F & \textvisiblespace\textvisiblespace1234.5 \\
- &  &  & \{0,8:G\} & 1234 & \textvisiblespace\textvisiblespace\textvisiblespace\textvisiblespace1234\\ \hline
-Fixed Point & F & All & \{0,8:F2\} & 1234.5F & \textvisiblespace1234.50\\ \hline
-Round Trip & R & All & \{0,8:R2\} & 1234.5F & 1234.5\\ \hline
-Number & N & All & \{0,8:N1\} & 1234.5F & 1,234.5\\ \hline
-Exponential & E & All & \{0,14:E6\} & 1234.5F & \textvisiblespace1.234500E+003\\ \hline
-Decimal & D & Integers Only & \{0,8:D\} & 1234 & 00001234\\ \hline
-Currency & C & All & \{0,10:C\} & 1234.5 & \textvisiblespace\$1,234.50\\ \hline
-Percentage & P & All & \{0,8:P\} & 0.89 & \textvisiblespace89.00\textvisiblespace\%\\ \hline
-Hexadecimal & X & Integers Only & \{0,8X\} & 1234 & 000004D2\\
-
-\end{tabular}
-\end{center}
-}
-
-By default, right alignment is used. A negative sign can be used to force left alignment.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Using a Format Specifier}
-
-When using a format specifier in a \texttt{Console.WriteLine} statement, the \texttt{Console.WriteLine} statement must be changed.
-
-If we have an integer \texttt{x} and we are going to print it to the screen in a formatted way, the command is:\\
-\quad \texttt{Console.WriteLine( "\{0\}", x );}
-
-Two things to note in this command: the \texttt{\{0\}} and the appearance of \texttt{x}.
-
-\texttt{\{0\}} is the simplest format. It uses the default. \\
-We could also choose \texttt{\{0,14:E6\}} if we wanted exponential format.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Using a Format Specifier}
-
-A variable to be output is placed after the string, after a comma. 
-
-Additional variables can appear after the first, separated by commas.\\
-\quad \texttt{Console.WriteLine( "Integers = \{0\}, \{1\}", x, y );}
-
-In the string, we put a number inside \{ \} braces. This is like an escape sequence, but it tells the compiler: use the variables after the string.
-
-The number placed in the braces matches the position of the variable after the string, starting at 0 (zero) rather than 1.
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Console Output with Formatting}
-
-\begin{verbatim}
-using System;
-class OutputFormatting
-{
-    static void Main( )
-    {
-        int x = 36;
-        Console.WriteLine( "Integer = {0}", x );
-        Console.WriteLine( "Fixed Point = {0:F2}", x );
-        Console.WriteLine( "Hexadecimal = {0:X}", x );
-        Console.WriteLine( "Exponential = {0:E4}", x );
-        Console.WriteLine( "Currency = {0,8:C}", x );
-        Console.WriteLine( "Currency = {0,-8:C}", x );
-    }
+for( int n : v ) {
+    cout << n << endl;
 }
 \end{verbatim}
-
-[Demo: This program's output.]
-
 \end{frame}
 
 
 \begin{frame}
-\frametitle{Library Methods}
+\frametitle{Using \texttt{vector}}
 
-The examples shown in the previous slides (e.g., \texttt{char} and \texttt{string}) show library (system-provided) functions.
+Every time we call \texttt{push\_back( )}, we put the new element in the list, after the last already-present element.
 
-Although we may ask you to work with these methods or to implement them, it is rarely a good practice to ``reinvent the wheel''.
+Even though we initialized the \texttt{vector} with a capacity of 3, we were able to add 5 more elements to the list.
 
-If you attempt to reinvent something that is already created, there is a good chance you will make some mistakes, even if they are obscure.\\
-\quad For an interesting real-world example, see:\\
-\quad \url{http://blog.codinghorror.com/whats-wrong-with-turkey/}
-
-When a library function exists to do the operation you want to perform, make use of that library function.
-
-Be sure, however, to check the documentation to learn how to call the function properly (e.g., order of parameters).
+The collection increases its own capacity dynamically when items are added beyond its current capacity.
 
 \end{frame}
 
+
+
+\begin{frame}
+\frametitle{This is Strange...}
+
+We just saw a function \texttt{push\_back( )} be inside the vector type.
+
+This is weird!
+
+This is because the victory is another kind of programmer-defined type... a \texttt{class}.
+
+
+\end{frame}
 
 \end{document}
 

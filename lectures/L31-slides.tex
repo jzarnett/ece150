@@ -1,6 +1,6 @@
 \input{configuration}
 
-\title{Lecture 31 --- Object-Oriented Programming }
+\title{Lecture 31 --- ToString, Equality, Namespaces}
 
 \author{J. Zarnett\\
 \texttt{jzarnett@uwaterloo.ca}}
@@ -18,469 +18,327 @@
   \end{center}
 \end{frame}
 
+\part{ToString}
+\begin{frame}\partpage\end{frame}
 
 
 \begin{frame}
-\frametitle{Structuring a Program}
+\frametitle{Printing Objects}
 
-Up to this point we have organized our program using procedural programming: the use of functions to give us program structure.
+What happens if we try writing  an object to the console with \texttt{Console.WriteLine( )}?
 
-We can break down a larger problem into smaller problems, each of which we can accomplish in a re-usable sequence of steps (function).
+The class name is just printed to the console. That's not very helpful.
 
-The painful reality is that most software projects fail.\\
-\quad They are often late, unreliable, and/or expensive.
-
-This is because software is extremely complex.\\
-\quad We need to manage this complexity if a project is to succeed.\\
-\quad Procedural programming is not adequate to the task.
+The system tries to convert the class to a console-printable form and that's the default behaviour. 
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Re-usable Components}
+\frametitle{The \texttt{ToString} Method}
+A \texttt{ToString( )} method automatically exists for every C\# type.
 
-Idea: if an electrical engineer needs a transistor, she does not need to build one from scratch; just go to the bin and use an existing one.
+The \texttt{ToString( )} method converts the value of an object to a string format in a (hopefully) meaningful way.
 
-Now take the idea of re-usable components and apply it to software.\\
-\quad We've already had re-usable functions, so why not components?
-
-What we'd like is to package up data and functions that manipulate that data into single, self-contained, re-usable unit.
-
-\alert{Objects} are the way of packaging \& managing our data and functions.\\
-\quad They are the building blocks of an object-oriented program.
-
+This method applies to both simple types and structured types.
 \end{frame}
 
 \begin{frame}
-\frametitle{Objects}
+\frametitle{The \texttt{override} Keyword}
+To replace the default behaviour of an existing method, like \texttt{ToString}, we need to make use of the \alert{\texttt{override}} keyword.
 
+This is our way of indicating that we want to replace the default behaviour provided for all objects in the system.
 
-
-An object models a tangible item or some abstract concept:\\
-\quad What properties does an object have? What can the object do?
-
-The world is full of ``things'' (objects). Imagine a dog.\\
-\quad A dog has characteristics like colour, weight, age...\\
-\quad A dog also has behaviours like bark, move, sleep...
-
-To represent a dog in software, create an object that possesses both characteristics (\textbf{data variables}) and behaviours (\textbf{functions}) of a dog.
-
+Now we are ready to write an implementation for \texttt{Coordinates}.
 
 \end{frame}
 
-\begin{frame}
-\frametitle{Object Oriented Programming}
 
-Objects interact with other objects through their functions, and not by manipulating another object's data directly.
 
-Modelling the system as objects and their interactions is known as \alert{Object Oriented Programming}.
+\begin{frame}[fragile]
+\frametitle{Implementing \texttt{ToString} for \texttt{Coordinates}}
 
-C++ supports and encourages this programming paradigm as an approach to designing useful, modular, reusable software systems.
+\begin{verbatim}
+public override string ToString( )
+{
+    return "(" + x + ", " + y + ", " + z + ")";
+}
+\end{verbatim}
 
-Appropriate use of object oriented programming as a design technique will allow us to create and maintain complex software.
+After this, whenever an object of type \texttt{Coordinates} is to be printed to the screen, it will be formatted as \texttt{(x, y, z)}. E.g., (1, 7, -5).
 
 \end{frame}
 
-\begin{frame}
-\frametitle{Example: Variable Voltage}
-Suppose we want to model a variable voltage source: an electric component that provides several different voltage output levels. 
 
-Let's say it has a selector to choose one of the following levels:\\
-\quad Off, 6V, 12V, 18V, and 24V.
+\begin{frame}[fragile]
+\frametitle{Implementing \texttt{ToString} for \texttt{Coordinates}}
 
-What variables will we need to model this?\\
-\quad Some constants to hold the possible settings.\\
-\quad A variable to represent the current setting.
+The code below:
 
-We also have some functions to represent voltage source behaviour:\\
-\quad Increase the voltage by one level.\\
-\quad Decrease the voltage by one level.\\
-\quad Shut it off.\\
+\begin{verbatim}
+Coordinates c4 = new Coordinates( 1, 7, -5 );
+Console.WriteLine( c4 );
+\end{verbatim}
 
+will produce as output:
+\texttt{(1, 7, -5)}
 
 \end{frame}
 
 
 \begin{frame}
-\frametitle{The Blueprints}
-We have an idea now about how to model the variable voltage source.\\
-\quad Now, to represent that in the program.
+\frametitle{Beyond Console Printing}
 
-Analogy: building ``blueprints'' (architectural plan).
+The examples thus far have used \texttt{Console.WriteLine} but there are other scenarios where we might convert an object to a \texttt{string}.
 
-Before a building is built, architects and civil engineers draft a document that describes in detail the structure of the building.
+\texttt{Console.WriteLine} has called \texttt{ToString} for us, but in other situations we are responsible for doing so.
 
-The construction team uses the document when building a structure.\\
-\quad It tells them what to do (though not generally how to do it).
+The \texttt{ToString} method can be explicitly called any time we wish to convert an object to a \texttt{string}.
+
+Example:\\
+ \texttt{string positionText = "Your position:~"~+~c4.ToString();}
+
+\end{frame}
+
+\part{Object Equality}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}
+\frametitle{Equality}
+
+
+When using equality operators, \texttt{==} and \texttt{!=}, we have thus far used them on simple types like \texttt{int}; \texttt{7 == 0} evaluates to \texttt{false}.
+
+When it comes to reference types, however, things don't always behave as we would expect.
+
+What does it mean for two \texttt{Coordinates} objects to be equal?
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Building Blueprints Example}
+\frametitle{Use of the \texttt{==} Operator on Objects}
+Our first instinct is to use the \texttt{==} operator.\\
+\quad This results in a test of \alert{reference equality}.
+
+This means that two objects will be considered equal if they are referring to the same object in memory.
+
+\texttt{Coordinates c1 = new Coordinates( );}\\
+\texttt{Coordinates c2 = c1; }\\
+\texttt{Coordinates c3 = new Coordinates( );}
+
+A test of \texttt{c2 == c1} will evaluate to true.\\
+A test of \texttt{c1 == c3} will evaluate to false.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Use of the \texttt{==} Operator on Objects}
+Both \texttt{c1} and \texttt{c3} are initialized as (0, 0, 0).
+
+Does this make intuitive sense when we look at this scenario?
+
+\texttt{Coordinates c1 = new Coordinates( 1.5, -2.0, 10 );}\\
+\texttt{Coordinates c2 = c1; }\\
+\texttt{Coordinates c3 = new Coordinates( 1.5, -2.0, 10 );}
+
+Even though they're both (1.5, -2.0, 10), \texttt{c1} and \texttt{c3} will not be considered equal by the \texttt{==} operator.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Comparing Objects}
+Our first approach to solving this might be to have the following statement to check if \texttt{c1} and \texttt{c3} are equal\\
+\quad \texttt{c1.X == c3.X \&\& c1.Y == c3.Y \&\& c1.Z == c3.Z}
+
+This is tedious and error-prone every time it's needed in the code (and impractical if the objects have many fields).
+
+Apply a previous solution to this problem: make it a function!
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Comparing Objects}
+You might find it logical to implement a function \texttt{Equals} for this.\\
+\quad It turns out, so did the designers of C\#.
+
+Like \texttt{ToString( )}, every object in C\# automatically has an \texttt{Equals} method that you can use to compare two objects.
+
+Also like the default \texttt{ToString( )}, the default implementation of \texttt{Equals} is not very useful. It does the same as \texttt{==}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Implementing \texttt{Equals}}
+We can write our own implementation for \texttt{Equals}, but must follow these rules:
+
+\begin{itemize}
+\item \texttt{x.Equals(x)} returns true
+\item \texttt{x.Equals(y)} returns the same value as \texttt{y.Equals(x)}
+\item \texttt{if (x.Equals(y) \&\& y.Equals(z))} returns true, then \texttt{x.Equals(z)} returns true
+\item Successive invocations of \texttt{x.Equals(y)} return the same value as long as the objects referenced by \texttt{x} and \texttt{y} are not modified
+\item \texttt{x.Equals(null)} returns false
+\end{itemize}
+
+Following these rules will prevent unexpected (surprising) behaviour.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Implementing \texttt{Equals}}
+The method signature for \texttt{Equals} is:\\
+\quad \texttt{public override bool Equals( object obj )}
+
+The signature compares against a general \texttt{object} and not the same class where this method is being implemented.
+
+Recall from earlier the concept of explicit type casting: we tell the system explicitly to treat one type as another.
+
+In this example, we need to explicitly cast \texttt{object} to \texttt{Coordinates}.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Implementing \texttt{Equals}}
+Add the following to the \texttt{Coordinates} class:
+
+\begin{verbatim}
+public override bool Equals( object obj )
+{
+    if ( obj == null )
+    {
+        return false;
+    }
+    Coordinates other = (Coordinates) obj;
+    
+    return ( x == other.x ) 
+        && ( y == other.y ) 
+        && ( z == other.z );
+}
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Problem with the Previous Implementation}
+
+There is a problem with the implementation of \texttt{Equals} on the previous slide.
+
+What if we called \texttt{Equals} with an actual parameter that is \underline{not} an instance of \texttt{Coordinates}?
+
+An error at this statement:\\
+\quad \texttt{Coordinates other = (Coordinates) obj;}
+
+There is, however, a way to prevent this error: the \alert{\texttt{is}} keyword.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{is} Keyword}
+
+The \texttt{is} keyword gives us the ability to check if an object is an instance of a given type.
+
+It is a binary operator that takes an object (on the left hand side) and a type name (on the right hand side), and evaluates to true or false.\\
+\quad Example: \texttt{obj is Coordinates}
+
+Apply this keyword to prevent an error in the \texttt{Equals} method.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Implementing \texttt{Equals} with \texttt{is}}
+Add the following to the \texttt{Coordinates} class:
+
+{\scriptsize
+\begin{verbatim}
+public override bool Equals( object obj )
+{
+    if ( obj == null )
+    {
+        return false;
+    }
+    if ( obj is Coordinates )
+    {
+        Coordinates other = (Coordinates) obj;
+        
+        return ( x == other.x ) 
+            && ( y == other.y ) 
+            && ( z == other.z );
+    }
+    else
+    {
+        return false;
+    }
+}
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{After Implementing \texttt{Equals}}
+
+After implementing the \texttt{Equals} method, what happens here?
+
+Recall this from earlier:\\
+\texttt{Coordinates c1 = new Coordinates( 1.5, -2.0, 10 );}\\
+\texttt{Coordinates c2 = c1; }\\
+\texttt{Coordinates c3 = new Coordinates( 1.5, -2.0, 10 );}
+
+Still \texttt{c1 == c3} will return false, because the \texttt{==} operator is still reference equality.
+
+But \texttt{c1.Equals( c3 )} will return true.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Another Problem with the \texttt{Equals}}
+You may have noticed we are doing an \texttt{==} comparison on \texttt{double}s.\\
+\quad We've previously said we should have a tolerance; not equality.
+
+For \texttt{Coordinates}, there's another motivation to use a tolerance.
+
+
+Example: if two points are close enough when drawn on the screen we may choose to consider them to be the same.
+
+\end{frame}
+
+
+\part{Namespaces}
+\begin{frame}\partpage\end{frame}
+
+\begin{frame}
+\frametitle{Namespaces}
+A \alert{namespace} is a collection of associated types.
+
+Namespaces often correspond with packages, libraries, or application programming interfaces (APIs).
+
+Namespaces permit code reuse by ensuring that types defined in one library do not conflict with those defined in another library.
+
+Thus we could define two distinct classes called \texttt{Coordinates} and differentiate between them by putting them in different namespaces:
+
+\texttt{Real.Coordinates} may represent $(x,y)$-coordinates;\\
+\texttt{Polar.Coordinates} may represent polar $(r,\theta)$-coordinates.
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The \texttt{using} Keyword}
+
+The \texttt{using} keyword can be used to eliminate the need for specifying the full name of a type or a function.
+
+For example, the statement \texttt{using System;} allows a C\# program to use \texttt{System.Console.WriteLine( )} as \texttt{Console.WriteLine( )}
+
+The scope of a \texttt{using} directive is limited to the file in which it appears; each file needs to specify its own \texttt{using} namespaces.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{C\# Type Overview}
 
 \begin{center}
-	\includegraphics[width=0.85\textwidth]{images/putnamhouse.jpg}
+\includegraphics[width=0.8\textwidth]{images/ooterms.png}\\
+{\tiny Source: J. Bishop and N. Horspool, C\# Concisely, Pearson Education Canada, 2004.}
 \end{center}
-\end{frame}
-
-\begin{frame}
-\frametitle{Class Definition}
-To tell the system how to build an object, we need to provide it the blueprints for that object.
-
-The blueprints for an object is a \alert{\texttt{class}} definition.\\
-\quad This code tells the system how to create an object of that type.
-
-The \texttt{class} definition specifies the variables and methods.
-
-Classes are therefore programmer-defined types.
 
 \end{frame}
-
-
-
-\begin{frame}
-\frametitle{The Structure}
-
-We've already seen programmer-defined types: the \texttt{struct}.
-
-The \texttt{struct} can contain different variables of different types.
-
-The \texttt{class} is an expanded version of the \texttt{struct}: it contains functions in addition to variables.
-
-The data and functions of an object are referred to as \alert{members}.
-
-Member functions are called \alert{methods}.\\
-Member variables are called \alert{fields}.
-
-\end{frame}
-
-
-\begin{frame}[fragile]
-\frametitle{Voltage Source Blueprints}
-
-Let's draw up the blueprints for the voltage source:
-{\scriptsize
-\begin{verbatim}
-class voltage_source
-{
-  public: 
-    int current_voltage;
-    int[] voltageLevels = {0, 6, 12, 18, 24};
-
-    void increase_voltage()
-    {
-      // ...
-    }
-  
-    void decrease_voltage()
-    {
-      // ...
-    }
-  
-    void turn_off()
-    {
-      // ...
-    }
-}
-\end{verbatim}
-}
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Voltage Source Blueprints Comments}
-
-The previous slide gave the structure for the voltage source we wanted to model: it showed the member fields and methods.
-
-Given this definition, the system now knows how to make a \texttt{voltage\_source} object.
-
-The implementations of the functions are not shown for space reasons, but in defining the class, we would normally fill them in.
-
-Of course, defining the structure of the object is the first step, but if we want to use a \texttt{voltage\_source}, we will need to create one.
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Instances}
-
-A specific realization of a class is called an \alert{instance}.\\
-\quad A program may create many distinct instances of the same class.
-
-Classes are programmer-defined \textbf{types}, so this is no surprise.\\
-\quad We can have many distinct \texttt{double}s in the program.
-
-The process of creating an instance of a class is called \alert{instantiation}.
-
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Classes are Like Structs}
-Classes are like structures, so we can use them as types
-
-The declaration
-\quad \texttt{voltage\_source source;}\\
-
-  
-creates an instance of \texttt{voltage\_source}.
-
-We can then access fields of this instance with the dot operator.
-
-\texttt{source.current\_voltage = 0;}
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Car Example}
-
-Let's look at another object example: a car.\\
-\quad Data: make, model, year,...\\
-\quad Functions: \texttt{honk\_horn(), flash\_lights()}...
-
-
-Given a \texttt{class Car}, you can make several instances:\\
-\quad Toyota Corolla, Chevrolet Corvette, BMW 335i, Volkswagen Jetta...
-
-\end{frame}
-
-
-\begin{frame}[fragile]
-\frametitle{Car Class}
-
-Here's a basic version of the \texttt{Car} class, that looks much like a \texttt{struct}:
-
-{\scriptsize
-\begin{verbatim}
-public class Car
-{
-    public:
-      string make;
-      string model;
-      int year;
-    
-      void honk_horn() {
-        // ...
-      }
-      void flash_lights() {
-        // ...
-      }
-      // Other methods not shown for space reasons
-}
-\end{verbatim}
-}
-
-As we learn more about OOP, we will improve this definition to be more useful and consistent with good programming practices.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Using the Dot Operator}
-
-Just like the \texttt{struct}, variables of an instance are accessed using the Dot Operator (\texttt{.}).
-
-\texttt{Car prius;}\\
-\quad Declares and instantiates a \texttt{Car} object.
-
-After creation with \texttt{new}, we may access the variables of the instance:\\
-\quad \texttt{prius.make  = "Toyota";}\\
-\quad \texttt{prius.model = "Prius";}\\
-\quad \texttt{prius.year  = 2010;}
-
-\end{frame}
-
-
-
-\begin{frame}
-\frametitle{Making a Copy of an Instance}
-
-If we want a copy, just using the assignment operator will not do what we want.
-
-We must allocate and create another instance.\\
-\quad \texttt{Car prius2;}
-
-To make a copy, create a new instance, and copy the data from the original object to the new instance, one variable at a time.
-
-(In the next lecture, we'll learn a better way to do this.)
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Building on the Car Example}
-
-Let's build on the example of the \texttt{Car} class and look at a dealership.
-
-A car dealership has zero or more cars on its parking lot.\\
-\quad A good way to implement this might be an array of \texttt{Car} objects.
-
-Just like the \texttt{struct} we can have an array of objects.
-
-When a sales associate wants to find a car to show a customer, they make the lights flash and the horn honk to find the car in the lot.
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{The Car Dealership}
-
-Suppose the parking lot has 42 spaces.
-
-\begin{verbatim}
-class Dealership
-{
-    public:
-      int capacity = 42;
-      Car[] available_cars[capacity];
-
-      void park( Car new_car, int position )
-      {
-          available_cars[position] = new_car;
-      }
-      // Other methods and variables not shown
-}
-\end{verbatim}
-
-Of course, this example ignores what happens if someone tries to park a car in a position that is already occupied.
-
-\end{frame}
-
-
-\begin{frame}[fragile]
-\frametitle{Finding a Specific Car}
-
-Now let's write a method to find a specific car in the lot when we know the make, model, and year.
-
-{\small
-\begin{verbatim}
-void find_car( string make, string model, int year )
-{
-    for ( int i = 0; i < capacity; i++ )
-    {
-        if ( available_cars[i].make == make &&
-             available_cars[i].model == model &&
-             available_cars[i].year == year)
-             {
-                 available_cars[i].honk_horn();
-                 available_cars[i].flash_lights();
-             }
-    }
-}
-\end{verbatim}
-}
-
-But this function will behave badly if the array of available cars is not initialized!
-
-\end{frame}
-
-
-
-\begin{frame}
-\frametitle{Use of Methods and Variables}
-A common mistake when working with classes is a method call like:\\
-\quad \texttt{Car.honk\_horn();}
-
-The compiler identifies this as an error. 
-
-To call the \texttt{honk\_horn()} method, an instance of the class is needed.\\
-\quad Which instance of \texttt{Car} do we mean? The Prius? The Jetta?\\
-\quad Correct usage: \texttt{prius.honk\_horn();}
-
-Why? These are \alert{instance methods}: they belong to an instance. 
-
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{The \texttt{static} Keyword}
-What does the \texttt{static} keyword mean? The member applies to the type, not an instance.
-
-The keyword \texttt{static} may apply to a field or method.
-
-Consider this very simple class definition:
-\begin{verbatim}
-class ExampleClass
-{
-    public:
-      int value;
-      static int count;
-}
-\end{verbatim}
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Static vs. Instance Members}
-
-In this class, \texttt{value} is an instance member: a new \texttt{int} variable is created whenever a new instance of \texttt{ExampleClass} is created.
-
-But \texttt{count} is a static member: there is only one \texttt{int} variable created, regardless of how many instances of \texttt{ExampleClass} there are.\\
-\quad This variable is shared between all instances.\\
-\quad It can even be accessed without an instance.
-
-Invalid: \texttt{ExampleClass.value = 1;}\\
-Valid: \texttt{ExampleClass.count = 1;}
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Static vs. Instance Members}
-Consider this code:
-
-\begin{verbatim}
-ExampleClass e1 = new ExampleClass( );
-ExampleClass e2 = new ExampleClass( );
-
-e1.value = 7;
-e2.value = -8;
-
-e1.count = 2;
-
-cout << "e1 value: " << e1.value << endl;
-cout << "e2 value: " << e1.value << endl;
-cout << "e1 count: " << e1.count << endl;
-cout << "e2 count: " << e2.count << endl;
-\end{verbatim}
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Static vs. Instance Members}
-In the previous slide, we used an instance, \texttt{e1}, to assign the variable \texttt{count}, even though \texttt{count} is \texttt{static}.
-
-This practice is discouraged; if a variable is \texttt{static}, it should be accessed using the \texttt{class} name, not an instance reference.\\
-\quad \texttt{ExampleClass.count = 2;}
-
-The compiler may identify this as a warning.
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Static vs. Instance Members}
-
-A \texttt{static} method can make use of static variables and call other static methods, but cannot use instance variables/methods.
-
-Why? Inside the static method, there is no instance to reference.
-
-An instance method can make use of \underline{both} instance and static variables and can call both static and instance methods.
-
-Why? Static methods and variables are always available, as they belong to the type itself.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Static Members}
-
-In the \texttt{voltage\_source} class is an array of the different voltage levels:\\
-\quad \texttt{int[] voltageLevels = \{0, 6, 12, 18, 24\};}
-
-This is a good candidate to be declared \texttt{static} since the voltage levels will be the same in all of the instances of the class.
-
-\texttt{static int[] voltageLevels = \{0, 6, 12, 18, 24\};}
-
-In general, any constant is likely to be a good candidate to be declared \texttt{static}.
-
-\end{frame}
-
 
 \end{document}
 
