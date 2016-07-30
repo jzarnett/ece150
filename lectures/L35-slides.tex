@@ -19,5 +19,97 @@
 \end{frame}
 
 
+
+\begin{frame}
+\frametitle{The Shape of Things to Come}
+
+In an earlier example we considered the idea of a \texttt{Shape} class as a parent class.
+
+It had several descendants, such as \texttt{circle, rectangle, triangle}...
+
+And suppose that they should all have \texttt{double ComputeArea( )}.
+
+But it makes no real sense to create an instance of a \texttt{Shape} object directly -- it needs to be something.
+
+The solution is an \alert{abstract class}.
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Abstract Class}
+
+An abstract class can only be used as a base to derive other classes from.
+
+You cannot create an instance of an abstract class, because it is ``incomplete''.
+
+It is, however, a way to create a partial class definition that can be extended as is necessary. 
+
+To be abstract, the class must contain one \alert{pure virtual function}.
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Pure Virtual Function}
+
+To declare a pure virtual function, we use the keyword \texttt{virtual} as well as an assignment to zero.
+
+\texttt{virtual double ComputeArea( ) = 0;}
+
+You may have multiple pure virtual functions in a class, and they may be of any type and take any parameters.
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Abstract Class}
+
+A class that extends an abstract class can go down one of two routes.
+
+\begin{enumerate}
+	\item Either it implements all the pure virtual functions; or
+	\item It will itself also be an abstract class.
+\end{enumerate}
+
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Abstract Class Examples}
+
+Example: abstract class $A$ has 5 pure virtual methods. 
+
+$B$ extends $A$ and implements all 5: $B$ is not an abstract class.
+
+$C$ extends $A$ and implements 4 of the 5: $C$ is abstract.
+
+$D$ extends $C$ and does not implement the ``missing'' abstract function: $D$ is abstract.
+
+$E$ extends $D$ and implements the last function: $E$ is not abstract.
+
+In theory, additional pure virtual functions could be introduced in, say, $D$, which $E$ would also have to implement.
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Interfaces}
+
+Other programming languages like Java and C\# have the concept of an \alert{interface}.
+
+An interface is like an abstract class that has no methods or fields implemented in it at all; all functions are virtual.
+
+Thus, the same behaviour in C++ can be achieved with an abstract class with all pure virtual functions.
+
+\end{frame}
+
+
 \end{document}
 
