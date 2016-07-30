@@ -51,18 +51,13 @@ They are a convenient mechanism for implementing object-oriented methods for acc
 \begin{frame}[fragile]
 \frametitle{Get-and-Set Methods}
 
+In the class:
 \begin{verbatim}
+public: 
+  double getPrice();
+  void setPrice( double new_price );
 private:
   double price;
-
-public:
-  double getPrice() {
-    return price;
-  }
-
-  void setPrice( double new_price ) {
-    price = new_price;
-  }
 \end{verbatim}
 
 \end{frame}
@@ -187,24 +182,28 @@ Multiple constructors for a class may exist.\\
 \begin{verbatim}
 class Coordinates
 {
+  private:
     float x;
     float y;
     float z;
+    
+  public:
+    Coordinates ( ); // Constructor 1
+    Coordinates( float a, float b, float c ); // Constructor 2
+};
 
-    public Coordinates( )            // Constructor 1
-    {
-        x = 0.0f; 
-        y = 0.0f;
-        z = 0.0f;
-    }
-
-    public Coordinates( float a, float b, float c )    // Constructor 2
-    {
-        x = a;
-        y = b;
-        z = c;
-    }    
+Coordinates::Coordinates( ) {
+    x = 0.0f; 
+    y = 0.0f;
+    z = 0.0f;
 }
+
+Coordinates::Coordinates( float a, float b, float c ) {
+    x = a;
+    y = b;
+    z = c;
+}    
+
 \end{verbatim}
 }
 \end{frame}
@@ -213,8 +212,8 @@ class Coordinates
 \frametitle{Coordinates Constructor Comments}
 
 In this example, an instance of a Coordinates object can be created using two different constructors:\\
-\quad \texttt{public Coordinates( )}\\
-\quad \texttt{public Coordinates( float a, float b, float c )}
+\quad \texttt{Coordinates( )}\\
+\quad \texttt{Coordinates( float a, float b, float c )}
 
 A constructor does not have an explicitly-specified return type and always has the same name as its class.
 
@@ -265,7 +264,7 @@ Correct solution:\\
 
 Or by manually assigning each variable:
 \begin{verbatim}
-Coordinates c3 = new Coordinates( );
+Coordinates* c3 = new Coordinates( );
 c3->setX( c2->getX() );
 c3->setY( c2->getY() );
 c3->setZ( c2->getZ() );
@@ -278,11 +277,11 @@ c3->setZ( c2->getZ() );
 We can make creation of a copy easier by adding a \alert{copy constructor}.
 
 \begin{verbatim}
-public Coordinates( Coordinates to_copy )
+Coordinates::Coordinates( Coordinates to_copy )
 {
-    x = to_copy->x;
-    y = to_copy->y;
-    z = to_copy->z;
+    x = to_copy.x;
+    y = to_copy.y;
+    z = to_copy.z;
 }
 \end{verbatim}
 
@@ -290,28 +289,6 @@ This makes the syntax of creating a copy much simpler:\\
 \quad \texttt{Coordinates* c3 = new Coordinates( c2 );}
 
 Use of a copy constructor also allows better encapsulation; no need to know the internals of the class to make a correct copy.
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Copy Constructor Alternative}
-Another strategy for making a copy of an object is a static method.
-
-\begin{verbatim}
-public static Coordinates MakeCopy( Coordinates to_copy )
-{
-    Coordinates result = new Coordinates( );
-    result->setX( to_copy->getX() );
-    result->setY( to_copy->getY() );
-    result->setZ( to_copy->getZ() );
-
-    return result;
-}
-\end{verbatim}
-
-
-Then, to make a copy of \texttt{Coordinates c1}, call:\\
-\quad \texttt{Coordinates* c2 = Coordinates.MakeCopy( c1 );}
 
 \end{frame}
 

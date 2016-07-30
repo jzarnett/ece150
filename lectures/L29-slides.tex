@@ -167,21 +167,10 @@ class voltage_source
     int current_voltage;
     int[] voltageLevels = {0, 6, 12, 18, 24};
 
-    void increase_voltage()
-    {
-      // ...
-    }
-  
-    void decrease_voltage()
-    {
-      // ...
-    }
-  
-    void turn_off()
-    {
-      // ...
-    }
-}
+    void increase_voltage();  
+    void decrease_voltage();  
+    void turn_off();
+};
 \end{verbatim}
 }
 
@@ -252,21 +241,17 @@ Here's a basic version of the \texttt{Car} class, that looks much like a \texttt
 
 {\scriptsize
 \begin{verbatim}
-public class Car
+class Car
 {
     public:
       string make;
       string model;
       int year;
     
-      void honk_horn() {
-        // ...
-      }
-      void flash_lights() {
-        // ...
-      }
+      void honk_horn();
+      void flash_lights();
       // Other methods not shown for space reasons
-}
+};
 \end{verbatim}
 }
 
@@ -331,15 +316,13 @@ class Dealership
       int capacity = 42;
       Car[] available_cars[capacity];
 
-      void park( Car new_car, int position )
-      {
-          available_cars[position] = new_car;
-      }
+      void park( Car new_car, int position );
+      void find_car( string make, string model, int year);
       // Other methods and variables not shown
-}
+};
 \end{verbatim}
 
-Of course, this example ignores what happens if someone tries to park a car in a position that is already occupied.
+What happens if someone tries to park a car in a position that is already occupied?
 
 \end{frame}
 
@@ -349,9 +332,9 @@ Of course, this example ignores what happens if someone tries to park a car in a
 
 Now let's write a method to find a specific car in the lot when we know the make, model, and year.
 
-{\small
+{\scriptsize
 \begin{verbatim}
-void find_car( string make, string model, int year )
+void Dealership::find_car( string make, string model, int year )
 {
     for ( int i = 0; i < capacity; i++ )
     {
@@ -367,7 +350,9 @@ void find_car( string make, string model, int year )
 \end{verbatim}
 }
 
-But this function will behave badly if the array of available cars is not initialized!
+This function behaves badly if the array of cars is not initialized!
+
+Also, a new piece of syntax: \texttt{::}  -- we will return to this soon.
 
 \end{frame}
 
@@ -402,7 +387,7 @@ class ExampleClass
     public:
       int value;
       static int count;
-}
+};
 \end{verbatim}
 
 \end{frame}
@@ -426,18 +411,18 @@ Valid: \texttt{ExampleClass.count = 1;}
 Consider this code:
 
 \begin{verbatim}
-ExampleClass e1 = new ExampleClass( );
-ExampleClass e2 = new ExampleClass( );
+ExampleClass* e1 = new ExampleClass( );
+ExampleClass* e2 = new ExampleClass( );
 
-e1.value = 7;
-e2.value = -8;
+e1->value = 7;
+e2->value = -8;
 
-e1.count = 2;
+e1->count = 2;
 
-cout << "e1 value: " << e1.value << endl;
-cout << "e2 value: " << e1.value << endl;
-cout << "e1 count: " << e1.count << endl;
-cout << "e2 count: " << e2.count << endl;
+cout << "e1 value: " << e1->value << endl;
+cout << "e2 value: " << e1->value << endl;
+cout << "e1 count: " << e1->count << endl;
+cout << "e2 count: " << e2->count << endl;
 \end{verbatim}
 
 \end{frame}
@@ -449,7 +434,7 @@ In the previous slide, we used an instance, \texttt{e1}, to assign the variable 
 This practice is discouraged; if a variable is \texttt{static}, it should be accessed using the \texttt{class} name, not an instance reference.\\
 \quad \texttt{ExampleClass.count = 2;}
 
-The compiler may identify this as a warning.
+The compiler may identify using an instance to assign a static variable as a warning.
 
 \end{frame}
 
@@ -470,7 +455,7 @@ Why? Static methods and variables are always available, as they belong to the ty
 \begin{frame}
 \frametitle{Static Members}
 
-In the \texttt{voltage\_source} class is an array of the different voltage levels:\\
+In the \texttt{voltage\_source} class is an array of different voltage levels:\\
 \quad \texttt{int[] voltageLevels = \{0, 6, 12, 18, 24\};}
 
 This is a good candidate to be declared \texttt{static} since the voltage levels will be the same in all of the instances of the class.

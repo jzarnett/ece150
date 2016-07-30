@@ -43,15 +43,12 @@ Filesystems typically support the following:
 
 File I/O and console I/O are very similar.
 
-It is possible to define I/O methods such as \texttt{ReadLine( )} and \texttt{WriteLine( )} that work with both file I/O and console I/O.
+We have used \texttt{cout} (an output stream) and \texttt{cin} (an input stream) extensively.
 
 \alert{Stream}s are an abstraction for data flow that can be applied to both file I/O and console I/O.
 
 A stream denotes the flow of data from a source to a destination.
 
-In this course, we have already used streams:\\
-\quad \texttt{Console.Out} is the stream for console output.\\
-\quad \texttt{Console.In} is the stream for console input.
 
 
 \end{frame}
@@ -59,13 +56,13 @@ In this course, we have already used streams:\\
 \begin{frame}
 \frametitle{File I/O Fundamentals}
 
-The file I/O classes are defined in the \texttt{System.IO} namespace.
+The file I/O classes are defined in the \texttt{fstream} library.
 
-Output streams are created using the \texttt{StreamWriter} class.
+Output streams are created using \texttt{ofstream}.
 
-Input streams are created using the \texttt{StreamReader} class.
+Input streams are created using \texttt{ifstream} class.
 
-The \texttt{StreamWriter} and \texttt{StreamReader} classes provide sequential access to text files: each line must be written or read in sequence.
+The \texttt{ofstream} and \texttt{ifstream} classes provide sequential access to text files: each line must be written or read in sequence.
 
 Files are assumed to store text data.
 
@@ -79,26 +76,16 @@ This code outputs the text ``Hello World'' to a file named ``output.txt''.
 
 {\scriptsize
 \begin{verbatim}
-StreamWriter outStream = null;
+ofstream outStream; 
 string filename = "output.txt";
-           
-try
-{
-    outStream = new StreamWriter( filename );
-    outStream.WriteLine( "Hello World" );
-    outStream.Close( );
-    Console.WriteLine( "File successfully created" );
-}
-catch( Exception e )
-{
-    Console.Write( "Unable to create file! Reason: " );
-    Console.WriteLine( e );
-    return;
-}
+outStream.open( filename );
+
+outStream << "Hello World" << endl;
+
+outStream.close();
+
 \end{verbatim}
 }
-
-If output.txt didn't exist before, it creates that file.
 
 \end{frame}
 
@@ -109,54 +96,35 @@ If output.txt didn't exist before, it creates that file.
 
 {\scriptsize
 \begin{verbatim}
-StreamReader inStream = null;
-string filename = "input.txt";
-string line;
-           
-try
-{
-    inStream = new StreamReader( filename );
-    do
-    {
-        line = inStream.ReadLine( );
-        Console.WriteLine( line );
-    }
-    while( line != null );
-    inStream.Close( );
-    Console.WriteLine( "File successfully read" );
-}
-catch( Exception e )
-{
-    Console.Write( "Unable to read file! Reason: " );
-    Console.WriteLine( e );
-    return;
-}
+ifstream inStream;
+inStream.open("input.txt");
+
+int a;
+int b;
+int c;
+
+inStream >> a >> b >> c;
+
+cout << a << endl;
+cout << b << endl;
+cout << c << endl;
+
+inStream.close();
+ 
 \end{verbatim}
 }
 
-\end{frame}
-
-\begin{frame}
-\frametitle{File Input Example}
-The file input example code reads a specified file (input.txt) into memory (variable \texttt{line}), one line at a time.
-
-That line of text is then printed out to the console.
-
-Note in both input and output examples the use of \texttt{try-catch} blocks.\\
-\quad File-related operations may frequently result in Exceptions.
-
-
+[In class demo: output of this program.]
 
 \end{frame}
 
 
 \begin{frame}
 \frametitle{Inputting Formatted Data}
-The \texttt{ReadLine( )} method reads complete lines of data.
 
-However, some applications use numeric input data or other formatted data fields stored as text.
+The input stream attempts to make sense of whatever it has been fed.
 
-If the input data consists of non-string data types represented as text, the lines of input must be split into individual strings and parsed.
+But perhaps it is not that simple and we will read in a line of text that we need to then interpret and split.
 
 There are a couple of things to consider:
 \begin{itemize}
@@ -173,13 +141,14 @@ There are a couple of things to consider:
 Given the following class declaration:
 
 \begin{verbatim}
-public class Employee
+class Employee
 {
+  private: 
     ulong identifier;
     string surname;
     string givenName;
     double salary;
-}
+};
 \end{verbatim}
 
 How would you build a program to read this data from a file and display the data on the console?
@@ -200,17 +169,17 @@ Let's assume a valid input file resembles the following:
 24 Liles John-Michael 4550000
 \end{verbatim}
 
-This is an easy file to parse since we can use the \texttt{Split( )} method of the \texttt{string} class to split lines into arrays of strings.
+This is an easy file to parse since we can use the space characters as our way of splitting a line into its component parts.
 
 
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Step 2A: Updating \texttt{Employee}}
+\frametitle{Step 2: Updating \texttt{Employee}}
 Next step: to make importing of data efficient, we should add a constructor to \texttt{Employee}.
 
 \begin{verbatim}
-public Employee( ulong id, string sname, 
+Employee::Employee( ulong id, string sname, 
                  string gname, double s )
 {
     identifier = id;
@@ -219,88 +188,6 @@ public Employee( ulong id, string sname,
     salary = s;
 }
 \end{verbatim}
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Step 2B: Updating \texttt{Employee}}
-Next step: to make output human readable, implement \texttt{toString}.
-
-\begin{verbatim}
-public override ToString( )
-{
-    string name = surname + ", " + givenName;
-    return( string.Format( "{0,-4}: {1,-30} {2,12:C}",
-            identifier, name, salary ) );
-}
-\end{verbatim}
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Step 3: Write the \texttt{Main} Method}
-{\tiny
-\begin{verbatim}
-static void Main( )
-{
-    StreamReader inStream = null;    // This is the filehandle for the input file
-    string filename = "input.dat";   // This is the filename for the input file
-    string line = null;              // This is a variable to refer to a single line of input
-    string[] fields = null;          // This is an array of strings to store the individual fields
-    int counter = 0;                 // This is a counter to keep track of the number of records read
-    Employee emp = null;             // This is a variable to refer to an employee record
-
-    Console.WriteLine( "\nDatabase File Reader\n" );
-    inStream = new StreamReader( filename );
-    do                    // Reads lines of input
-    {        
-        line = inStream.ReadLine( );
-        if( line == null )
-        {
-            break;
-        }
-        counter++;
-        Console.WriteLine( "Record [{0}]:", counter );
-    }
-    while( true );
-    inStream.Close( );
-    Console.WriteLine( "\nSuccessfully read {0} records", counter );
-}
-\end{verbatim}
-}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Step 4: Modify the Program to Parse Data}
-Replace the content of the \texttt{do-while} loop with:
-{\scriptsize
-\begin{verbatim}
-line = inStream.ReadLine( );
-if( line == null )
-{
-    break;
-}
-counter++;
-fields = line.Split( );
-emp = new Employee(
-                   UInt64.Parse( fields[0] ),
-                   fields[1],
-                   fields[2],
-                   double.Parse( fields[3] ) 
-                   );
-Console.WriteLine( "Record [{0}]:", counter );
-Console.WriteLine( "\t{0}", emp );
-\end{verbatim}
-}
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Step 5: Add Error Checking}
-
-To add error detection, simply enclose the file I/O in a \texttt{try} statement and add a corresponding \texttt{catch} statement.
-
-Adding the error checking code is left as an exercise.
 
 \end{frame}
 
@@ -322,33 +209,13 @@ What would you do if you needed to read a file containing a fixed number of reco
 
 \end{frame}
 
-\begin{frame}
-\frametitle{Field Delimiters}
-
-The \texttt{Split( )} method provides the ability to specify one or more delimiters.
-
-When the \texttt{Split( )} method is called, a character array containing a set of delimiters can be passed to the method.
-
-The easiest way to create an array of delimiters is to create a string of the delimiters and then convert the string to a character array.
-
-A string s can be converted to a character array using the ToCharArray( ) method:\\
-\quad \texttt{",.\&".ToCharArray( )}
-
-\end{frame}
-
 \begin{frame}[fragile]
 \frametitle{Field Delimiter Example}
 
-What happens when we try to split \texttt{line} below?
+What happens when we try to split \texttt{line} below with a space as the delimiter?
 
 \begin{verbatim}
 string line = "A,B;C D;E,F";
-char[] delimiters = new char[] { ' ' };
-string[] fields;
-
-Console.WriteLine("\nSplitTest1\n");
-
-fields = line.Split( delimiters );
 \end{verbatim}
 
 We get two strings as output:\\
@@ -360,16 +227,10 @@ We get two strings as output:\\
 \begin{frame}[fragile]
 \frametitle{Field Delimiter Example 2}
 
-What happens when we try to split \texttt{line} below?
+What happens when we try to split \texttt{line} below with a comma as a delimiter?
 
 \begin{verbatim}
 string line = "A,B;C D;E,F";
-char[] delimiters = new char[] { ',' };
-string[] fields;
-
-Console.WriteLine("\nSplitTest1\n");
-
-fields = line.Split( delimiters );
 \end{verbatim}
 
 We get three strings as output:\\
@@ -382,16 +243,10 @@ We get three strings as output:\\
 \begin{frame}[fragile]
 \frametitle{Field Delimiter Example 3}
 
-What happens when we try to split \texttt{line} below?
+What happens when we try to split \texttt{line} below with a semicolon as a delimiter?
 
 \begin{verbatim}
 string line = "A,B;C D;E,F";
-char[] delimiters = new char[] { ';' };
-string[] fields;
-
-Console.WriteLine("\nSplitTest1\n");
-
-fields = line.Split( delimiters );
 \end{verbatim}
 
 We get three strings as output:\\
@@ -404,16 +259,10 @@ We get three strings as output:\\
 \begin{frame}[fragile]
 \frametitle{Field Delimiter Example 4}
 
-What happens when we try to split \texttt{line} below?
+What happens when we try to split \texttt{line} below using all three??
 
 \begin{verbatim}
 string line = "A,B;C D;E,F";
-char[] delimiters = new char[] { ' ', ',', ';'  };
-string[] fields;
-
-Console.WriteLine("\nSplitTest1\n");
-
-fields = line.Split( delimiters );
 \end{verbatim}
 
 We get six strings as output:\\
@@ -439,34 +288,6 @@ In our discussion of file I/O, we have introduced a number of important database
 \end{enumerate}
 
 A detailed discussion of databases is beyond the scope of this course.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Comments on C\# File Security}
-Some practical information if you are trying to work with files in C\#.
-
-By default, a C\# program does not have permission to create or modify a file if the program resides on a network drive.
-
-For example, all of the file I/O example programs provided in the lecture notes will NOT run on a remote (network) drive.
-
-There are two ways to compile and test programs that use file I/O:
-\begin{enumerate}
-\item Copy the executable program to a local directory (i.e., C:\textbackslash TEMP) and execute it there.
-
-\item Include attributes / code fragments to modify the default file I/O permissions or to modify the security policy
-\end{enumerate}
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Files and Directories}
-C\# also provides a couple of classes with static methods to let you work with files and directories.
-
-They are called \texttt{File} and \texttt{Directory}, respectively.
-
-For those who like a challenge, write a program to display the entire directory structure of a filesystem.
-
 
 \end{frame}
 

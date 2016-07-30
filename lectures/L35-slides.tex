@@ -65,11 +65,11 @@ The same function, method, or collection can be used with many different types (
 
 We have already seen some examples of polymorphism in the course.
 
-\texttt{ArrayList} is a polymorphic collection:\\
+\texttt{vector} is a polymorphic collection:\\
 \quad We can put many different types of object in the collection.
 
-\texttt{ArrayList.Sort} is a polymorphic function:\\
-\quad It will sort the objects in the array, whatever kind of object they are.
+\texttt{std::sort} is a polymorphic function:\\
+\quad It will sort the objects in the vector, whatever kind of object they are.
 
 
 
@@ -84,13 +84,10 @@ Polymorphism exploits characteristics common to a set of types.\\
 \frametitle{Polymorphic Functions}
 A polymorphic function operates on a related set of object types.
 
-\texttt{ArrayList.Sort} does not need to know the type of the objects, but it does need to know how to compare the objects in the array.
+\texttt{sort} does not need to know the type of the objects, but it does need to know how to compare the objects in the array.
 
-A function with an \texttt{object} parameter is automatically polymorphic.\\
-\quad We've seen \texttt{Equals} as an example of that.\\
-\quad Hence why we need to use the \texttt{is} keyword to check the input.
 
-A function can be polymorphic without having an \texttt{object} parameter.\end{frame}
+\end{frame}
 
 
 \begin{frame}
@@ -394,7 +391,7 @@ Solution: extend \texttt{SalaryEmployee} to make \texttt{Manager}.
 \begin{verbatim}
 class Manager : SalaryEmployee
 {
-    ArrayList reports;
+    vector reports;
     double bonus;
 
     public Manager( string n, string t,  string s, double m,
@@ -405,7 +402,7 @@ class Manager : SalaryEmployee
         base.sin = s;
         salary = m;
         bonus = b;
-        reports = new ArrayList( );
+        reports = new vector( );
     }
 }
 \end{verbatim}
