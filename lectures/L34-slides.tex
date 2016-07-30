@@ -1,6 +1,6 @@
 \input{configuration}
 
-\title{Lecture 34 --- Interfaces }
+\title{Lecture 34 --- Polymorphism \& Inheritance }
 
 \author{J. Zarnett\\
 \texttt{jzarnett@uwaterloo.ca}}
@@ -18,381 +18,396 @@
   \end{center}
 \end{frame}
 
+
 \begin{frame}
-\frametitle{Sorting Programmer-Defined Types}
-Last time, we examined using the \texttt{Sort} methods of the language to do sorting automatically.
+\frametitle{Object-Oriented Design Revisited}
 
-To sort a programmer-defined type, we can either do it manually, or we can tell the system how to sort that type automatically.
+So far, our discussion of object-oriented design has been limited to relatively simple classes.
 
-Let's use a class \texttt{Student} that has the following member variables:
-\begin{itemize}
-	\item Student ID Number
-	\item Last Name
-	\item First Name
-	\item Date of Birth
-	\item User ID
-\end{itemize}
+Often, object-oriented design provides little benefit for ``toy'' applications such as the applications developed in this course.
+
+Many of the things we have written in the class can be done with one class, or a handful of classes.
+
+For large application programs developed by a team of software developers, object-oriented design is necessary.\\
+\quad Programs will be too complex to leave unmanaged.
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Sorting Programmer-Defined Types}
+\frametitle{Coping with Evolving Software Demands}
 
-If told to sort some students, you might ask, ``sort them by what?''\\
-\quad Could be: Student ID Number, Last Name, Date of Birth...
+Two key characteristics are often desirable to cope with the evolving demands of software:
+\begin{enumerate}
+\item \alert{Polymorphism} \\
+    Define methods and collections that work with a variety of types
+\item \alert{Extensibility}\\
+    Enhance existing types without changes to already-existing code
+\end{enumerate}
 
-You might also ask if you want it to be ascending, descending...
-
-Let's say we want to sort by student ID number, ascending.
-
-When you actually perform the sort, you will examine a particular student record, and \alert{compare} it with others to see where it belongs.
-
-So to tell the system how to sort a programmer-defined type:\\
-\quad Tell it \alert{how to compare two instances}.
-
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Interface}
-The secret to indicating how to sort two objects is the \alert{interface}.
-
-An interface is an object oriented design concept to allow a common means for unrelated objects to interact with one another.
-
-In this case, we want the sorting routine to interact with the \texttt{Student} class, even though the sort routine knows nothing about \texttt{Students}.
-
-Think of an interface as a contract.\\
-\quad An interface specifies some number of methods.\\
-\quad To fulfill our side of the contract, we implement those methods.\\
-\quad If we do our part, we gain some benefit.
+Not all object-oriented languages provide full support for both polymorphism and extensibility.
 
 \end{frame}
 
 \begin{frame}
-\frametitle{\texttt{IComparable}}
+\frametitle{Polymorphism}
+The word polymorphism comes from Greek and means ``many forms''.
 
-The relevant interface in C\# is \alert{\texttt{IComparable}}.
+Polymorphic code works for or on multiple types of object.\\
+\quad The code is ``generic'' or flexible in what it accepts.
 
-\texttt{IComparable} contains one method signature:\\
-\quad \texttt{public int CompareTo( object obj )}
-
-The first thing to do is to say that our class promises to implement the methods of the \texttt{IComparable} interface.
-
-When we live up to our promise and implement \texttt{CompareTo} on our class, we get the benefit: automatic sorting of instances of that class.
+The same function, method, or collection can be used with many different types (without relying on type promotion).
 
 \end{frame}
 
 
 \begin{frame}
-\frametitle{Comparing Two Instances}
+\frametitle{Examples of Polymorphism}
+
+We have already seen some examples of polymorphism in the course.
+
+\texttt{vector} is a polymorphic collection:\\
+\quad We can put many different types of object in the collection.
+
+\texttt{std::sort} is a polymorphic function:\\
+\quad It will sort the objects in the vector, whatever kind of object they are.
 
 
-The contract says when \texttt{o1} is compared to \texttt{o2} (\texttt{o1.CompareTo( o2 )}):
-\begin{itemize}
-	\item A negative result (e.g., -1) is returned if \texttt{o1} is ``smaller than'' \texttt{o2}
-	\item Zero is returned if \texttt{o1} is equal to \texttt{o2}
-	\item A positive result (e.g., 1) is returned if \texttt{o1} is ``larger than'' \texttt{o2}
-\end{itemize}
 
-The meaning of the comparison is defined by the method implementation, not the interface.
+Polymorphism exploits characteristics common to a set of types.\\
+\quad Example: if two objects can be compared, they can be sorted.\\
+\quad ... regardless of the actual types of the instances.
 
-We are responsible for deciding what it means for an instance to be larger than or smaller than another.
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Polymorphic Functions}
+A polymorphic function operates on a related set of object types.
+
+\texttt{sort} does not need to know the type of the objects, but it does need to know how to compare the objects in the array.
+
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Comparing Two Instances}
+\frametitle{Type Conversion}
 
-We have decided to sort by student ID.\\
-\quad Thus when \texttt{Student s1.CompareTo( s2 ) } is run:
+We have already done type conversion with explicit casting.\\
+\quad Example: \texttt{double d = (double) x;}
 
-\begin{itemize}
-	\item -1 is returned if \texttt{s1}'s student ID is less than \texttt{s2}'s student ID
-	\item Zero is returned if \texttt{s1}'s student ID is equal to \texttt{s2}'s student ID
-	\item 1 is returned if \texttt{s1}'s student ID is greater than \texttt{s2}'s student ID
-\end{itemize}
+Polymorphic functions and collections often benefit from the use of run-time type conversion.
 
-We reduce the problem of comparing two \texttt{Student}s down to the problem of comparing two student IDs.
+For example, arrays of objects can be created. At run-time:\\
+    \quad The type of array elements can be identified.\\
+    \quad Entries can be converted to a compatible type for processing.
 
-Comparing student IDs is easy: they're integers.
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Inheritance}
+
+Inheritance: a class is based upon (or derived from) another class.
+
+The original class is referred to as the ``base'' or ``parent'' class.\\
+\quad We say the derived class ``inherits'' from the parent class.
+
+What does it inherit? Fields, methods, et cetera.
+
+Inheritance provides extensibility and reduces duplicate code.
+
+This provides two advantages:
+\begin{enumerate}
+    \item Reduce the amount of code required for objects that are related
+    \item Promote the consistent behaviour of related objects
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{C++ Inheritance Rules}
+
+In C++, a class may inherit from multiple parent classes.
+
+This has the potential to get confusing, but is very flexible.
+
+Some languages like C\# only allow one parent class.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Inheriting from a Base Class}
+
+The syntax for inheriting from a base class uses a colon (\texttt{:}).
+
+\textit{attributes modifiers} class \textit{identifier} : \textit{base}\\
+\quad Example: \texttt{class DerivedClass : BaseClass}
+
+Followed by the internal implementation of the derived class.
+
+Note that the implementation of the derived class does not repeat the member function and variable declarations of the base class.\\
+\quad Unless there is a need for them to have a different implementation.
 
 \end{frame}
 
 
 \begin{frame}[fragile]
-\frametitle{Implementing \texttt{IComparable}}
-
-To indicate the promise to implement \texttt{IComparable}, we add after the name of the class: a colon and the name of the interface.
+\frametitle{Inheritance Syntax}
 
 \begin{verbatim}
-public class Student : IComparable
+class BaseClass
 {
-    public int CompareTo( object obj )
-    {
-       // TODO : Implement method
-    }
-}
+    // Declares a base class from which other classes 
+    // may be derived.  This class will automatically
+    // inherit from the object class.
+};
+
+class DerivedClass : BaseClass
+{
+    // Declares a derived class that inherits fields 
+    // and functions from the BaseClass.
+};
+
 \end{verbatim}
-
-By promising to implement that interface, it will be a compile time error if we do not add the \texttt{CompareTo} method.
-
-We've decided that the \texttt{CompareTo} method should do a normal integer comparison of their student IDs.
 
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Implementing \texttt{IComparable}}
+\frametitle{Employee Example}
 
-Remember the \texttt{is} keyword from the discussion of \texttt{Equals}, and the use of explicit type casting.
+Let's start out with a simple class \texttt{Employee}:
 
-{\scriptsize
 \begin{verbatim}
-public int CompareTo( object obj )
+class Employee
 {
-    if ( obj is Student )
-    {
-        Student other = (Student) obj;
-        if ( studentID < other.studentID )
-        {
-            return -1;
-        } else if ( studentID == other.studentID )
-        {
-            return 0;
-        } else
-        {
-            return 1;
-        }
-    }
-    else
-    {
-        throw new ArgumentException( "No comparison possible." ); 
-    }
-}
+  protected:
+    string name;
+    string title;
+    string sin;
+
+  public:
+     Employee( string n, string t , string s);
+};
 \end{verbatim}
-}
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Implementing \texttt{IComparable}}
-
-Given that studentID is an \texttt{int}, a system defined type for which \texttt{CompareTo} is implemented, we can simplify this:
-
-{\scriptsize
-\begin{verbatim}
-public int CompareTo( object obj )
-{
-    if ( obj is Student )
-    {
-        Student other = (Student) obj;
-        return studentID.CompareTo( other.studentID );
-    }
-    else
-    {
-        throw new ArgumentException( "No comparison possible." ); 
-    }
-}
-\end{verbatim}
-}
-\end{frame}
-
-\begin{frame}
-\frametitle{Changing the Implementation}
-If we decide in the future we would prefer to sort by userID, the change is easy to make.
-
-Strings and all built-in numeric types are comparable as we expect.
-
-If we wanted to sort by date of birth, it might be necessary to make the \texttt{Date} class implement comparable too.
-
-\end{frame}
-
-\begin{frame}[fragile]
-\frametitle{Implementing \texttt{IComparable} on User ID}
-
-Let's rewrite the comparison to check on User ID:
-
-{\scriptsize
-\begin{verbatim}
-public int CompareTo( object obj )
-{
-    if ( obj is Student )
-    {
-        Student other = (Student) obj;
-        return userID.CompareTo( other.userID );
-    }
-    else
-    {
-        throw new ArgumentException( "No comparison possible." ); 
-    }
-}
-\end{verbatim}
-}
-
-\begin{verbatim}
-
-\end{verbatim}
-
-We delegate the comparison to the built in string comparison routine.
-
-This still lives up to the contract of \texttt{IComparable}.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Using Multiple Criteria}
-Sorting on student ID or user ID is ``nice'' because we expect that these are all unique: no two students will have the same student/user ID.
-
-Last names, however, are not unique. Many are quite common, siblings, et cetera...
-
-When we compare two identical last names we will have a tie.\\
-\quad To get a consistent sort order we will need a tiebreaker.
 
 \end{frame}
 
 
 \begin{frame}[fragile]
-\frametitle{Multiple Criteria \texttt{IComparable}}
+\frametitle{Employee Example}
 
-{\scriptsize
+Now let's add a new kind of \texttt{Employee}: the \texttt{HourlyEmployee}.
+
 \begin{verbatim}
-public int CompareTo( object obj )
+class HourlyEmployee : Employee
 {
-    if ( obj is Student )
-    {
-        Student other = (Student) obj;
-        int comparison = lastName.CompareTo( other.lastName );
-        if (comparison == 0)
-        {
-            return firstName.CompareTo( other.firstName );
-        }
-        else
-        {
-            return comparison;
-        }
-    }
-    else
-    {
-        throw new ArgumentException( "No comparison possible." ); 
-    }
-}
+  private:
+    double wage;
+    double weeklyHours;
+
+  public:
+    HourlyEmployee( string n, string t, string s,
+                           double w, double h );
+};
 \end{verbatim}
-}
-
-If two last names are equal, the check compares the first names.
-
-We could check another criterion if the first names are also identical...
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Summing Up \texttt{IComparable}}
-As we saw for \texttt{IComparable}, an interface is a contract.\\
-\quad If we accept the contract and implement the methods, we benefit.\\
-\quad Here, the benefit is automatic sorting of the \texttt{Student} objects.
+\frametitle{Observations on \texttt{HourlyEmployee}}
 
-The system can sort without knowing how \texttt{Student} is implemented.\\
-\quad It's enough to know that \texttt{Student} implements \texttt{IComparable}.
+The \texttt{HourlyEmployee} class inherits all of the fields and functions of the \texttt{Employee} class. They need not be duplicated.
 
-In short, the interface allows a piece of code (the sort routine) to interact with some object (the student), regardless of implementation.
+It also adds two new fields only applicable to hourly employees.
 
-Comparison is useful, but it's only an example of what interfaces are...
+Another new keyword appeared on that slide: \texttt{protected}\\
+\quad Let's take a look at that on the next slide.
 
 \end{frame}
 
-
 \begin{frame}
-\frametitle{Defining Interfaces}
+\frametitle{Access Modification}
+In addition to the access modifier keywords \texttt{public} and \texttt{private}, there is a third option: \texttt{protected}.
 
-Formally, an interface defines a set of methods, properties, et cetera.
+Declaring a field or method as \texttt{protected} means it is accessible only from within the class where it is declared and \underline{any derived class}.
 
-A class may implement as many interfaces as required.
-
-An interface is defined as follows:
-\textit{access-modifier} interface \textit{identifier}
-
-This is followed by a statement block that contains the definitions of methods, properties, etc...
-
-Interfaces may not contain method implementation; only signatures.\\
-\quad They also may not contain fields.
+In some cases, you may not want a derived class to be able to access member fields directly; in that case, use \texttt{private}.
 
 \end{frame}
 
 \begin{frame}[fragile]
-\frametitle{Interface Definition Example}
+\frametitle{Employee Example}
+
+Now let's add another kind of \texttt{Employee}: the \texttt{SalaryEmployee}.
 
 \begin{verbatim}
-public interface ITaxable
+class SalaryEmployee : Employee
 {
-    public double GetTaxRate( );
-    public double GetBasisAmount( );
-    public void SetTotalAmount( double totalAmount );
+  protected:
+    double salary;
+
+  public:
+    SalaryEmployee( string n, string t, 
+                           string s, double m );
 }
 \end{verbatim}
 
-It is a C\# convention to add I (a capital letter i) to the beginning of an interface name. This is common practice, but not an enforced rule.
-
-
 \end{frame}
 
-\begin{frame}
-\frametitle{Using Interfaces}
-It's important to note that it is not possible to instantiate an interface.\\
-\quad An interface is only a specification of members (behaviour).
+\begin{frame}[fragile]
+\frametitle{Employee Example}
 
-Instead, we must instantiate a class that implements that interface.
+We can use the \texttt{:} syntax to reduce the amount of code we have to write here by calling the constructor of the base class:
 
-We may have several classes that implement \texttt{ITaxable}:
-\begin{itemize}
-	\item \texttt{Invoice}
-	\item \texttt{BillPayment}
-	\item \texttt{Paycheque}
-	\item ... and more.
-\end{itemize}
+\begin{verbatim}
+class SalaryEmployee : Employee
+{
+    double salary;
 
-We could instantiate any one of those.
+    public SalaryEmployee( string n, string t, 
+                           string s, double m ) 
+                           : Employee (n, t, s);
+}
+\end{verbatim}
 
 \end{frame}
 
 
 \begin{frame}
-\frametitle{Using Code that Implements Interfaces}
+\frametitle{Observations on \texttt{SalaryEmployee}}
 
-We can, for example, use the interface name as the type as a parameter of a function or method.
+The \texttt{SalaryEmployee} class is closely related to \texttt{HourlyEmployee}.
 
-Let's use the \texttt{ITaxable} interface we saw before.
+Both classes inherit from the \texttt{Employee} class.\\
+\quad Common elements need only be defined once.
 
-There may be another method elsewhere: \\
-\quad \texttt{public void computeTotal( ITaxable t ) }
+Inheritance represents the ``is-a'' relationship:\\
+\quad Hourly Employee is an Employee;\\
+\quad Salary Employee is an Employee.
 
-The interface is \texttt{ITaxable} and within this method we can call any method on \texttt{t} that is specified in the interface.
+Because of this relationship, this is legal:\\
+\quad \texttt{Employee* e = new HourlyEmployee( )};
+
+We can refer to an instance of \texttt{HourlyEmployee} as if it's an instance of \texttt{Employee}: an hourly employee is an employee.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Moving Beyond Salary and Hourly}
+Now suppose you wanted to add a category of employee: \texttt{Manager}.
+
+You may decide that \texttt{Manager} is a kind of \texttt{SalaryEmployee}.
+
+A \texttt{Manager} has a list of employees who report to him or her.\\
+Managers can also get bonuses at the end of the year.
+
+Solution: extend \texttt{SalaryEmployee} to make \texttt{Manager}.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The \texttt{Manager}}
+
+{\small
+\begin{verbatim}
+class Manager : SalaryEmployee
+{
+  protected:
+    vector reports; // Remember to initialize!
+    double bonus;
+
+    public:
+     Manager( string n, string t,  string s, double m,
+                    double b );
+}
+\end{verbatim}
+}
+\end{frame}
+
+\begin{frame}
+
+\texttt{Manager} inherits from \texttt{SalaryEmployee} which in turn inherits from \texttt{Employee}.
+
+\frametitle{More About the \texttt{Manager}}
+The ``is-a'' relationship is transitive:\\
+\quad Manager is a Salary Employee;\\
+\quad Salary Employee is an Employee;\\
+\quad Therefore Manager is an Employee.
+
+Because of this relationship, this is also legal:\\
+\quad \texttt{Employee* e = new Manager( )};
 
 \end{frame}
 
 
 \begin{frame}[fragile]
-\frametitle{Using Code that Implements Interfaces}
+\frametitle{Overriding Methods}
 
+Overriding a method is the term for replacing the behaviour of a base class by writing a new implementation of that method.
+
+Suppose we add the following method to \texttt{SalaryEmployee}:
 \begin{verbatim}
-public void computeTotal( ITaxable t )
+double SalaryEmployee::ComputePay( )
 {
-    double tax = t.GetBasisAmount( ) * t.GetTaxRate( );
-    double total = t.GetBasisAmount( ) + tax;
-    t.SetTotalAmount( total );
+    return salary;
 }
 \end{verbatim}
 
-This works even though the object referenced by \texttt{t} is not an instance of \texttt{ITaxable}, but of some class that implements \texttt{ITaxable}.
+This method is available and can be called on instances of \texttt{SalaryEmployee} and \texttt{Manager}.
+
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{Overriding Methods}
+Now imagine we'd like to override this behaviour in \texttt{Manager} to account for the fact that managers can get a bonus.
+
+\begin{verbatim}
+double Manager::ComputePay( )
+{
+    return salary + bonus;
+}
+\end{verbatim}
+
+\texttt{ComputePay( )} can still be called on \texttt{Manager} and \texttt{SalaryEmployee}.
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Multiple Interfaces}
-It is permitted for one class to implement more than one interface.
+\frametitle{Overriding Methods}
 
-To do so, the interfaces are separated by commas.\\
-\quad Example: \texttt{public class Invoice : ITaxable, IComparable}
+When calling \texttt{ComputePay( )} on an instance of \texttt{SalaryEmployee}, the method in \texttt{SalaryEmployee} is run.
 
-Interfaces are a way to write code that is extensible and general.\\
-\quad Next time, we'll look at more advanced techniques.
+When calling \texttt{ComputePay( )} on an instance of \texttt{Manager}, the method in \texttt{Manager} is run.\\
+\quad Why? It is overidden in \texttt{Manager}.
+
+What if the code just refers to an instance of \texttt{SalaryEmployee} and we're not sure if it's a manager or not?
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Inheritance and Polymorphism}
+
+At run-time, the system knows what kind of object a given instance is.
+
+Thus, the code may refer to \texttt{Employee}, but the system knows if it is really a \texttt{HourlyEmployee}, \texttt{SalaryEmployee}, or \texttt{Manager}.
+
+It will therefore execute the appropriate method based on the actual type of the instance.
+
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Inheritance Plus Polymorphic Functions}
+Earlier we asserted that a function can be polymorphic without having a generic parameter. Inheritance is the reason for this.
+
+Suppose we have a method \texttt{double ComputeArea( Shape s ) }.
+
+Let's say that \texttt{Shape} is a base class and there are many derived classes: \texttt{Triangle, Rectangle, Circle, Polygon}...
+
+When calling \texttt{ComputeArea}, because \texttt{Triangle} derives from \texttt{Shape} it is legal to provide a \texttt{Triangle} instance as the actual parameter.
 
 \end{frame}
 
