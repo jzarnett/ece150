@@ -220,8 +220,8 @@ Like the \texttt{enum}, the \texttt{struct} definition should be placed outside 
 \begin{verbatim}
 struct Complex
 {
-    public double real;
-    public double imaginary;
+    double real;
+    double imaginary;
 };
 \end{verbatim}
 
@@ -235,8 +235,6 @@ The keyword \texttt{struct} indicates we are defining a structure.\\
 \quad Typically, a \texttt{struct} name begins with an uppercase letter.
 
 The variables declared inside the \{ \} braces are called the \alert{members}.
-
-The variables inside the \texttt{struct} have an additional keyword in front of their type: \texttt{public}.
 
 Once a structure is defined, you can use it just like any other type.
 
