@@ -218,7 +218,7 @@ int enter_number( )
     int result;
     cout << "Enter a number: ";
     cin >> result;
-    cout << "Address of result on stack: << (int) &result << endl;
+    cout << "Address of result on stack: " << (int) &result << endl;
     hack_it();
     return( result );
 }
@@ -226,7 +226,7 @@ int enter_number( )
 int main( )
 {
     int i = enter_number( );
-    cout << "hack_it( ) already knew you entered << + i << endl;
+    cout << "hack_it( ) already knew you entered " << + i << endl;
     return 0;
 }
 \end{verbatim}

@@ -171,7 +171,7 @@ In general, insertion sort requires $n - 1$ iterations to sort $n$ values.
 \begin{verbatim}
 void insertion_sort( int[] data, int length )
 {
-    for( int index = 1; index < data.Length; index++ )
+    for( int index = 1; index < length; index++ )
     {
         int pos;
         int temp = data[index];
@@ -290,7 +290,7 @@ void insertion_sort( linked_list* original )
     {
         insert_in_order( sorted, tmp->data );
         delete tmp;
-        tmp = tmp = remove_first( original );
+        tmp = remove_first( original );
     }
   
     delete original;
