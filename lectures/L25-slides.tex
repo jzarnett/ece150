@@ -156,17 +156,17 @@ void initialize( linked_list* list ) {
 
 \begin{verbatim}
 void append( linked_list* list, int data ) {
-    if (tail == 0) {
+    if (list->tail == 0) {
         list->head = new list_entry;
-        list->tail = head;
+        list->tail = list->head;
         list->tail->data = data;
         list->tail->next = 0;
     } else { 
         list_entry* entry = new list_entry;
         entry->data = data;
         entry->next = 0;
-        list->tail.next = entry;
-        list->tail = tail->next;
+        list->tail->next = entry;
+        list->tail = list->tail->next;
     }
 }
 \end{verbatim}
@@ -215,7 +215,7 @@ list_entry* remove_first( linked_list* list ) {
 
 \begin{verbatim}
 void clear( linked_list* list ) {
-   while( list-> head != 0 ) {
+   while( list->head != 0 ) {
        list_entry* current = list->head;
        list->head = list->head->next;
        delete current;	
